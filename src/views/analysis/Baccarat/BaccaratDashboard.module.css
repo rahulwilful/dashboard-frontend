@@ -1,0 +1,17 @@
+h1 {
+  text-align: center;
+}
+
+.placeholder_grey::placeholder {
+  color: rgb(184, 184, 184);
+  opacity: 1; /* Ensures the color is fully applied */
+}
+
+.opacity {
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+.overflowYHidden {
+  overflow-y: hidden;
+}

@@ -1,0 +1,43 @@
+.placeholder_grey::placeholder {
+  color: rgb(184, 184, 184);
+  opacity: 1; /* Ensures the color is fully applied */
+}
+.opacity {
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+.roullet_wheel_container {
+  min-height: 30vh;
+}
+
+.main {
+  max-width: 1600px;
+}
+
+@media (max-width: 576px) {
+  .roullet_wheel {
+    height: 100%;
+  }
+}
+
+@media (min-width: 576px) {
+  .roullet_wheel {
+    height: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+}
+
+@media (min-width: 992px) {
+  .roullet_wheel {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .roullet_wheel {
+    height: 100%;
+  }
+}

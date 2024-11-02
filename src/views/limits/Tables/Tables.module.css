@@ -1,0 +1,139 @@
+.box {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  overflow: hidden;
+  padding: 2px;
+  border-radius: 7px;
+}
+
+.black::before,
+.blue::before {
+  content: '';
+  position: absolute;
+  width: 120%;
+  height: 200%;
+  filter: blur(12px);
+  background-image: conic-gradient(rgb(56, 76, 255) 20deg, transparent 120deg);
+  animation: animate 10s linear infinite;
+  z-index: 0;
+  pointer-events: none; /* Prevent pseudo-element from blocking clicks */
+}
+
+.blue::before {
+  background-image: conic-gradient(rgb(238, 56, 255) 20deg, transparent 120deg);
+}
+
+.box::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  background-color: transparent;
+  border-radius: 5px;
+  z-index: 1;
+  pointer-events: none; /* Prevent pseudo-element from blocking clicks */
+}
+
+.card {
+  position: relative;
+  z-index: 2;
+  pointer-events: auto; /* Ensure card is clickable */
+}
+
+@keyframes animate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* /////////////////////////////////////////////////////////////// */
+
+.form__group {
+  position: relative;
+  padding: 20px 0 0;
+  width: 100%;
+  max-width: 180px;
+}
+
+.form__field2,
+.form__field {
+  font-family: inherit;
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #9b9b9b;
+  outline: 0;
+  font-size: 17px;
+  color: #fff;
+  padding: 7px 0;
+  background: transparent;
+  transition: border-color 0.2s;
+}
+
+.form__field2::placeholder,
+.form__field::placeholder {
+  color: transparent;
+}
+
+.form__field2:placeholder-shown ~ .form__label,
+.form__field:placeholder-shown ~ .form__label {
+  font-size: 17px;
+  cursor: text;
+  top: 20px;
+}
+
+.form__label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  font-size: 17px;
+  color: #9b9b9b;
+  pointer-events: none;
+}
+
+.form__field:focus {
+  padding-bottom: 6px;
+  font-weight: 700;
+  border-width: 3px;
+  border-image: linear-gradient(to right, rgb(11, 94, 215), rgb(27, 117, 253));
+  border-image-slice: 1;
+}
+
+.form__field2:focus {
+  padding-bottom: 6px;
+  font-weight: 700;
+  border-width: 3px;
+  border-image: linear-gradient(to right, rgb(44, 43, 43), rgb(228, 232, 238));
+  border-image-slice: 1;
+}
+
+.form__field:focus ~ .form__label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  font-size: 17px;
+  color: rgb(11, 94, 215);
+  font-weight: 700;
+}
+
+.form__field2:focus ~ .form__label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  font-size: 17px;
+  color: rgb(54, 54, 54);
+  font-weight: 700;
+}
+.form__field2:required,
+.form__field2:invalid,
+.form__field:required,
+.form__field:invalid {
+  box-shadow: none;
+}

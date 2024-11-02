@@ -1,0 +1,31 @@
+.table_dark {
+  background-color: #2b2b2b; /* Dark background for table */
+  color: #ffffff; /* Light text color for contrast */
+}
+
+.table_dark .p-datatable-thead > tr > th {
+  background-color: #3a3a3a; /* Darker shade for table header */
+  color: #ffffff;
+  border-bottom: 1px solid #4a4a4a;
+}
+
+.table_dark .p-datatable-tbody > tr {
+  background-color: #333333; /* Row background color */
+}
+
+.table_dark .p-datatable-tbody > tr:nth-child(even) {
+  background-color: #2b2b2b; /* Alternate row color */
+}
+
+.table_dark .p-datatable-tbody > tr > td {
+  color: #e0e0e0;
+}
+
+.table_dark .p-datatable-tbody > tr.p-highlight {
+  background-color: #565656 !important;
+}
+
+.table_dark .p-paginator .p-paginator-current {
+  color: #ffffff;
+  background-color: #444444;
+}
