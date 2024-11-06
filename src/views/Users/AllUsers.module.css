@@ -1,3 +1,8 @@
+.placeholder_grey::placeholder {
+  color: rgb(184, 184, 184);
+  opacity: 1; /* Ensures the color is fully applied */
+}
+
 .table_dark {
   background-color: #2b2b2b; /* Dark background for table */
   color: #ffffff; /* Light text color for contrast */

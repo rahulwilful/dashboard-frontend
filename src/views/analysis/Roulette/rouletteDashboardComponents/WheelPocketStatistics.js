@@ -7,6 +7,7 @@ const WheelPocketStatistics = (props) => {
   const theme = useSelector((state) => state.theme)
   const [expectedValue, setExpectedValue] = useState(0)
   const [selectedNumber, setSelectedNumber] = useState('0')
+  const [gameCount, setGameCount] = useState(0)
   const [selectedChiSuqare, setSelectedChiSuqare] = useState(0)
   const [selectedObservedFrequency, setSelectedObservedFrequency] = useState(0)
   const [standardDeviationFromExpected, setStandardDeviationFromExpected] = useState(0)
@@ -16,7 +17,12 @@ const WheelPocketStatistics = (props) => {
   let tempChiRouletteData = rouletteDataForChi
 
   useEffect(() => {
+    console.log("props.rouletteData: ",props.rouletteData)
+    console.log("props.data: ",props.data)
+
     if (props.rouletteData) {
+      setGameCount(props.data.length)
+      const gameCount = props.data.length
       setExpectedValue((props.data.length / 37).toFixed(2))
 
       let expected = (props.data.length / 37).toFixed(2)
@@ -154,7 +160,7 @@ const WheelPocketStatistics = (props) => {
                   </thead>
                   <tbody className="w-100">
                     <tr>
-                      <td>Selected Pocket</td>
+                      <td>Select Pocket</td>
                       <td className={`text-end `}>
                         <select
                           className="rounded-1 px-2"
@@ -210,13 +216,8 @@ const WheelPocketStatistics = (props) => {
                         <span
                           className={`rounded-1 bg-danger text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
                         >
-                          {chiRouletteData.map((item) => {
-                            {
-                              if (item.name == selectedNumber) {
-                                return item.chi.toFixed(1)
-                              }
-                            }
-                          })}
+                         
+                            {(((selectedObservedFrequency - expectedValue) / props.data.length) * 100).toFixed(2)}
                         </span>
                       </td>
                     </tr>
@@ -252,13 +253,8 @@ const WheelPocketStatistics = (props) => {
                         <span
                           className={`rounded-1 bg-danger text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
                         >
-                          {chiRouletteData.map((item) => {
-                            {
-                              if (item.name == selectedNumber) {
-                                return item.chi.toFixed(1)
-                              }
-                            }
-                          })}
+                         
+                           {(((selectedObservedFrequency - expectedValue) / props.data.length) * 100).toFixed(2)}
                         </span>
                       </td>
                     </tr>

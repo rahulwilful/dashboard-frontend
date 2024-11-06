@@ -47,12 +47,12 @@ const _nav = [
     to: '/config',
     icon: <Sliders className="nav-icon text-light" />,
   },
-  {
+ /*  {
     component: CNavItem,
     name: 'Account',
     to: '/dashboard',
     icon: <PersonCircle className="nav-icon text-light" />,
-  },
+  }, */
   {
     component: CNavGroup,
     name: 'Settings',

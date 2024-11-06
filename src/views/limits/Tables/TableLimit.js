@@ -14,6 +14,8 @@ import { useColorModes } from '@coreui/react'
 import axiosClient from '../../../axiosClient.js'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import { GetCurrent } from '../../../getCurrent.js'
+
 const TableLimits = () => {
   const navigate = useNavigate()
   const { game, id } = useParams()
@@ -23,7 +25,7 @@ const TableLimits = () => {
   const { colorMode, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
 
   const toggleAddNew = async(set) => {
-   // await getCurrent()
+   await getCurrent()
     setAddNew(set)
     setCount(count + 1)
   }
@@ -31,18 +33,7 @@ const TableLimits = () => {
   const  getCurrent = async ()=>{
     console.log("called getCurrent")
   
-    try{
-      const res = await axiosClient.get(`/user/get/current`)
-    //  console.log('res.data.result: ', res)
-      if(!res){
-        navigate('/login')
-      }
-    
-    }catch(err){
-      console.log("error: ",err)
-      navigate('/login')
-  
-    }
+    const user = await GetCurrent('limits')
     return
     
   }

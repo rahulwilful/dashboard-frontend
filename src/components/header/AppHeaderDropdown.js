@@ -42,15 +42,13 @@ const AppHeaderDropdown = () => {
         visible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
       >
-        <CModalHeader>
-          <CModalTitle>Confirm logout</CModalTitle>
-        </CModalHeader>
+       
         <CModalBody>Are you sure you want to log out?</CModalBody>
         <CModalFooter>
-          <CButton color="secondary" onClick={() => setIsModalVisible(false)}>
+          <CButton size="sm" color="secondary" onClick={() => setIsModalVisible(false)}>
             Close
           </CButton>
-          <CButton color="primary" onClick={handleLogout}>
+          <CButton size="sm" color="primary" onClick={handleLogout}>
             Log Out
           </CButton>
         </CModalFooter>

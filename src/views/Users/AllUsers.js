@@ -8,6 +8,9 @@ import { Link } from 'react-router-dom'
 
 import showToast from '../../components/Notification/ShowToast'
 
+import gsap from 'gsap'
+import { useGSAP } from '@gsap/react'
+
 // Define a custom dark theme for DataTable
 createTheme('customDark', {
   text: {
@@ -64,14 +67,16 @@ const AllUsers = () => {
   let originalUsers = []
 
   useEffect(() => {
-    getCurrent().then(() => {
-      getUsers()
-    })
+    getCurrent()
+     
+  
   }, [])
 
   const getCurrent = async () => {
-    const res = await GetCurrent()
+    console.log(" called getCurrent")
+    const res = await GetCurrent('users')
     user = res
+    getUsers()
     return
   }
 
@@ -170,6 +175,23 @@ const AllUsers = () => {
     },
   ]
 
+  useGSAP(() => {
+    gsap.fromTo(
+      '.fade-in',
+      {
+        delay: 0.5,
+        opacity: 0,
+        y: 50,
+      },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: 'power1.out',
+      },
+    )
+  }, [])
+
   return (
     <>
       <div className={`bootstrapModal`}>
@@ -215,7 +237,7 @@ const AllUsers = () => {
           </div>
         </div>
       </div>
-      <div className={`${theme === 'dark' ? 'text-light' : 'text-dark'} pb-4`}>
+      <div className={`${theme === 'dark' ? 'text-light' : 'text-dark'} pb-4 fade-in`}>
         <div className={`w-100 px-3 d-flex justify-content-end`}>
           <Link to="/add/user">
             <button

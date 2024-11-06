@@ -11,6 +11,8 @@ import axiosClient from '../../../axiosClient'
 import roulleteWheel from 'src/assets/images/dashboard/roullete-wheel.png'
 import { useNavigate } from 'react-router-dom'
 
+import { GetCurrent } from '../../../getCurrent'
+
 const UpdateBackgrounds = (props) => {
   const [parent, animateParent] = useAutoAnimate()
   const theme = useSelector((state) => state.theme)
@@ -60,30 +62,17 @@ const UpdateBackgrounds = (props) => {
   }, [backgrounds, form])
 
   useEffect(() => {
-    getCurrent().then(() => {
-
-      getBackgrounds()
-    })
+    getCurrent()
   }, [])
 
-  const  getCurrent = async ()=>{
-    console.log("called getCurrent")
-  
-    try{
-      const res = await axiosClient.get(`/user/get/current`)
-    //  console.log('res.data.result: ', res)
-      if(!res){
-        navigate('/login')
-      }
-    
-    }catch(err){
-      console.log("error: ",err)
-      navigate('/login')
-  
-    }
-    return
-    
+  const getCurrent = async () => {
+    console.log('called getCurrent')
+    await GetCurrent('settings')
+    getBackgrounds()
+    console.log('user ', user)
+    return 
   }
+
 
   const handleSearch = (e) => {
     if (e.target.value === '') {

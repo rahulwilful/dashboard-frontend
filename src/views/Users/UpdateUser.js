@@ -3,6 +3,9 @@ import { useSelector } from 'react-redux'
 
 import showToast from '../../components/Notification/ShowToast'
 
+import gsap from 'gsap'
+import { useGSAP } from '@gsap/react'
+
 import { Link, useParams } from 'react-router-dom'
 
 import s from './AllUsers.module.css'
@@ -79,7 +82,7 @@ const UpdateUser = () => {
 
   const getCurrent = async () => {
     console.log('called getCurrent')
-    const user = await GetCurrent()
+    const user = await GetCurrent('users')
     console.log('user ', user)
   }
   const handleUserUpdate = async () => {
@@ -98,11 +101,28 @@ const UpdateUser = () => {
     return
   }
 
+  useGSAP(() => {
+    gsap.fromTo(
+      '.fade-in',
+      {
+        delay: 0.5,
+        opacity: 0,
+        y: 50,
+      },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: 'power1.out',
+      },
+    )
+  }, [])
+
   return (
     <>
       
       <div
-        className={`${theme === 'dark' ? 'text-light' : 'text-dark'} pb-4 d-flex justify-content-center`}
+        className={`${theme === 'dark' ? 'text-light' : 'text-dark'} pb-4 d-flex justify-content-center fade-in`}
       >
         <div className={`w-100`}>
           <div className={`container-xl px-4 mt-4 `}>

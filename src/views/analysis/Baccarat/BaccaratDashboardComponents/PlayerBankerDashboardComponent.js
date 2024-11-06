@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import s from './PlayerBankerDashboardComponent.module.css'
 import card from 'src/assets/images/baccarat/card.png'
 import Select from 'react-select'
-import { Cards, ShoeSideWin } from './BaccaratData.js'
+import { Cards, ShoeSideWin, CardImages } from './BaccaratData.js'
 import PieChartComponent from './PieChartComponent'
 import DoughnutChartComponent from './DoughnutChartComponent'
 import BarChartComponent from './BarChartComponent.js'
@@ -17,16 +17,6 @@ const PlayerBankerDashboardComponent = (props) => {
   const theme = useSelector((state) => state.theme)
   const [themeClass, setThemeClass] = useState('bg-light text-dark border')
   const [themeBorder, setThemeBorder] = useState('bg-light text-dark border')
-
-  /* const options = [
-    { value: 20, label: 20 },
-    { value: 19, label: 19 },
-    { value: 18, label: 18 },
-    { value: 17, label: 17 },
-    { value: 16, label: 16 },
-    { value: 15, label: 15 },
-    { value: 14, label: 14 },
-  ] */
 
   useEffect(() => {
     setThemeClass(
@@ -65,6 +55,12 @@ const PlayerBankerDashboardComponent = (props) => {
     { name: 'Player Pair', value: 0 },
   ])
   const [showDoughnut, setShowDoughnut] = useState(true)
+  const [playerCardImage1, setPlayerCardImage1] = useState(null)
+  const [playerCardImage2, setPlayerCardImage2] = useState(null)
+  const [playerCardImage3, setPlayerCardImage3] = useState(null)
+  const [bankerCardImage1, setBankerCardImage1] = useState(null)
+  const [bankerCardImage2, setBankerCardImage2] = useState(null)
+  const [bankerCardImage3, setBankerCardImage3] = useState(null)
 
   const processData = (shoeData) => {
     console.log('processData: ', shoeData)
@@ -175,10 +171,6 @@ const PlayerBankerDashboardComponent = (props) => {
       console.log('true')
     }
 
-    //console.log('bankerVsPlayer', bankerVsPlayer)
-    //console.log('doughnutData', doughnutData)
-    //console.log('sideWin', sideWin)
-
     setShoes(tempShoes)
     setBankerVsPlayer(bankerVsPlayer)
     setDoughnutData(doughnutData)
@@ -262,14 +254,11 @@ const PlayerBankerDashboardComponent = (props) => {
     }
   }, [props.shoeData, props.shoes])
 
-  const handleIndexChange = (event) => {
-    if (event == '+') {
-      setIndex(index + 1)
-    } else {
-      setIndex(index - 1)
+  useEffect(() => {
+    if (currentShoeData.length > 0) {
+      handleCardImages(0)
     }
-    // Update currentShoe with the selected value
-  }
+  }, [currentShoeData])
 
   const handleShoeChange = (selectedOption) => {
     console.log('handleShoeChange: ', selectedOption)
@@ -292,6 +281,7 @@ const PlayerBankerDashboardComponent = (props) => {
     }
 
     setIndex(0)
+    handleCardImages(0)
   }
 
   const getDataByShoe = async (shoe) => {
@@ -381,6 +371,85 @@ const PlayerBankerDashboardComponent = (props) => {
     })
   }
 
+  const handleIndexChange = (event) => {
+    let tempIndex = index
+    if (event == '+') {
+      tempIndex = index + 1
+      setIndex(index + 1)
+    } else {
+      tempIndex = index - 1
+      setIndex(index - 1)
+    }
+    handleCardImages(tempIndex)
+
+    // Update currentShoe with the selected value
+  }
+
+  //changes card images according to current index
+  const handleCardImages = (tempIndex) => {
+    if (currentShoeData[tempIndex].playerCard1) {
+      for (let i in CardImages) {
+        if (CardImages[i].name == currentShoeData[tempIndex].playerCard1) {
+          setPlayerCardImage1(CardImages[i].card)
+        }
+      }
+    } else {
+      setPlayerCardImage1(null)
+    }
+
+    if (currentShoeData[tempIndex].playerCard2) {
+      for (let i in CardImages) {
+        if (CardImages[i].name == currentShoeData[tempIndex].playerCard2) {
+          setPlayerCardImage2(CardImages[i].card)
+        }
+      }
+    } else {
+      setPlayerCardImage2(null)
+    }
+
+    if (currentShoeData[tempIndex].playerCard3) {
+      for (let i in CardImages) {
+        if (CardImages[i].name == currentShoeData[tempIndex].playerCard3) {
+          setPlayerCardImage3(CardImages[i].card)
+        }
+      }
+    } else {
+      setPlayerCardImage3(null)
+    }
+
+    if (currentShoeData[tempIndex].bankerCard1) {
+      for (let i in CardImages) {
+        if (CardImages[i].name == currentShoeData[tempIndex].bankerCard1) {
+          setBankerCardImage1(CardImages[i].card)
+        }
+      }
+    } else {
+      setBankerCardImage1(null)
+    }
+
+    if (currentShoeData[tempIndex].bankerCard2) {
+      for (let i in CardImages) {
+        if (CardImages[i].name == currentShoeData[tempIndex].bankerCard2) {
+          setBankerCardImage2(CardImages[i].card)
+        }
+      }
+    } else {
+      setBankerCardImage2(null)
+    }
+
+    if (currentShoeData[tempIndex].bankerCard3) {
+      for (let i in CardImages) {
+        if (CardImages[i].name == currentShoeData[tempIndex].bankerCard3) {
+          setBankerCardImage3(CardImages[i].card)
+        }
+      }
+    } else {
+      setBankerCardImage3(null)
+    }
+
+    return
+  }
+
   return (
     <div
       className={` ${theme === 'light' ? 'text-dark' : 'text-light'} ${shoeData ? '' : 'd-none'}`}
@@ -412,7 +481,7 @@ const PlayerBankerDashboardComponent = (props) => {
                         <div className={`h-100 w-100 p-1`}>
                           <div className={`text-center`}>{currentShoeData[index].playerCard1}</div>
 
-                          <img src={card} className="w-100 drop_shadow" />
+                          <img src={playerCardImage1} className="w-100 drop_shadow" />
                         </div>
                       </div>
                     </div>
@@ -423,7 +492,7 @@ const PlayerBankerDashboardComponent = (props) => {
                         <div className={`h-100 w-100 p-1`}>
                           <div className={`text-center`}>{currentShoeData[index].playerCard2}</div>
 
-                          <img src={card} className="w-100 drop_shadow" />
+                          <img src={playerCardImage2} className="w-100 drop_shadow" />
                         </div>
                       </div>
                     </div>
@@ -434,7 +503,7 @@ const PlayerBankerDashboardComponent = (props) => {
                         <div className={`h-100 w-100 p-1`}>
                           <div className={`text-center`}>{currentShoeData[index].playerCard3}</div>
 
-                          <img src={card} className="w-100 drop_shadow" />
+                          <img src={playerCardImage3} className="w-100 drop_shadow" />
                         </div>
                       </div>
                     </div>
@@ -458,7 +527,7 @@ const PlayerBankerDashboardComponent = (props) => {
                                   ...base,
                                   fontSize: '0.8rem',
                                   zIndex: 100, // Ensure it's above other components
-                                  menuPortal: base => ({ ...base, zIndex: 9999 })
+                                  menuPortal: (base) => ({ ...base, zIndex: 9999 }),
                                 }),
                                 option: (base) => ({
                                   ...base,
@@ -507,7 +576,6 @@ const PlayerBankerDashboardComponent = (props) => {
                               })}
                               menuPosition="fixed" // Ensures it stays fixed on the screen
                               menuPortalTarget={document.body} // Renders dropdown outside the parent hierarchy
-                              
                             />
 
                             {/*  <select
@@ -628,7 +696,7 @@ const PlayerBankerDashboardComponent = (props) => {
                         <div className={`h-100 w-100 p-1`}>
                           <div className={`text-center`}>{currentShoeData[index].bankerCard1}</div>
 
-                          <img src={card} className="w-100 drop_shadow" />
+                          <img src={bankerCardImage1} className="w-100 drop_shadow" />
                         </div>
                       </div>
                     </div>
@@ -639,7 +707,7 @@ const PlayerBankerDashboardComponent = (props) => {
                         <div className={`h-100 w-100 p-1`}>
                           <div className={`text-center`}>{currentShoeData[index].bankerCard2}</div>
 
-                          <img src={card} className="w-100 drop_shadow" />
+                          <img src={bankerCardImage2} className="w-100 drop_shadow" />
                         </div>
                       </div>
                     </div>
@@ -650,7 +718,7 @@ const PlayerBankerDashboardComponent = (props) => {
                         <div className={`h-100 w-100 p-1`}>
                           <div className={`text-center`}>{currentShoeData[index].bankerCard3}</div>
 
-                          <img src={card} className="w-100 drop_shadow" />
+                          <img src={bankerCardImage3} className="w-100 drop_shadow" />
                         </div>
                       </div>
                     </div>

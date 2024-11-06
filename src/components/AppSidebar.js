@@ -20,33 +20,40 @@ import roulleteWheel from 'src/assets/brand/roulleteWheelBlack.png'
 import nav from '../_nav'
 import axiosClient from '../axiosClient'
 
+import { GetCurrent } from '../getCurrent'
+
 const AppSidebar = () => {
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
   const [navigation, setNavigation] = useState(nav)
   const [key, setKey] = useState(0) // Key to force re-render
+  let tempNav = nav
+  let user = ''
 
   const getLimits = async () => {
     try {
       const { data } = await axiosClient.get('/config/get/table/type')
       // console.log('response', data)
 
-      const newNavigation = navigation.map((navItem) => {
-        if (navItem.name === 'Table Limits') {
-          return {
-            ...navItem,
-            items: [
-              ...navItem.items,
-              ...data.game_types.map((tableType) => ({
-                component: 'CNavItem',
-                name: tableType.game_type_name,
-                to: `/limits/${tableType.game_type_name}/${tableType.game_type_id}`,
-              })),
-            ],
-          }
+      const tempNavigation = tempNav.map((navItem) => {
+        if(user.limits == true && navItem.name === 'Table Limits'){
+
+         
+            return {
+              ...navItem,
+              items: [
+                ...navItem.items,
+                ...data.game_types.map((tableType) => ({
+                  component: 'CNavItem',
+                  name: tableType.game_type_name,
+                  to: `/limits/${tableType.game_type_name}/${tableType.game_type_id}`,
+                })),
+              ],
+            }
+          
         }
-        if (navItem.name === 'Table Analysis') {
+        if (user.analysis == true && navItem.name === 'Table Analysis') {
           return {
             ...navItem,
             items: [
@@ -62,6 +69,18 @@ const AppSidebar = () => {
         return navItem
       })
 
+      console.log("newNavigation: ", tempNavigation)
+
+    
+      let newNavigation = []
+      newNavigation.push(tempNavigation[0])
+      if(user.limits== true || user.roleType=='super_admin') newNavigation.push(tempNavigation[1])
+        if(user.analysis== true || user.roleType=='super_admin') newNavigation.push(tempNavigation[2])
+          if(user.config== true || user.roleType=='super_admin') newNavigation.push(tempNavigation[3])
+            if(user.settings== true || user.roleType=='super_admin') newNavigation.push(tempNavigation[4])
+              if(user.users== true || user.roleType=='super_admin') newNavigation.push(tempNavigation[5])
+      
+
       setNavigation(newNavigation)
       setKey((prevKey) => prevKey + 1) // Update key to force re-render
     } catch (error) {
@@ -74,8 +93,16 @@ const AppSidebar = () => {
   }, [navigation])
 
   useEffect(() => {
-    getLimits()
+    getCurrent()
   }, [])
+
+  const getCurrent = async() => {
+    const tempUser = await GetCurrent()
+    user = tempUser
+    console.log("tempUser: ", user) 
+    await  getLimits()
+   
+  }
 
   return (
     <CSidebar

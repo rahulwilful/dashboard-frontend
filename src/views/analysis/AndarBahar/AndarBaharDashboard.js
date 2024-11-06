@@ -8,6 +8,8 @@ import PieChartComponent2 from './AndarBaharDashboardComponents/PieChartComponen
 import DoughnutChartComponent from './AndarBaharDashboardComponents/DoughnutChartComponent'
 import BarChartComponent from './AndarBaharDashboardComponents/BarChartComponent'
 
+import { CardImages } from './AndarBaharDashboardComponents/AndarBaharData'
+
 import cardImage from 'src/assets/images/baccarat/card.png'
 
 import s from './AndarBaharDashboard.module.css'
@@ -17,6 +19,8 @@ import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { CustomEase } from 'gsap/all'
 import { CardImage } from 'react-bootstrap-icons'
+
+import { GetCurrent } from '../../../getCurrent'
 
 gsap.registerPlugin(CustomEase)
 
@@ -51,6 +55,7 @@ const AndarBaharDashboard = () => {
 
   const [winner, setWinner] = useState('')
   const [jokerCard, setJokerCard] = useState('')
+  const [jokerCardImage,setJokerCardImage] = useState(null)
   const [side_win, setSideWin] = useState('')
   const [form, setForm] = useState({})
 
@@ -95,30 +100,21 @@ const AndarBaharDashboard = () => {
     return () => clearInterval(intervalId)
   }, [limit])
 
+ 
+
   useEffect( () => {
-   /*  getCurrent().then(()=>{
-      getGameData(100)
-    }) */
-      getGameData(100)
-    // Ensure the current limit is passed
+     getCurrent()
+    
   }, [])
 
   const  getCurrent = async ()=>{
     console.log("called getCurrent")
   
-    try{
-      const res = await axiosClient.get(`/user/get/current`)
-    ////  console.log('res.data.result: ', res)
-      if(!res){
-        navigate('/login')
-      }
-    
-    }catch(err){
-      console.log("error: ",err)
-      navigate('/login')
-  
-    }
+    await GetCurrent('analysis')
+    getGameData(100) 
     return
+   
+    
     
   }
 
@@ -127,9 +123,34 @@ const AndarBaharDashboard = () => {
     const res = await axiosClient.get(
       `/game/get/andar_bahar/${game_type_id}/${table_limit_id}/${limit}`,
     )
+    console.log("response: ",res.data.result)
     processData(res.data.result)
     setRenderKey(renderKey + 1)
-    localStorage.setItem('callOnTimeInterval', true)
+    localStorage.setItem('baccaratCallOnTimeInterval', true)
+  }
+
+  const getCustomeGameDataByRadio = async (limitParam) => {
+    const limitToUse = limitParam || limit
+    const res = await axiosClient.get(
+      `/game/get/andar_bahar/${game_type_id}/${table_limit_id}/${limitParam}`,
+    )
+    console.log("getCustomeGameDataByRadio response: ",res.data.result)
+    processData(res.data.result)
+    setRenderKey(renderKey + 1)
+    setLimit(limitParam)
+    localStorage.setItem('baccaratCallOnTimeInterval', true)
+  }
+
+  const getCustomeGameData = async () => {
+   
+    const res = await axiosClient.get(
+      `/game/get/andar_bahar/${game_type_id}/${table_limit_id}/${customLimit}`,
+    )
+    console.log("getCustomeGameDataByRadio response: ",res.data.result)
+    processData(res.data.result)
+    setRenderKey(renderKey + 1)
+    setLimit(customLimit)
+    localStorage.setItem('baccaratCallOnTimeInterval', false)
   }
 
   const processData = (resData) => {
@@ -206,30 +227,52 @@ const AndarBaharDashboard = () => {
 
     for (let i in tempAndarCards) {
       if (i == 0) {
-        tempAndarCards2.push({ name: tempAndarCards[i], image: cardImage, position: 0 })
+        for(let j in CardImages){
+          if(tempAndarCards[i] == CardImages[j].name){
+            
+            tempAndarCards2.push({ name: tempAndarCards[i], image: CardImages[j].card, position: 0 })
+          }
+        }
+       
       } else {
-        tempAndarCards2.push({
-          name: tempAndarCards[i],
-          image: cardImage,
-          position: tempAndarCards2[tempAndarCards2.length - 1].position + 3,
-        })
+        for(let j in CardImages){
+          if(tempAndarCards[i] == CardImages[j].name){
+            tempAndarCards2.push({
+              name: tempAndarCards[i],
+              image: CardImages[j].card,
+              position: tempAndarCards2[tempAndarCards2.length - 1].position + 3,
+            })
+          }
+        }
+       
       }
     }
 
     for (let i in tempBaharCards) {
       if (i == 0) {
-        tempBaharCards2.push({ name: tempBaharCards[i], image: cardImage, position: 0 })
+        for(let j in CardImages){
+          if(tempBaharCards[i] == CardImages[j].name){
+            tempBaharCards2.push({ name: tempBaharCards[i], image: CardImages[j].card, position: 0 })
+          }
+        }
+      
       } else {
-        tempBaharCards2.push({
-          name: tempBaharCards[i],
-          image: cardImage,
-          position: tempBaharCards2[tempBaharCards2.length - 1].position + 3,
-        })
+        for(let j in CardImages){
+          if(tempBaharCards[i] == CardImages[j].name){
+            tempBaharCards2.push({
+              name: tempBaharCards[i],
+              image: CardImages[j].card,
+              position: tempBaharCards2[tempBaharCards2.length - 1].position + 3,
+            })
+          }
+        }
+
+      
       }
     }
 
-  //  console.log('tempAndarCards: ', tempAndarCards2)
-  //  console.log('tempBaharCards2: ', tempBaharCards2)
+    console.log('tempAndarCards: ', tempAndarCards2)
+    console.log('tempBaharCards2: ', tempBaharCards2)
 
   //  console.log('res.data.result: ', resData)
     if (andarShot == 0 && baharShot == 0) {
@@ -237,6 +280,13 @@ const AndarBaharDashboard = () => {
     } else {
       setShowDoughnutChart(true)
     }
+
+    for(let i in CardImages){
+      if(CardImages[i].name == resData[0].joker_cards){
+        setJokerCardImage(CardImages[i].card)
+      }
+    }
+
     setIndex(0)
     setAndarCards(tempAndarCards2)
     setBaharCards(tempBaharCards2)
@@ -277,27 +327,54 @@ const AndarBaharDashboard = () => {
 
       for (let i in tempAndarCards) {
         if (i == 0) {
-          tempAndarCards2.push({ name: tempAndarCards[i], image: cardImage, position: 0 })
+          for(let j in CardImages){
+            if(tempAndarCards[i] == CardImages[j].name){
+              tempAndarCards2.push({ name: tempAndarCards[i], image: CardImages[j].card, position: 0 })
+            }
+          }
+         
         } else {
-          tempAndarCards2.push({
-            name: tempAndarCards[i],
-            image: cardImage,
-            position: tempAndarCards2[tempAndarCards2.length - 1].position + 3,
-          })
+          for(let j in CardImages){
+            if(tempAndarCards[i] == CardImages[j].name){
+              tempAndarCards2.push({
+                name: tempAndarCards[i],
+                image: CardImages[j].card,
+                position: tempAndarCards2[tempAndarCards2.length - 1].position + 3,
+              })
+            }
+          }
+      
         }
       }
 
       for (let i in tempBaharCards) {
         if (i == 0) {
-          tempBaharCards2.push({ name: tempBaharCards[i], image: cardImage, position: 0 })
+          for(let j in CardImages){
+            if(tempBaharCards[i] == CardImages[j].name){
+              tempBaharCards2.push({ name: tempBaharCards[i], image: CardImages[j].card, position: 0 })
+            }
+          }
+         
         } else {
-          tempBaharCards2.push({
-            name: tempBaharCards[i],
-            image: cardImage,
-            position: tempBaharCards2[tempBaharCards2.length - 1].position + 3,
-          })
+          for(let j in CardImages){
+            if(tempBaharCards[i] == CardImages[j].name){
+              tempBaharCards2.push({
+                name: tempBaharCards[i],
+                image: CardImages[j].card,
+                position: tempBaharCards2[tempBaharCards2.length - 1].position + 3,
+              })
+            }
+          }
+        
         }
       }
+
+      for(let i in CardImages){
+        if(CardImages[i].name == data[tempIndex].joker_cards){
+          setJokerCardImage(CardImages[i].card)
+        }
+      }
+
       setWinner(data[tempIndex].winner)
       setJokerCard(data[tempIndex].joker_cards)
       setSideWin(data[tempIndex].side_win)
@@ -310,25 +387,48 @@ const AndarBaharDashboard = () => {
 
       for (let i in tempAndarCards) {
         if (i == 0) {
-          tempAndarCards2.push({ name: tempAndarCards[i], image: cardImage, position: 0 })
+          for(let j in CardImages){
+            if(tempAndarCards[i] == CardImages[j].name){
+              tempAndarCards2.push({ name: tempAndarCards[i], image: CardImages[j].card, position: 0 })
+            }
+          }
         } else {
-          tempAndarCards2.push({
-            name: tempAndarCards[i],
-            image: cardImage,
-            position: tempAndarCards2[tempAndarCards2.length - 1].position + 3,
-          })
+          for(let j in CardImages){
+            if(tempAndarCards[i] == CardImages[j].name){
+              tempAndarCards2.push({
+                name: tempAndarCards[i],
+                image: CardImages[j].card,
+                position: tempAndarCards2[tempAndarCards2.length - 1].position + 3,
+              })
+            }
+          }
         }
       }
 
       for (let i in tempBaharCards) {
         if (i == 0) {
-          tempBaharCards2.push({ name: tempBaharCards[i], image: cardImage, position: 0 })
+        
+          for(let j in CardImages){
+            if(tempBaharCards[i] == CardImages[j].name){
+              tempBaharCards2.push({ name: tempBaharCards[i], image: CardImages[j].card, position: 0 })
+            }
+          }
         } else {
-          tempBaharCards2.push({
-            name: tempBaharCards[i],
-            image: cardImage,
-            position: tempBaharCards2[tempBaharCards2.length - 1].position + 3,
-          })
+          for(let j in CardImages){
+            if(tempBaharCards[i] == CardImages[j].name){
+              tempBaharCards2.push({
+                name: tempBaharCards[i],
+                image: CardImages[j].card,
+                position: tempBaharCards2[tempBaharCards2.length - 1].position + 3,
+              })
+            }
+          }
+        }
+      }
+
+      for(let i in CardImages){
+        if(CardImages[i].name == data[tempIndex].joker_cards){
+          setJokerCardImage(CardImages[i].card)
         }
       }
       setWinner(data[tempIndex].winner)
@@ -416,7 +516,156 @@ const AndarBaharDashboard = () => {
             {table_limit_name ? table_limit_name : 'Title'}
           </h3>
         </div>
-        <div className={``}>
+        <div className={`px-2 py-1 `}>
+          <div className={`px-1`}>
+            <div className={`row    d-flex justify-content-center`}>
+              <div
+                className={`col-12 col-md-10 col-xxl-12 border-0 shadow-s poppins-500 box ${s.opacity} ${themeClass} bg-gradient py-2 rounded`}
+              >
+                <div className={`row gx-1 gy-2`}>
+                  <div className={`col-12 col-md-6 col-xxl-3 d-flex `}>
+                    <div
+                      className={` d-flex gap-2 w-100 justify-content-between   justify-content-sm-evenly align-items-center`}
+                    >
+                      <div className={`d-flex gap-2`}>
+                        <lable> 10</lable>
+                        <input
+                          className="pointer text-dark "
+                          type="radio"
+                          value={'10'}
+                          name="searchBy"
+                          id="searchByDate"
+                          
+                          onClick={()=>getCustomeGameDataByRadio(10)}
+                        />
+                      </div>
+                      <div className={`d-flex gap-2`}>
+                        <lable> 20</lable>
+                        <input
+                          className="pointer text-dark "
+                          type="radio"
+                          value={'20'}
+                          name="searchBy"
+                          id="searchByDate"
+                          onClick={()=>getCustomeGameDataByRadio(20)}
+                        />
+                      </div>
+                      <div className={`d-flex gap-2`}>
+                        <lable> 50</lable>
+                        <input
+                          className="pointer text-dark "
+                          type="radio"
+                          value={'50'}
+                          name="searchBy"
+                          id="searchByDate"
+                          onClick={()=>getCustomeGameDataByRadio(50)}
+                        />
+                      </div>
+                      <div
+                        className={`border-end border-secondary h-100 border-opacity-25 d-none d-md-block`}
+                      ></div>
+                    </div>
+                  </div>
+                  <div className={`col-12 col-md-6 col-xxl-3 `}>
+                    <div
+                      className={` w-100  d-flex justify-content-evenly w-100 d-flex gap-1  border-end-0  border-end-xxl-1 border-secondary border-opacity-25 `}
+                    >
+                      <div className="gap-2 fontText w-100 px-0 px-xxl-3  poppins-500 d-flex justify-content-evenly gap-3 align-items-center ">
+                      {/*   <div className={`w-100 `}>
+                          <input
+                            className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}  `}
+                            type="number"
+                            placeholder="From Shoe"
+                        
+                          />
+                        </div> */}
+                        <div className={`w-100  `}>
+                          <input
+                            className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}  `}
+                            type="number"
+                            placeholder="To Shoe"
+                            onChange={(e) => setCustomLimit(e.target.value)}
+                          />
+                        </div>
+                        <div className={` d-flex justify-content-end `}>
+                          <button
+                            className="btn btn-primary bg-gradient btn-sm  fontText"
+                            type="button"
+                            onClick={() => getCustomeGameData()}
+                            
+                          >
+                            Search
+                          </button>
+                        </div>
+                        <div
+                          className={`border-end border-secondary h-100 border-opacity-25 d-none d-xxl-block`}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={`col-12 col-md-12 col-xl-12 col-xxl-6 px-0 px-xxl-3`}>
+                    <div className={``}>
+                      <div className={`row gx-2 gy-1 d-flex  justify-content-evenly`}>
+                        <div className={`col-6 col-sm-5 col-lg-4`}>
+                          <div className={``}>
+                            <div className={`input-group  input-group-sm`}>
+                              <span
+                                className={`input-group-text  font12 bg-${theme} ${themeBorder}`}
+                                id="inputGroup-sizing-sm"
+                              >
+                                From
+                              </span>
+                              <input
+                                type="date"
+                                className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
+                                aria-label="Sizing example input"
+                                aria-describedby="inputGroup-sizing-sm"
+                                onChange={(e) => setFromDate(e.target.value)}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className={`col-6 col-sm-5 col-lg-4`}>
+                          <div className="">
+                            <div className="input-group input-group-sm ">
+                              <span
+                                className={`input-group-text font12 bg-${theme} ${themeBorder}`}
+                                id="inputGroup-sizing-sm"
+                              >
+                                To
+                              </span>
+                              <input
+                                type="date"
+                                className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
+                                aria-label="Sizing example input"
+                                aria-describedby="inputGroup-sizing-sm"
+                                onChange={(e) => setToDate(e.target.value)}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          className={`col-12  col-lg-4 d-flex justify-content-lg-end justify-content-center align-items-center`}
+                        >
+                          <div className="">
+                            <button
+                              className={`btn btn-primary bg-gradient btn-sm fontText`}
+                              type="button"
+                              onClick={() => getGameDataByDate()}
+                            >
+                              Search By Date
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className={`mt-3`}>
           <div className={`row g-3   align-items-stretch`}>
             <div className={`col-12 col-md-5 box ${s.opacity}`}>
               <div
@@ -499,7 +748,7 @@ const AndarBaharDashboard = () => {
                   >
                     <div className={``} style={{ maxWidth: '130px' }}>
                       <img
-                        src={cardImage}
+                        src={jokerCardImage}
                         alt=""
                         className={`${theme == 'dark' ? 'card_drop_shadow_dark' : 'card_drop_shadow_light'}`}
                         style={{ width: '100%', transform: 'rotateY(15deg)' }}

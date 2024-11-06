@@ -14,6 +14,8 @@ import { useSelector } from 'react-redux'
 import { ScrollTrigger } from 'gsap/all'
 import gsap from 'gsap'
 
+import { GetCurrent } from '../../../getCurrent'
+
 gsap.registerPlugin(ScrollTrigger)
 
 const Tables = (props) => {
@@ -28,6 +30,7 @@ const Tables = (props) => {
 
   const getTables = async () => {
     try {
+      await GetCurrent('limits')
       const { data } = await axiosClient.get(`/table/limits/get/tables/${props.id}`)
       setTables(data.result)
       setOriginalTables(data.result)
@@ -169,39 +172,18 @@ const Tables = (props) => {
                     src={props.table == 'roulette' ? roulletImage : baccarat[i % 3]}
                     className="card-img-top card-hover2 bg-dark bg-gradient drop_shadow"
                     alt="..."
-                    onClick={() =>
-                      handleViewDashboard(
-                        table.game_type_name,
-                        table.table_limit_name,
-                        table.game_type_id,
-                        table.table_limit_id,
-                      )
-                    }
+                    onClick={() => handleNavigate(table.table_limit_id)}
                   />
                 </div>
                 <div className="card-body bg-light ">
                   <h5
-                    onClick={() =>
-                      handleViewDashboard(
-                        table.game_type_name,
-                        table.table_limit_name,
-                        table.game_type_id,
-                        table.table_limit_id,
-                      )
-                    }
+                    onClick={() => handleNavigate(table.table_limit_id)}
                     className="card-title fontSubHeading poppins-500"
                   >
                     {table.table_limit_name}
                   </h5>
                   <p
-                    onClick={() =>
-                      handleViewDashboard(
-                        table.game_type_name,
-                        table.table_limit_name,
-                        table.game_type_id,
-                        table.table_limit_id,
-                      )
-                    }
+                    onClick={() => handleNavigate(table.table_limit_id)}
                     className="card-text"
                   >
                     Game: {table.game_type_name} <br /> Language: {table.language}

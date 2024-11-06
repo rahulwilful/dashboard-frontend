@@ -7,6 +7,8 @@ import axiosClient from '../../../axiosClient'
 import roulleteWheel from 'src/assets/images/dashboard/roullete-wheel.png'
 import { useNavigate } from 'react-router-dom'
 
+import { GetCurrent } from '../../../getCurrent'
+
 const UpdateThemes = (props) => {
   const navigate = useNavigate()
   const [themes, setThemes] = useState([])
@@ -45,30 +47,18 @@ const UpdateThemes = (props) => {
     console.log('form after setting', form)
   }, [themes, form])
 
-  useEffect(() => {
-    getCurrent().then(() => {
 
-      getThemes()
-    })
+
+  useEffect(() => {
+    getCurrent()
   }, [])
 
-  const  getCurrent = async ()=>{
-    console.log("called getCurrent")
-  
-    try{
-      const res = await axiosClient.get(`/user/get/current`)
-    //  console.log('res.data.result: ', res)
-      if(!res){
-        navigate('/login')
-      }
-    
-    }catch(err){
-      console.log("error: ",err)
-      navigate('/login')
-  
-    }
-    return
-    
+  const getCurrent = async () => {
+    console.log('called getCurrent')
+    await GetCurrent('settings')
+    getThemes()
+    console.log('user ', user)
+    return 
   }
   
   return (

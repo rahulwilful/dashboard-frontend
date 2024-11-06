@@ -20,6 +20,8 @@ import PieChartComponent from './BaccaratDashboardComponents/PieChartComponent.j
 import BarChartComponent from './BaccaratDashboardComponents/BarChartComponent.js'
 import PlayerBankerDashboardComponent from './BaccaratDashboardComponents/PlayerBankerDashboardComponent.js'
 
+import { GetCurrent } from '../../../getCurrent.js'
+
 const BaccaratDashboard = () => {
   const navigate = useNavigate()
   const [renderKey, setRenderKey] = useState(0)
@@ -89,28 +91,18 @@ const BaccaratDashboard = () => {
   }, [limit])
 
   useEffect( () => {
-    getCurrent().then(()=>{
-      getGameData(10)
-    })
+    getCurrent()
     // Ensure the current limit is passed
   }, [])
 
   const  getCurrent = async ()=>{
     console.log("called getCurrent")
   
-    try{
-      const res = await axiosClient.get(`/user/get/current`)
-    //  console.log('res.data.result: ', res)
-      if(!res){
-        navigate('/login')
-      }
-    
-    }catch(err){
-      console.log("error: ",err)
-      navigate('/login')
-  
-    }
+    await GetCurrent('analysis')
+    getGameData(10) 
     return
+   
+    
     
   }
 

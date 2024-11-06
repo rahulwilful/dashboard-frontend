@@ -14,6 +14,8 @@ import { useSelector } from 'react-redux'
 import { ScrollTrigger } from 'gsap/all'
 import gsap from 'gsap'
 
+import { GetCurrent } from '../../getCurrent'
+
 gsap.registerPlugin(ScrollTrigger)
 
 const TableAnalysis = () => {
@@ -62,6 +64,12 @@ const TableAnalysis = () => {
         `/dashboard/baccarat/${game_type_name}/${table_limit_name}/${game_type_id}/${table_limit_id}`,
       )
     }
+
+    if (game.toLowerCase().includes('andar bahar')) {
+      navigate(
+        `/dashboard/andarbahar/${game_type_name}/${table_limit_name}/${game_type_id}/${table_limit_id}`,
+      )
+    }
   }
 
   const handleNavigate = (id) => {
@@ -71,27 +79,13 @@ const TableAnalysis = () => {
   const  getCurrent = async ()=>{
     console.log("called getCurrent")
   
-    try{
-      const res = await axiosClient.get(`/user/get/current`)
-    //  console.log('res.data.result: ', res)
-      if(!res){
-        navigate('/login')
-      }
-    
-    }catch(err){
-      console.log("error: ",err)
-      navigate('/login')
-  
-    }
+    await GetCurrent('analysis')
+    getTables()
     return
-    
   }
 
   useEffect(() => {
-    getCurrent().then(() => {
-      console.log("game: ",game)
-      getTables()
-    })
+    getCurrent()
    
   }, [game, id])
 

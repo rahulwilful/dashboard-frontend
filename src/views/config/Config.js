@@ -9,6 +9,8 @@ import axiosClient from '../../axiosClient.js'
 
 import { useNavigate } from 'react-router-dom'
 
+import { GetCurrent } from '../../getCurrent.js'
+
 const Config = () => {
   const theme = useSelector((state) => state.theme)
   const navigate = useNavigate()
@@ -26,20 +28,7 @@ const Config = () => {
   }, [])
 
   const  getCurrent = async ()=>{
-    console.log("called getCurrent")
-  
-    try{
-      const res = await axiosClient.get(`/user/get/current`)
-    //  console.log('res.data.result: ', res)
-      if(!res){
-        navigate('/login')
-      }
-    
-    }catch(err){
-      console.log("error: ",err)
-      navigate('/login')
-  
-    }
+   GetCurrent('config')
     return
     
   }

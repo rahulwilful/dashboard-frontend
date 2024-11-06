@@ -9,6 +9,9 @@ import { GetCurrent } from '../../getCurrent'
 import axiosClient from '../../axiosClient'
 import showToast from '../../components/Notification/ShowToast';
 
+import gsap from 'gsap'
+import { useGSAP } from '@gsap/react'
+
 const AddUser = () => {
   const navigate = useNavigate()
   const theme = useSelector((state) => state.theme)
@@ -18,7 +21,7 @@ const AddUser = () => {
   const [user, setUser] = useState({})
   const [userForm, setUserForm] = useState({
     name: '',
-    email: '@gmail',
+    email: '@gmail.com',
     phone_no: '',
     roleType: '',
     password:"",
@@ -53,7 +56,7 @@ const AddUser = () => {
   }, [])
   const getCurrent = async () => {
     console.log('called getCurrent')
-    const user = await GetCurrent()
+    const user = await GetCurrent('users')
     console.log('user ', user)
   }
 
@@ -121,9 +124,26 @@ const AddUser = () => {
     return true;
   }
 
+  useGSAP(() => {
+    gsap.fromTo(
+      '.fade-in',
+      {
+        delay: 0.5,
+        opacity: 0,
+        y: 50,
+      },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: 'power1.out',
+      },
+    )
+  }, [])
+
   return (
     <div
-    className={`${theme === 'dark' ? 'text-light' : 'text-dark'} pb-4 d-flex justify-content-center`}
+    className={`${theme === 'dark' ? 'text-light' : 'text-dark'} pb-4 d-flex justify-content-center fade-in`}
   >
     <div className={`w-100`}>
       <div className={`container-xl px-4 mt-4 `}>
@@ -150,8 +170,9 @@ const AddUser = () => {
                         Name
                       </label>
                       <input
-                        className={`form-control ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
+                        className={`form-control ${s.placeholder_grey} bg-${theme} ${themeBorder} ${s.placeholder_grey}`}
                         id="name"
+                        placeholder='Enter Name'
                         type="text"
                         value={userForm.name}
                         onChange={(e) => setUserForm({ ...userForm, name: e.target.value })}
@@ -165,8 +186,9 @@ const AddUser = () => {
                       </label>
                       <input
                        onChange={(e) => setUserForm({...userForm,email:e.target.value})}
-                        className={`form-control ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
+                        className={`form-control  ${s.placeholder_grey}  ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
                         id="Role"
+                        placeholder='Enter Email'
                         type="text"
                         name=""
                         value={userForm.email}
@@ -179,8 +201,9 @@ const AddUser = () => {
                         Password
                       </label>
                       <input
-                        className={`form-control ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
+                        className={`form-control  ${s.placeholder_grey}  ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
                         id="name"
+                        placeholder='Enter Password'
                         type="password"
                         value={userForm.password}
                         onChange={(e) => setUserForm({ ...userForm, password: e.target.value })}
@@ -193,8 +216,9 @@ const AddUser = () => {
                         Mobile Number
                       </label>
                       <input
-                        className={`form-control ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
+                        className={`form-control  ${s.placeholder_grey}  ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
                         id="mobile_no"
+                        placeholder='Enter Phone Number'
                         type="number"
                         value={userForm.phone_no}
                         onChange={(e) => setUserForm({ ...userForm, phone_no: e.target.value })}

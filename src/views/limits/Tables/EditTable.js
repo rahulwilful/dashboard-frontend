@@ -8,6 +8,8 @@ import axiosClient from '../../../axiosClient.js'
 import { v4 as uuidv4 } from 'uuid'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import { GetCurrent } from '../../../getCurrent.js'
+
 const EditTable = () => {
   const navigate = useNavigate()
   const params = useParams()
@@ -18,6 +20,7 @@ const EditTable = () => {
   const [tables, setTables] = useState([])
 
   const getConfigs = async () => {
+    await GetCurrent('limits')
     try {
       const response = await axiosClient.get('config/get/configs')
       console.log('response', response)

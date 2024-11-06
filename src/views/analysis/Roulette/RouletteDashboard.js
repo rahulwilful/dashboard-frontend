@@ -130,16 +130,15 @@ const RouletteDashboard = () => {
   }, [limit])
 
   useEffect( () => {
-    getCurrent().then(() => {
-      
-      getGameData(100) 
-    })
+    getCurrent()
   }, [])
 
  const  getCurrent = async ()=>{
   console.log("called getCurrent")
 
-  return await GetCurrent()
+  await GetCurrent('analysis')
+  getGameData(100) 
+  return
  
   
   

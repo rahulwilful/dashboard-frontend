@@ -7,6 +7,8 @@ import gsap from 'gsap'
 import showToast from '../../../components/Notification/ShowToast.js'
 import axiosClient from '../../../axiosClient.js'
 
+import { GetCurrent } from '../../../getCurrent.js'
+
 const AddTable = (props) => {
   const theme = useSelector((state) => state.theme)
   const [languages, setLanguages] = useState([])
@@ -33,6 +35,7 @@ const AddTable = (props) => {
   // Fetch configurations for dropdowns
   const getConfigs = async () => {
     try {
+      await GetCurrent('limits')
       const response = await axiosClient.get('config/get/configs')
       const { languages, themes, backgrounds } = response.data
       setLanguages(languages)
