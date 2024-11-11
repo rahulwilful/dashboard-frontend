@@ -19,9 +19,9 @@ const BarChartComponent = (props) => {
   const [data, setData] = useState([])
 
   const COLORS = [
-    'rgb(36, 141, 92)',
+    'rgb(22, 115, 253)',
     'rgb(255, 43, 50)',
-    'rgb(65, 173, 123)',
+    'rgb(50, 134, 252)',
     'rgb(252, 68, 83)',
     '#FF9800',
     '#8BC34A',

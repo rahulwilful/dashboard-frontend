@@ -16,6 +16,8 @@ import gsap from 'gsap'
 
 import { GetCurrent } from '../../getCurrent'
 
+import NoDataFull from '../NoData/NoDataFull'
+
 gsap.registerPlugin(ScrollTrigger)
 
 const TableAnalysis = () => {
@@ -27,6 +29,7 @@ const TableAnalysis = () => {
   const [tables, setTables] = useState([])
   const [originaltables, setOriginalTables] = useState([])
   const [search, setSearch] = useState('')
+  const [display, setDisplay] = useState('loading')
 
   const baccarat = [baccaratBlue, baccaratGreen, baccaratPink, baccaratRed]
 
@@ -36,8 +39,15 @@ const TableAnalysis = () => {
       console.log('data', data)
       setTables(data.result)
       setOriginalTables(data.result)
+      if(data.result.length == 0){
+        setDisplay('nodata')
+      }else{
+        setDisplay('data')
+      }
+     
     } catch (error) {
       console.error(error)
+      setDisplay('nodata')
     }
   }
   const handleSearch = (e) => {
@@ -142,8 +152,9 @@ const TableAnalysis = () => {
   }
 
   return (
+    <>
     <div
-      className={` ${theme === 'dark' ? 'text-light' : 'text-dark'} table-main h-100 py-2 container capitalize fade-in`}
+      className={` ${theme === 'dark' ? 'text-light' : 'text-dark'} table-main h-100 py-2 container capitalize `}
       key={game}
     >
       <h2 className="text-center my-2">{game}</h2>
@@ -155,14 +166,14 @@ const TableAnalysis = () => {
             className={`${s.form__field} ${theme === 'dark' ? 'd-block' : 'd-none'}`}
             placeholder="Name"
             required=""
-          />
+            />
           <input
             onChange={handleSearch}
             type="input"
             className={`${s.form__field2} ${theme === 'dark' ? 'd-none' : 'd-block'} text-secondary`}
             placeholder="Name"
             required=""
-          />
+            />
           <label for="name" className={`${s.form__label}`}>
             Search
           </label>
@@ -170,12 +181,12 @@ const TableAnalysis = () => {
 
        
       </div>
-      <div className="row gap-0 w-100 px-3" ref={scrollRef}>
+      <div className={`row gap-0 w-100 px-3`} ref={scrollRef}>
         {tables.map((table, i) => (
           <div
-            key={i}
-            className="col-12 col-sm-6 col-md-4 col-xxl-3 mb-3 mb-sm-0 mt-3"
-            style={{ opacity: 0, transform: 'translateY(50px)' }}
+          key={i}
+          className="col-12 col-sm-6 col-md-4 col-xxl-3 mb-3 mb-sm-0 mt-3"
+          style={{ opacity: 0, transform: 'translateY(50px)' }}
           >
             <div
               className={`card-hover poppins-400 ${s.box} ${theme === 'light' ? s.black : s.blue} pointer shadow`}
@@ -187,7 +198,7 @@ const TableAnalysis = () => {
                   table.table_limit_id,
                 )
               }
-            >
+              >
               
               <div className="card border-0 overflow-hidden bg-transparent" style={{ width: '100%' }}>
                 <div className="overflow-hidden">
@@ -195,14 +206,14 @@ const TableAnalysis = () => {
                     src={game == 'roulette' ? roulletImage : baccarat[i % 3]}
                     className="card-img-top card-hover2 bg-dark bg-gradient drop_shadow"
                     alt="..."
-                   
-                  />
+                    
+                    />
                 </div>
                 <div className="card-body bg-light  py-4">
                   <h5
                    
-                    className="card-title fontSubHeading poppins-500"
-                  >
+                   className="card-title fontSubHeading poppins-500"
+                   >
                     {table.table_limit_name}
                   </h5>
                   <p
@@ -215,7 +226,7 @@ const TableAnalysis = () => {
                       )
                     }
                     className="card-text"
-                  >
+                    >
                     Game: {table.game_type_name} <br /> Language: {table.language}
                   </p>
                  
@@ -226,6 +237,10 @@ const TableAnalysis = () => {
         ))}
       </div>
     </div>
+    <div className={`${display == 'nodata' ? 'd-block' : 'd-none'} fade-in`} key={display}>
+        <NoDataFull />
+    </div>
+        </>
   )
 }
 

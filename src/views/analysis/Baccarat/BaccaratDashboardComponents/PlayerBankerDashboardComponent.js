@@ -13,6 +13,8 @@ import { ScrollTrigger } from 'gsap/all'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 
+import NoData from '../../../NoData/NoData.js'
+
 const PlayerBankerDashboardComponent = (props) => {
   const theme = useSelector((state) => state.theme)
   const [themeClass, setThemeClass] = useState('bg-light text-dark border')
@@ -458,9 +460,11 @@ const PlayerBankerDashboardComponent = (props) => {
         {currentShoeData[0] ? (
           <div>
             <div className={`row g-3 `}>
-              <div className={`col-12 h-100 col-md-5 boxPlayerBanker ${s.opacity}  `}>
+              <div
+                className={`col-12 ${playerCardImage1 ? 'h-100' : 'h-full'} col-md-5 boxPlayerBanker  ${s.opacity}  `}
+              >
                 <div
-                  className={`w-100 h-75 player shadow-s rounded ${themeBorder} bg-gradient px-1 `}
+                  className={`w-100  ${playerCardImage1 ? 'h-75' : 'h-100'}   player shadow-s rounded ${themeBorder} bg-gradient px-1 `}
                 >
                   <div
                     className={`d-flex justify-content-center align-items-center pt-2 py-1 fontTextHeading border-bottom border-secondary  border-opacity-25 `}
@@ -472,7 +476,7 @@ const PlayerBankerDashboardComponent = (props) => {
                     </span>
                   </div>
                   <div
-                    className={`row gx-1  w-100 h-100 d-flex justify-content-center  p-2 align-items-center font12 `}
+                    className={`row gx-1  w-100 h-100 d-flex justify-content-center  p-2 align-items-center font12 ${playerCardImage1 ? '' : 'd-none'} `}
                   >
                     <div className={`col-4`}>
                       <div
@@ -508,8 +512,14 @@ const PlayerBankerDashboardComponent = (props) => {
                       </div>
                     </div>
                   </div>
+                  <div
+                    className={`row gx-1  w-100 h-100 d-flex justify-content-center   p-2 align-items-center font12 ${!playerCardImage1 ? '' : 'd-none'} `}
+                  >
+                    <NoData />
+                  </div>
                 </div>
               </div>
+
               <div className={`col-12  col-md-2 boxPlayerBanker ${s.opacity} `}>
                 <div
                   className={` h-100  shadow-s rounded ${themeBorder} bg-gradient info p-3 d-flex flex-column justify-content-between align-items-center`}
@@ -673,9 +683,9 @@ const PlayerBankerDashboardComponent = (props) => {
                   </div>
                 </div>
               </div>
-              <div className={`col-12 h-100  col-md-5 boxPlayerBanker ${s.opacity} `}>
+              <div className={`col-12  ${bankerCardImage1 ? 'h-100' : 'h-full'}  col-md-5 boxPlayerBanker ${s.opacity} `}>
                 <div
-                  className={`w-100 h-75  shadow-s rounded ${themeBorder} bg-gradient player   px-1`}
+                  className={`w-100  ${bankerCardImage1 ? 'h-75' : 'h-100'}  shadow-s rounded ${themeBorder} bg-gradient player   px-1`}
                 >
                   <div
                     className={`d-flex justify-content-center align-items-center pt-2 py-1 fontTextHeading border-bottom border-secondary  border-opacity-25 `}
@@ -722,6 +732,11 @@ const PlayerBankerDashboardComponent = (props) => {
                         </div>
                       </div>
                     </div>
+                  </div>
+                  <div
+                    className={`row gx-1  w-100 h-100 d-flex justify-content-center   p-2 align-items-center font12 ${!bankerCardImage1 ? '' : 'd-none'} `}
+                  >
+                    <NoData />
                   </div>
                 </div>
               </div>

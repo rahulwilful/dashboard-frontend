@@ -22,10 +22,14 @@ import PlayerBankerDashboardComponent from './BaccaratDashboardComponents/Player
 
 import { GetCurrent } from '../../../getCurrent.js'
 
+import NoData from '../../NoData/NoData'
+import NoDataFull from '../../NoData/NoDataFull'
+
 const BaccaratDashboard = () => {
   const navigate = useNavigate()
   const [renderKey, setRenderKey] = useState(0)
   const { game, table_limit_name, game_type_id, table_limit_id } = useParams()
+  const [display, setDisplay] = useState('loading')
 
   const [shoePlayerBankerComponent, setShoePlayerBankerComponent] = useState(false)
   const [data, setData] = useState([{ shoe: 0, data: [] }])
@@ -90,69 +94,102 @@ const BaccaratDashboard = () => {
     return () => clearInterval(intervalId) // Cleanup on unmount
   }, [limit])
 
-  useEffect( () => {
+  useEffect(() => {
     getCurrent()
     // Ensure the current limit is passed
   }, [])
 
-  const  getCurrent = async ()=>{
-    console.log("called getCurrent")
-  
+  const getCurrent = async () => {
+    console.log('called getCurrent')
+
     await GetCurrent('analysis')
-    getGameData(10) 
+    getGameData(10)
     return
-   
-    
-    
   }
 
   const getGameDataByDate = async () => {
-  //  console.log('fromDate ', fromDate, ' toDate ', toDate)
+    //  console.log('fromDate ', fromDate, ' toDate ', toDate)
     try {
       const res = await axiosClient.post(`/game/get/${game}/${game_type_id}/${table_limit_id}`, {
         from_date: fromDate,
         to_date: toDate,
       })
-    //  console.log('res.data.result: ', res.data.result)
+      //  console.log('res.data.result: ', res.data.result)
       processData(res.data.result)
+      let data = res.data.result
+      console.log('response: ', data)
+      if (data.length > 0) {
+        setDisplay('data')
+      }
+
+      if (data.length == 0) {
+        setDisplay('nodata')
+      }
       setRenderKey(renderKey + 1)
-      localStorage.setItem('baccaratCallOnTimeInterval', false)
     } catch (err) {
-    //  console.log(err)
+      console.log('err: ', err)
+      setDisplay('nodata')
     }
+
+    localStorage.setItem('baccaratCallOnTimeInterval', false)
   }
 
   const getGameDataByFromShoeToToShoe = async () => {
-  //  console.log('fromShoe: ', fromShoe, 'toShoe: ', toShoe)
+    //  console.log('fromShoe: ', fromShoe, 'toShoe: ', toShoe)
 
     try {
       const res = await axiosClient.get(
         `/baccarat/get/from/to/${game_type_id}/${table_limit_id}/${fromShoe}/${toShoe}`,
       )
 
-    //  console.log('res: ', res)
+      //  console.log('res: ', res)
       setShoePlayerBankerComponent(false)
       processData(res.data.result)
-      localStorage.setItem('baccaratCallOnTimeInterval', false)
+      let data = res.data.result
+      console.log('response: ', data)
+      if (data.length > 0) {
+        setDisplay('data')
+      }
+
+      if (data.length == 0) {
+        setDisplay('nodata')
+      }
+
       setRenderKey(renderKey + 1)
     } catch (err) {
-    //  console.log(err)
+      //  console.log(err)
     }
+    localStorage.setItem('baccaratCallOnTimeInterval', false)
   }
 
   const getGameData = async (limitParam) => {
-  //  console.log('getGameData: ', limitParam)
+    //  console.log('getGameData: ', limitParam)
     const limitToUse = limitParam || limit
-    const res = await axiosClient.get(`/baccarat/get/${game_type_id}/${table_limit_id}/${limit}`)
-    setShoePlayerBankerComponent(false)
-    processData(res.data.result)
-    setRenderKey(renderKey + 1)
+    try {
+      const res = await axiosClient.get(`/baccarat/get/${game_type_id}/${table_limit_id}/${limit}`)
+      setShoePlayerBankerComponent(false)
+      processData(res.data.result)
+      let data = res.data.result
+      console.log('response: ', data)
+      if (data.length > 0) {
+        setDisplay('data')
+      }
+
+      if (data.length == 0) {
+        setDisplay('nodata')
+      }
+      setRenderKey(renderKey + 1)
+    } catch (err) {
+      console.log('err: ', err)
+      setDisplay('nodata')
+    }
+
     localStorage.setItem('baccaratCallOnTimeInterval', true)
   }
 
   const processData = async (resData) => {
     setRawData(resData)
-  //  console.log('res.data.result: ', resData)
+    //  console.log('res.data.result: ', resData)
 
     const resShoes = await axiosClient.get(`/baccarat/get/shoes/${game_type_id}/${table_limit_id}`)
 
@@ -306,7 +343,7 @@ const BaccaratDashboard = () => {
     //console.log('bankerVsPlayer : ', bankerVsPlayer)
 
     //console.log('doughnutData : ', doughnutData)
-  //  console.log('sideWin : ', sideWin)
+    //  console.log('sideWin : ', sideWin)
     sideWin[0].value = playerStreak
     sideWin[1].value = bankerStreak
 
@@ -321,12 +358,12 @@ const BaccaratDashboard = () => {
   }
 
   const getDataByShoe = async (data) => {
-  //  console.log('data: ', data)
+    //  console.log('data: ', data)
     let tempRawData = rawData
     for (let i in data) {
       tempRawData.push(data[i])
     }
-  //  console.log('tempRawData: ', tempRawData)
+    //  console.log('tempRawData: ', tempRawData)
     processData(tempRawData)
   }
 
@@ -543,58 +580,64 @@ const BaccaratDashboard = () => {
             </div>
           </div>
         </div>
-        <div className={`position-relative`}>
-          <div className={`w-100 mt-2  `} key={renderKey}>
-            <PlayerBankerDashboardComponent
-              shoes={shoes}
-              shoeData={data}
-              dataSize={dataSize}
-              getDataByShoe={getDataByShoe}
-            />
-          </div>
-          <div className={`w-100   mt-3`}>
-            <div className={`row  g-3  `}>
-              <div className={`col-12 col-md-6 box ${s.opacity} `}>
-                <div className={` shadow-s rounded py-2 ${themeBorder} bg-gradient`}>
-                  <div className={`px-1`}>
-                    <div className={`border-bottom border-secondary border-opacity-25 px-2`}>
-                      Total Shoes {dataSize}
-                    </div>
-                  </div>
-                  <div className={``}>
-                    <PieChartComponent bankerVsPlayer={bankerVsPlayer} />
-                  </div>
-                </div>
-              </div>
-              <div className={`col-12 col-md-6 box ${s.opacity}`}>
-                <div className={` shadow-s rounded py-2 ${themeBorder} bg-gradient`}>
-                  <div className={`px-1`}>
-                    <div className={`border-bottom border-secondary border-opacity-25 px-2`}>
-                      Total Shoes {dataSize}
-                    </div>
-                  </div>
-                  <div className={``}>
-                    <DoughnutChartComponent doughnutData={doughnutData} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <div className={` box mt-3 box  ${s.opacity}`}>
-            <div
-              className={`py-3 row shadow-s rounded  d-flex justify-content-center ${themeBorder} bg-gradient`}
-            >
-              <div className={``}>
-                <div className={`border-bottom border-secondary border-opacity-25 px-2`}>
-                  Total Shoes {dataSize}
+        <div className={` ${display == 'data' ? '' : 'd-none'}`}>
+          <div className={`position-relative`}>
+            <div className={`w-100 mt-2  `} key={renderKey}>
+              <PlayerBankerDashboardComponent
+                shoes={shoes}
+                shoeData={data}
+                dataSize={dataSize}
+                getDataByShoe={getDataByShoe}
+              />
+            </div>
+            <div className={`w-100   mt-3`}>
+              <div className={`row  g-3  `}>
+                <div className={`col-12 col-md-6 box ${s.opacity} `}>
+                  <div className={` shadow-s rounded py-2 ${themeBorder} bg-gradient`}>
+                    <div className={`px-1`}>
+                      <div className={`border-bottom border-secondary border-opacity-25 px-2`}>
+                        Total Shoes {dataSize}
+                      </div>
+                    </div>
+                    <div className={``}>
+                      <PieChartComponent bankerVsPlayer={bankerVsPlayer} />
+                    </div>
+                  </div>
+                </div>
+                <div className={`col-12 col-md-6 box ${s.opacity}`}>
+                  <div className={` shadow-s rounded py-2 ${themeBorder} bg-gradient`}>
+                    <div className={`px-1`}>
+                      <div className={`border-bottom border-secondary border-opacity-25 px-2`}>
+                        Total Shoes {dataSize}
+                      </div>
+                    </div>
+                    <div className={``}>
+                      <DoughnutChartComponent doughnutData={doughnutData} />
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className={`col-11 col-sm-10 h-100 mt-2`}>
-                <BarChartComponent sideWin={sideWin} />
+            </div>
+
+            <div className={` box mt-3 box  ${s.opacity}`}>
+              <div
+                className={`py-3 row shadow-s rounded  d-flex justify-content-center ${themeBorder} bg-gradient`}
+              >
+                <div className={``}>
+                  <div className={`border-bottom border-secondary border-opacity-25 px-2`}>
+                    Total Shoes {dataSize}
+                  </div>
+                </div>
+                <div className={`col-11 col-sm-10 h-100 mt-2`}>
+                  <BarChartComponent sideWin={sideWin} />
+                </div>
               </div>
             </div>
           </div>
+        </div>
+        <div className={`${display == 'nodata' ? '' : 'd-none'}`}>
+          <NoDataFull />
         </div>
       </div>
     </div>

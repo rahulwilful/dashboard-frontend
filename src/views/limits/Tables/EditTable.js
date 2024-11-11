@@ -18,6 +18,7 @@ const EditTable = () => {
   const [themes, setThemes] = useState([])
   const [backgrounds, setBackgrounds] = useState([])
   const [tables, setTables] = useState([])
+const [currencys, setCurrencys] = useState([])
 
   const getConfigs = async () => {
     await GetCurrent('limits')
@@ -25,15 +26,17 @@ const EditTable = () => {
       const response = await axiosClient.get('config/get/configs')
       console.log('response', response)
 
-      const { languages, themes, backgrounds, games } = response.data
+      const { languages, themes, backgrounds, games,currencys} = response.data
       setLanguages(languages)
       setBackgrounds(backgrounds)
       setThemes(themes)
       setTables(games)
+      setCurrencys(currencys)
 
       let language = ''
       let background = ''
       let theme = ''
+      let currency = ''
      
 
       const { data } = await axiosClient.get(`/table/limits/get/${params.id}`)
@@ -41,21 +44,28 @@ const EditTable = () => {
 
       for(let i in languages){
         if(languages[i].language_id == data.result.language_id){
-          language = languages[i].language
+          language = languages[i].language_id
         }
       }
 
       for(let i in backgrounds){
         if(backgrounds[i].background_id == data.result.background_id){
-         background = backgrounds[i].background
+         background = backgrounds[i].background_id
         }
       }
 
       for(let i in themes){
         if(themes[i].theme_id == data.result.theme_id){
-         theme = themes[i].theme
+         theme = themes[i].theme_id
         }
       }
+
+      for(let i in currencys){
+        if(currencys[i].currency_id == data.result.currency_id){
+         currency = currencys[i].currency_id
+        }
+      }
+
       console.log("language: ",language)  
       console.log("background: ",background)  
       console.log("theme: ",theme)
@@ -71,9 +81,11 @@ const EditTable = () => {
         side_bet_min: data.result.side_bet_min,
         side_bet_max: data.result.side_bet_max,
         s_message: data.result.s_message,
+        commission: data.result.commission,
         theme: theme,
         background: background,
         language: language,
+        currency_id: currency
       })
     } catch (error) {
       console.error(error)
@@ -93,6 +105,8 @@ const EditTable = () => {
     theme: '',
     language: '',
     background: '',
+    currency_id: '',
+    commission:false,
   })
 
   useEffect(() => {
@@ -151,17 +165,22 @@ const EditTable = () => {
       return
     }
     if (!side_bet_max) {
-      showToast('Enter Side Bet Maximum', 'info')
+      showToast('Enter Side Bet Maximum', 'info') 
       return
     }
 
-    const dataToSend = {
+    let dataToSend = {
       ...formData,
     }
-    console.log('Data to send:', dataToSend)
-    return
+    dataToSend.language_id = dataToSend.language
+    dataToSend.theme_id = dataToSend.theme
+    dataToSend.background_id = dataToSend.background
+    //dataToSend.currency_id = dataToSend.currency
+    console.log('Data to send:', dataToSend," id: ",params.id , " game: ", params.game)
+    
+
     try {
-      const response = await axiosClient.put(`table/limits/update/${params.id}`, formData)
+      const response = await axiosClient.put(`table/limits/update/${params.id}`, dataToSend)
       console.log(response)
       showToast('Table Updated', 'success')
       setTimeout(() => {
@@ -221,7 +240,7 @@ const EditTable = () => {
                   >
                     <option value="">Select Theme</option>
                     {themes.map((theme) => (
-                      <option key={theme.theme_id} value={theme.theme}>
+                      <option key={theme.theme_id} value={theme.theme_id}>
                         {theme.theme}
                       </option>
                     ))}
@@ -238,7 +257,7 @@ const EditTable = () => {
                   >
                     <option value="">Select Background</option>
                     {backgrounds.map((bg) => (
-                      <option className="" key={bg.bg_id} value={bg.background}>
+                      <option className="" key={bg.bg_id} value={bg.background_id}>
                         <div className="d-flex align-items-evenly border border-danger">
                           <div
                             className=" border mx-2"
@@ -250,6 +269,8 @@ const EditTable = () => {
                     ))}
                   </select>
                 </div>
+
+                
                 <div className="mb-2">
                   <label className="animate form-label">Language</label>
                   <select
@@ -260,8 +281,25 @@ const EditTable = () => {
                   >
                     <option value="">Select Language</option>
                     {languages.map((lang) => (
-                      <option key={lang.lang_id} value={lang.language}>
+                      <option key={lang.lang_id} value={lang.language_id}>
                         {lang.language}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="mb-2">
+                  <label className="animate form-label">Currency</label>
+                  <select
+                    className="animate form-select form-select-sm"
+                    name="currency_id"
+                    value={formData.currency_id}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select currency</option>
+                    {currencys.map((curr) => (
+                      <option key={curr.currency_id} value={curr.currency_id}>
+                        {curr.currency}
                       </option>
                     ))}
                   </select>
@@ -315,6 +353,18 @@ const EditTable = () => {
                     onChange={handleChange}
                     min="0"
                   />
+                </div>
+                <div className="  mt-4 pt-3">
+                  <div className="form-check">
+                    <input
+                      className="form-check-input animate"
+                      type="checkbox"
+                      name="commission"
+                      checked={formData.commission}
+                      onChange={()=>setFormData({...formData,commission:!formData.commission})}
+                    />
+                    <label className="form-check-label animate">Commission</label>
+                  </div>
                 </div>
               </div>
               <div className="d-flex justify-content-center pt-3">

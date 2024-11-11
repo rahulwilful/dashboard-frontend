@@ -21,16 +21,16 @@ const Config = () => {
     theme: '',
     language: '',
     background: '',
+    currency:"",
   })
 
   useEffect(() => {
     getCurrent()
   }, [])
 
-  const  getCurrent = async ()=>{
-   GetCurrent('config')
+  const getCurrent = async () => {
+    GetCurrent('config')
     return
-    
   }
 
   useEffect(() => {
@@ -105,6 +105,22 @@ const Config = () => {
       showToast('Language added successfully!', 'success')
     } catch (error) {
       showToast('Error while adding Language', 'error')
+      console.error(error)
+    }
+  }
+
+  const handleAddCurrency = async () => {
+    if (formData.currency == '') {
+      showToast('Enter Currency', 'info')
+      return
+    }
+
+    try {
+      const response = await axiosClient.post('config/add/currency', formData)
+      console.log(response)
+      showToast('Currency added successfully!', 'success')
+    } catch (error) {
+      showToast('Error while adding Currency', 'error')
       console.error(error)
     }
   }
@@ -289,6 +305,44 @@ const Config = () => {
         </div>
       </div>
 
+      <div
+        className="modal fade"
+        id="addCurrencyModal"
+        tabindex="-1"
+        aria-labelledby="addCurrencyModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header border-0">
+              <h1 className="modal-title fs-5" id="addCurrencyModalLabel">
+                Add Currency {formData.currency}
+              </h1>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+
+            <div className="modal-footer border-0">
+              <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">
+                Close
+              </button>
+              <button
+                onClick={handleAddCurrency}
+                type="button"
+                data-bs-dismiss="modal"
+                class="btn btn-primary btn-sm"
+              >
+                Add Currency
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* ///////////////////////////////////////////////////////////////////////////////////// */}
       <div className={`py-3  ${theme === 'dark' ? 'text-light' : 'text-dark'} fade-in `}>
         <h1 className="text-center animate py-3">Configuration</h1>
@@ -299,108 +353,135 @@ const Config = () => {
                 theme === 'dark' ? 'border-primary' : 'border-dark'
               } rounded-4 p-4 shadow-lg`}
             >
-              <div className="col-12 d-flex justify-content-center align-items-center col-md-6  border-0  border-md-1 border-md-end">
-                <div className="h-100 d-flex flex-column justify-content-evenly">
-                  <div className="mb-2  ">
-                    <label className="animate form-label">Table Type</label>
-                    <div className="d-flex   align-items-center gap-2 flex-md-row">
-                      <input
-                        type="text"
-                        className={`form-control animate ${s.red_placeholder}`}
-                        placeholder="Enter"
-                        style={{ color: 'red' }}
-                        name="game_type_name"
-                        value={formData.game_type_name}
-                        onChange={handleChange}
-                      />
-                      <div className="my-1 px-1 ">
-                        <button
-                          data-bs-toggle="modal"
-                          data-bs-target="#addTableModal"
-                          type="button"
-                          className={`btn animate ${theme === 'dark' ? 'btn-primary' : 'btn-dark '} btn-sm  px-3 ${formData.game_type_name == '' ? 'disabled' : ''}`}
-                        >
-                          Add
-                        </button>
+              <div className="h-100 d-flex flex-column justify-content-evenly ">
+                <div className={`row  w-100`}>
+                  <div className="col-12 col-md-6  ">
+                    <div className="mb-2  ">
+                      <label className="animate form-label">Game Type</label>
+                      <div className="d-flex   align-items-center gap-2 flex-md-row">
+                        <input
+                          type="text"
+                          className={`form-control animate `}
+                          placeholder="Enter"
+                        
+                          name="game_type_name"
+                          value={formData.game_type_name}
+                          onChange={handleChange}
+                        />
+                        <div className="my-1 px-1 ">
+                          <button
+                            data-bs-toggle="modal"
+                            data-bs-target="#addTableModal"
+                            type="button"
+                            className={`btn animate ${theme === 'dark' ? 'btn-primary' : 'btn-dark '} btn-sm  px-3 ${formData.game_type_name == '' ? 'disabled' : 'opacity-100'}`}
+                          >
+                            Add
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
-
-                  <div className="mb-2  ">
-                    <label className="animate form-label">Theme</label>
-                    <div className="d-flex   align-items-center gap-2 flex-md-row">
-                      <input
-                        type="text"
-                        className="form-control animate "
-                        placeholder="Enter"
-                        name="theme"
-                        value={formData.theme}
-                        onChange={handleChange}
-                      />
-                      <div className="my-1 px-1 ">
-                        <button
-                          data-bs-toggle="modal"
-                          data-bs-target="#addThemeModal"
-                          type="button"
-                          className={`btn animate ${theme === 'dark' ? 'btn-primary' : 'btn-dark '} btn-sm  px-3 ${formData.theme == '' ? 'disabled' : ''}`}
-                        >
-                          Add
-                        </button>
+                  <div className="col-12 col-md-6  ">
+                    <div className="mb-2  ">
+                      <label className="animate form-label">Theme</label>
+                      <div className="d-flex   align-items-center gap-2 flex-md-row">
+                        <input
+                          type="text"
+                          className="form-control animate "
+                          placeholder="Enter"
+                          name="theme"
+                          value={formData.theme}
+                          onChange={handleChange}
+                        />
+                        <div className="my-1 px-1 ">
+                          <button
+                            data-bs-toggle="modal"
+                            data-bs-target="#addThemeModal"
+                            type="button"
+                            className={`btn animate ${theme === 'dark' ? 'btn-primary' : 'btn-dark '} btn-sm  px-3 ${formData.theme == '' ? 'disabled' : 'opacity-100'}`}
+                          >
+                            Add
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-
-              <div className="col-12 d-flex justify-content-center align-items-center col-md-6 border-0  ">
-                <div className="h-100 d-flex flex-column justify-content-evenly">
-                  <div className="mb-2  ">
-                    <label className="animate form-label">Background</label>
-                    <div className="d-flex   align-items-center gap-2 flex-md-row">
-                      <input
-                        type="text"
-                        className="form-control animate "
-                        placeholder="Enter"
-                        name="background"
-                        value={formData.background}
-                        onChange={handleChange}
-                      />
-                      <div className="my-1 px-1 ">
-                        <button
-                          data-bs-toggle="modal"
-                          data-bs-target="#addBackgroundModal"
-                          type="button"
-                          className={`btn animate ${theme === 'dark' ? 'btn-primary' : 'btn-dark '} btn-sm  px-3 ${formData.background == '' ? 'disabled' : ''}`}
-                        >
-                          Add
-                        </button>
+                  <div className="col-12 col-md-6  ">
+                    <div className="mb-2  ">
+                      <label className="animate form-label">Background</label>
+                      <div className="d-flex   align-items-center gap-2 flex-md-row">
+                        <input
+                          type="text"
+                          className="form-control animate "
+                          placeholder="Enter"
+                          name="background"
+                          value={formData.background}
+                          onChange={handleChange}
+                        />
+                        <div className="my-1 px-1 ">
+                          <button
+                            data-bs-toggle="modal"
+                            data-bs-target="#addBackgroundModal"
+                            type="button"
+                            className={`btn animate ${theme === 'dark' ? 'btn-primary' : 'btn-dark '} btn-sm  px-3 ${formData.background == '' ? 'disabled' : 'opacity-100'}`}
+                          >
+                            Add
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
-
-                  <div className="mb-2  ">
-                    <label className="animate form-label">Language</label>
-                    <div className="d-flex   align-items-center gap-2 flex-md-row">
-                      <input
-                        type="text"
-                        className="form-control animate "
-                        placeholder="Enter"
-                        name="language"
-                        value={formData.language}
-                        onChange={handleChange}
-                      />
-                      <div className="my-1 px-1 ">
-                        <button
-                          data-bs-toggle="modal"
-                          data-bs-target="#addLanguageModal"
-                          type="button"
-                          className={`btn animate ${theme === 'dark' ? 'btn-primary' : 'btn-dark '} btn-sm  px-3 ${formData.language == '' ? 'disabled' : ''}`}
-                        >
-                          Add
-                        </button>
+                  <div className="col-12 col-md-6  ">
+                    <div className="mb-2  ">
+                      <label className="animate form-label">Language</label>
+                      <div className="d-flex   align-items-center gap-2 flex-md-row">
+                        <input
+                          type="text"
+                          className="form-control animate "
+                          placeholder="Enter"
+                          name="language"
+                          value={formData.language}
+                          onChange={handleChange}
+                        />
+                        <div className="my-1 px-1 ">
+                          <button
+                            data-bs-toggle="modal"
+                            data-bs-target="#addLanguageModal"
+                            type="button"
+                            className={`btn animate ${theme === 'dark' ? 'btn-primary' : 'btn-dark '} btn-sm  px-3 ${formData.language == '' ? 'disabled' : 'opacity-100'}`}
+                          >
+                            Add
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
+                  <div className="col-12 col-md-6  ">
+                    <div className="mb-2  ">
+                      <label className="animate form-label">Currency</label>
+                      <div className="d-flex   align-items-center gap-2 flex-md-row">
+                        <input
+                          type="text"
+                          className="form-control animate "
+                          placeholder="Enter"
+                          name="currency"
+                          value={formData.currency}
+                          onChange={handleChange}
+                        />
+                        <div className="my-1 px-1 ">
+                          <button
+                            data-bs-toggle="modal"
+                            data-bs-target="#addCurrencyModal"
+                            type="button"
+                            className={`btn animate ${theme === 'dark' ? 'btn-primary' : 'btn-dark '} btn-sm  px-3 ${formData.currency == '' ? 'disabled' : 'opacity-100'}`}
+                          >
+                            Add
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-12 col-md-6  "></div>
                 </div>
               </div>
             </div>

@@ -36,7 +36,7 @@ const renderCustomizedLabel = ({
 const DoughnutChartComponent = (props) => {
   const [data, setData] = useState([])
   const [isdataLoaded, setIsdataLoaded] = useState(false)
-  const COLORS = ['rgb(36, 141, 92)', 'rgb(255, 43, 50)', 'rgb(65, 173, 123)', 'rgb(252, 68, 83)']
+  const COLORS = ['rgb(22, 115, 253)', 'rgb(255, 43, 50)', 'rgb(50, 134, 252)', 'rgb(252, 68, 83)']
   useEffect(() => {
     setData(props.doughnutData)
   })

@@ -16,9 +16,13 @@ import gsap from 'gsap'
 
 import { GetCurrent } from '../../../getCurrent'
 
+import NoData from '../../NoData/NoData'
+import NoDataFull from '../../NoData/NoDataFull'
+
 gsap.registerPlugin(ScrollTrigger)
 
 const Tables = (props) => {
+  const [display, setDisplay] = useState('loading')
   const scrollRef = useRef(null)
   const theme = useSelector((state) => state.theme)
   const navigate = useNavigate()
@@ -33,9 +37,20 @@ const Tables = (props) => {
       await GetCurrent('limits')
       const { data } = await axiosClient.get(`/table/limits/get/tables/${props.id}`)
       setTables(data.result)
+      let tempData = data.result
+
+      console.log('response: ', data)
+      if (tempData.length > 0) {
+        setDisplay('data')
+      }
+
+      if (tempData.length == 0) {
+        setDisplay('nodata')
+      }
       setOriginalTables(data.result)
     } catch (error) {
       console.error(error)
+      setDisplay('nodata')
     }
   }
   const handleSearch = (e) => {
@@ -85,28 +100,28 @@ const Tables = (props) => {
     const cards = scrollRef.current.children
     const config = { threshold: 0.1 }
 
-    // Intersection Observer callback function
+   
     const observer = new IntersectionObserver((entries, self) => {
       const targets = entries
         .filter((entry) => entry.isIntersecting)
         .map((entry) => {
-          self.unobserve(entry.target) // Stop observing once it's intersected
+          self.unobserve(entry.target) 
           return entry.target
         })
 
-      // Call the fadeIn animation function
+      
       fadeIn(targets)
     }, config)
 
-    // Observe each card
+    
     Array.from(cards).forEach((card) => observer.observe(card))
 
     return () => {
-      observer.disconnect() // Cleanup the observer on component unmount
+      observer.disconnect() 
     }
   }, [tables, props.id, search])
 
-  // Fade-in animation function using GSAP
+ 
   function fadeIn(targets) {
     gsap.to(targets, {
       opacity: 1,
@@ -122,6 +137,8 @@ const Tables = (props) => {
       className={` ${theme === 'dark' ? 'text-light' : 'text-dark'} table-main h-100 py-2 container capitalize`}
     >
       <h2 className="text-center my-2">{props.table}</h2>
+      <div className={`w-100`}>
+
       <div className="w-100 d-flex h-100 justify-content-between align-items-end ">
         <div className={`${s.form__group} ${s.field}  poppins-400`}>
           <input
@@ -156,16 +173,14 @@ const Tables = (props) => {
       <div className="row gap-0 w-100 px-3" ref={scrollRef}>
         {tables.map((table, i) => (
           <div
-            key={i}
+          key={i}
             className="col-12 col-sm-6 col-md-4 col-xxl-3 mb-3 mb-sm-0 mt-3"
             style={{ opacity: 0, transform: 'translateY(50px)' }}
           >
             <div
               className={`card-hover poppins-400 ${s.box} ${theme === 'light' ? s.black : s.blue} pointer shadow`}
-            >
-              {/*   navigate(
-                  `/dashboard/${table.game_type_name}/${table.table_limit_name}/${table.game_type_id}/${table.table_limit_id}`,
-                ) */}
+              >
+            
               <div className="card border-0 bg-transparent overflow-hidden" style={{ width: '100%' }}>
                 <div className="overflow-hidden">
                   <img
@@ -179,13 +194,13 @@ const Tables = (props) => {
                   <h5
                     onClick={() => handleNavigate(table.table_limit_id)}
                     className="card-title fontSubHeading poppins-500"
-                  >
+                    >
                     {table.table_limit_name}
                   </h5>
                   <p
                     onClick={() => handleNavigate(table.table_limit_id)}
                     className="card-text"
-                  >
+                    >
                     Game: {table.game_type_name} <br /> Language: {table.language}
                   </p>
                   <div className="d-flex justify-content-end">
@@ -194,7 +209,7 @@ const Tables = (props) => {
                       className={`bi bi-pen-fill icon-size font-size icon icon-hover pointer text-shadow icon-hover ${
                         theme === 'light' ? 'text-dark' : 'text-dark'
                       }`}
-                    ></i>
+                      ></i>
                   </div>
                 </div>
               </div>
@@ -202,6 +217,10 @@ const Tables = (props) => {
           </div>
         ))}
       </div>
+        </div>
+        <div className={`${display == 'nodata' ? '' : 'd-none'}`}>
+          <NoDataFull />
+        </div>
     </div>
   )
 }

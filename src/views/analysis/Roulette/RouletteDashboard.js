@@ -22,7 +22,11 @@ import WinStatistics from './rouletteDashboardComponents/WinStatistics.js'
 
 import { GetCurrent } from '../../../getCurrent.js'
 
+import NoData from '../../NoData/NoData'
+import NoDataFull from '../../NoData/NoDataFull'
+
 const RouletteDashboard = () => {
+  const [display, setDisplay] = useState('loading')
   const navigate = useNavigate()
   const [renderKey, setRenderKey] = useState(0)
   const theme = useSelector((state) => state.theme)
@@ -129,28 +133,25 @@ const RouletteDashboard = () => {
     return () => clearInterval(intervalId) // Cleanup on unmount
   }, [limit])
 
-  useEffect( () => {
+  useEffect(() => {
     getCurrent()
   }, [])
 
- const  getCurrent = async ()=>{
-  console.log("called getCurrent")
+  const getCurrent = async () => {
+    console.log('called getCurrent')
 
-  await GetCurrent('analysis')
-  getGameData(100) 
-  return
- 
-  
-  
-}
+    await GetCurrent('analysis')
+    getGameData(100)
+    return
+  }
 
   const getGameDataByDate = async () => {
-  //  console.log('fromDate ', fromDate, ' toDate ', toDate)
+    //  console.log('fromDate ', fromDate, ' toDate ', toDate)
     const res = await axiosClient.post(`/game/get/${game}/${game_type_id}/${table_limit_id}`, {
       from_date: fromDate,
       to_date: toDate,
     })
-  //  console.log('res.data.result: ', res.data.result)
+    //  console.log('res.data.result: ', res.data.result)
     processData(res.data.result)
     setRenderKey(renderKey + 1)
     localStorage.setItem('callOnTimeInterval', false)
@@ -158,22 +159,38 @@ const RouletteDashboard = () => {
 
   const getGameData = async (limitParam) => {
     const limitToUse = limitParam || limit
-    const res = await axiosClient.get(
-      `/game/get/${game}/${game_type_id}/${table_limit_id}/${limit}`,
-    )
-    processData(res.data.result)
-    setRenderKey(renderKey + 1)
+
+    try {
+      const res = await axiosClient.get(
+        `/game/get/${game}/${game_type_id}/${table_limit_id}/${limit}`,
+      )
+      processData(res.data.result)
+      let data = res.data.result
+      console.log('response: ', data)
+      if (data.length > 0) {
+        setDisplay('data')
+      }
+
+      if (data.length == 0) {
+        setDisplay('nodata')
+      }
+      setRenderKey(renderKey + 1)
+    } catch (err) {
+      console.log('err: ', err)
+      setDisplay('nodata')
+    }
+
     localStorage.setItem('callOnTimeInterval', true)
   }
 
   const processData = (resData) => {
-  //  console.log('res.data.result: ', resData)
+    //  console.log('res.data.result: ', resData)
 
     //console.log('tempRoulleteData: ', tempRoulleteData)
 
     let live = false
     const currentTime = new Date()
-  //  console.log('time: ', currentTime)
+    //  console.log('time: ', currentTime)
 
     //checking if connection is live
     // Check if resData[0].date_time exists and is exactly 1 minute before current time
@@ -187,7 +204,7 @@ const RouletteDashboard = () => {
       }
     }
 
-  //  console.log('live status: ', live)
+    //  console.log('live status: ', live)
     setLive(live)
     if (live == true) {
       setLiveData(resData[0])
@@ -297,17 +314,17 @@ const RouletteDashboard = () => {
     })
   }
 
-
-
   return (
     <div
       className={` ${theme === 'dark' ? 'text-light' : 'text-dark'} pb-4 d-flex justify-content-center`}
     >
       <div className={`fade-in  ${s.main} w-100`}>
-        <div className="">
+        <div className={'fade-in'}>
           <h3 className="text-center text-shadow capitalize poppins-400">
             {table_limit_name ? table_limit_name : 'Title'}
           </h3>
+        </div>
+        <div className={`${display == 'data' ? '' : 'd-none'}`}>
           <div className="row   poppins-400">
             <div className={` col-12 col-lg-7  form d-flex flex-column`}>
               <div
@@ -684,6 +701,9 @@ const RouletteDashboard = () => {
               </div>
             </div>
           </div>
+        </div>
+        <div className={`${display == 'nodata' ? '' : 'd-none'}`}>
+          <NoDataFull />
         </div>
       </div>
     </div>

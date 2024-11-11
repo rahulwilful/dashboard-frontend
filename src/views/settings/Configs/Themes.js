@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 //import s from './UpdateTableLimits.module.css'
 import showToast from '../../../components/Notification/ShowToast'
 import { Modal } from 'bootstrap'
+import { useSelector } from 'react-redux'
 
 import axiosClient from '../../../axiosClient'
 import roulleteWheel from 'src/assets/images/dashboard/roullete-wheel.png'
@@ -10,14 +11,17 @@ import { useNavigate } from 'react-router-dom'
 import { GetCurrent } from '../../../getCurrent'
 
 const UpdateThemes = (props) => {
+  const theme = useSelector((state) => state.theme)
   const navigate = useNavigate()
   const [themes, setThemes] = useState([])
+  const [originalThemes, setOriginalThemes] = useState([])
   const [form, setForm] = useState({ theme_id: '', theme: '' })
   const getThemes = async () => {
     const { data } = await axiosClient.get(`/config/get/theme`)
     console.log(data)
 
     setThemes(data.themes)
+    setOriginalThemes(data.themes)
   }
 
   const handleSetForm = (theme) => {
@@ -59,6 +63,20 @@ const UpdateThemes = (props) => {
     getThemes()
     console.log('user ', user)
     return 
+  }
+
+  const handleSearch = (e) => {
+    console.log("handleSearch called")
+    if (e.target.value === '') {
+      setThemes(originalThemes)
+    } else {
+      const value = e.target.value.toLowerCase()
+      const filtered = themes.filter((theme) =>
+        theme.theme.toLowerCase().includes(value),
+      )
+      setThemes(filtered)
+      setSearch(value)
+    } 
   }
   
   return (
@@ -114,8 +132,20 @@ const UpdateThemes = (props) => {
       </div>
 
       {/* ///////////////////////////////////////////////////////////////////////// */}
-      <div className=" table-main  py-2 container">
+      <div   className={`table-main  py-2 container ${theme === 'dark' ? 'text-light' : 'text-dark'}`}>
         <h2 className="text-center my-2">Themes</h2>
+        <div className={` `}>
+          <div class="mb-3">
+            <input
+              type="input"
+              class="form-control"
+              placeholder="Search Themes"
+              onChange={handleSearch}
+              id="search"
+              aria-describedby="emailHelp"
+            />
+          </div>
+        </div>
         <div className="row gap-0 w-100 px-3 ">
           {themes.map((theme, i) => (
             <div key={i} className="col-12 col-sm-3  mb-3 mb-sm-0 mt-2">

@@ -70,9 +70,8 @@ const UpdateBackgrounds = (props) => {
     await GetCurrent('settings')
     getBackgrounds()
     console.log('user ', user)
-    return 
+    return
   }
-
 
   const handleSearch = (e) => {
     if (e.target.value === '') {
@@ -124,7 +123,9 @@ const UpdateBackgrounds = (props) => {
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5" id="exampleModalLabel"></h1>
+              <h1 className="modal-title fs-5" id="exampleModalLabel">
+                Update Background
+              </h1>
               <button
                 type="button"
                 className="btn-close"
@@ -134,24 +135,15 @@ const UpdateBackgrounds = (props) => {
             </div>
             <div className="modal-body">
               <div className="mb-3 ">
-                <div className={`${s.form__group} ${s.field} `}>
+                <div class="mb-3">
+                 
                   <input
-                    onChange={handleSearch}
-                    type="input"
-                    className={`${s.form__field} ${theme === 'dark' ? 'd-block' : 'd-none'} `}
-                    placeholder="Name"
-                    required=""
+                    type="email"
+                    class="form-control"
+                    id="exampleInputEmail1"
+                    aria-describedby="emailHelp"
                   />
-                  <input
-                    onChange={handleSearch}
-                    type="input"
-                    className={`${s.form__field2} ${theme === 'dark' ? 'd-none' : 'd-block'}`}
-                    placeholder="Name"
-                    required=""
-                  />
-                  <label for="name" className={`${s.form__label}`}>
-                    Search
-                  </label>
+                 
                 </div>
               </div>
             </div>

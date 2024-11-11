@@ -4,15 +4,15 @@ import axiosClient from "./axiosClient";
 
 export async function   GetCurrent (data )  {
   if(!data){
-    console.log("data: ", )
+   // console.log("data: ", )
   }else{
 
-    console.log("data: ",data)
+   // console.log("data: ",data)
   }
     try{
       let res = await axiosClient.post(`/user/get/current`)
       const user = res.data.user
-      console.log('res.data.result: ', user)
+      //console.log('res.data.result: ', user)
       if(!res){
         window.location.href = '/login'
         return false

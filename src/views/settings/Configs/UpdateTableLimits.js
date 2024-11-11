@@ -6,16 +6,21 @@ import { Modal } from 'bootstrap'
 import axiosClient from '../../../axiosClient'
 import roulleteWheel from 'src/assets/images/dashboard/roullete-wheel.png'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const UpdateTableLimits = (props) => {
+  const theme = useSelector((state) => state.theme)
+  const [search, setSearch] = useState('')
   const navigate = useNavigate()
   const [games, setGames] = useState([])
+  const [originalGames, setOriginalGames] = useState([])
   const [form, setForm] = useState({ game_type_id: '', game_type_name: '' })
   const getGames = async () => {
     const { data } = await axiosClient.get(`/config/get/table/type`)
-    console.log(data)
+    console.log("data: ",data)
 
     setGames(data.game_types)
+    setOriginalGames(data.game_types)
   }
 
   const handleSetForm = (table) => {
@@ -48,6 +53,20 @@ const UpdateTableLimits = (props) => {
   useEffect(() => {
     getGames()
   }, [])
+
+  const handleSearch = (e) => {
+    console.log("handleSearch called")
+    if (e.target.value === '') {
+      setGames(originalGames)
+    } else {
+      const value = e.target.value.toLowerCase()
+      const filtered = games.filter((game) =>
+        game.game_type_name.toLowerCase().includes(value),
+      )
+      setGames(filtered)
+      setSearch(value)
+    } 
+  }
   return (
     <>
       <div
@@ -101,8 +120,22 @@ const UpdateTableLimits = (props) => {
       </div>
 
       {/* ///////////////////////////////////////////////////////////////////////// */}
-      <div className=" table-main  py-2 container">
+      <div
+        className={`table-main  py-2 container ${theme === 'dark' ? 'text-light' : 'text-dark'}`}
+      >
         <h2 className="text-center my-2">Games</h2>
+        <div className={` `}>
+          <div class="mb-3">
+            <input
+              type="input"
+              class="form-control"
+              placeholder="Search Game"
+              onChange={handleSearch}
+              id="search"
+              aria-describedby="emailHelp"
+            />
+          </div>
+        </div>
         <div className="row gap-0 w-100 px-3 ">
           {games.map((table, i) => (
             <div key={i} className="col-12 col-sm-3  mb-3 mb-sm-0 mt-2">

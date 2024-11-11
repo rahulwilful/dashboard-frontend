@@ -14,11 +14,12 @@ const AddTable = (props) => {
   const [languages, setLanguages] = useState([])
   const [themes, setThemes] = useState([])
   const [backgrounds, setBackgrounds] = useState([])
+  const [currencys, setCurrencys] = useState([])
   const [showModal, setShowModal] = useState(false) // State to control modal visibility
   const modalRef = useRef(null) // Ref for modal
 
   const [formData, setFormData] = useState({
-    table_limit_name: 'baccarat6',
+    table_limit_name: '',
     table: '',
     game_type_name: '',
     game_type_id: '',
@@ -30,6 +31,8 @@ const AddTable = (props) => {
     theme_id: '',
     language_id: '',
     background_id: '',
+    currency_id: '',
+    commission: false,
   })
 
   // Fetch configurations for dropdowns
@@ -37,10 +40,11 @@ const AddTable = (props) => {
     try {
       await GetCurrent('limits')
       const response = await axiosClient.get('config/get/configs')
-      const { languages, themes, backgrounds } = response.data
+      const { languages, themes, backgrounds, currencys } = response.data
       setLanguages(languages)
       setThemes(themes)
       setBackgrounds(backgrounds)
+      setCurrencys(currencys)
     } catch (error) {
       console.error('Error fetching configs:', error)
     }
@@ -90,6 +94,7 @@ const AddTable = (props) => {
   const handleSubmit = async () => {
     try {
       console.log(formData)
+
       const response = await axiosClient.post('table/limits/add', formData)
       showToast('Table limit added successfully!', 'success')
       setShowModal(false)
@@ -202,6 +207,23 @@ const AddTable = (props) => {
                       ))}
                     </select>
                   </div>
+
+                  <div className="mb-2">
+                    <label className="animate form-label">Currency</label>
+                    <select
+                      className="animate form-select form-select-sm"
+                      name="currency_id"
+                      value={formData.currency_id}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select currency</option>
+                      {currencys.map((curr) => (
+                        <option key={curr.currency_id} value={curr.currency_id}>
+                          {curr.currency}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
                 {/* Right Column */}
@@ -253,6 +275,20 @@ const AddTable = (props) => {
                       onChange={handleChange}
                       min="0"
                     />
+                  </div>
+                  <div className="mt-4 pt-3">
+                    <div className="form-check ">
+                      <input
+                        className="form-check-input animate"
+                        type="checkbox"
+                        name="commission"
+                        checked={formData.commission}
+                        onChange={() =>
+                          setFormData({ ...formData, commission: !formData.commission })
+                        }
+                      />
+                      <label className="form-check-label animate">Commission</label>
+                    </div>
                   </div>
                 </div>
 
