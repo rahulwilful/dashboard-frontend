@@ -822,7 +822,7 @@ const AndarBaharDashboard = () => {
                     >
                       {' '}
                       <span
-                        className={`bg-gradient bg-success text-light border-0 bg-gradient px-2 shadow-xs poppins-500 rounded-1 `}
+                        className={`bg-gradient bg-warning text-light border-0 bg-gradient px-2 shadow-xs poppins-500 rounded-1 `}
                       >
                         Joker
                       </span>
@@ -952,7 +952,7 @@ const AndarBaharDashboard = () => {
               <div className={`fontTextHeading  poppins-500`}>
                 winner :{' '}
                 <span
-                  className={`bg-gradient bg-success text-light border-0 bg-gradient px-2 shadow-xs  poppins-500 rounded-1 ${winner == 'A' ? '' : 'd-none'}`}
+                  className={`bg-gradient bg-primary text-light border-0 bg-gradient px-2 shadow-xs  poppins-500 rounded-1 ${winner == 'A' ? '' : 'd-none'}`}
                 >
                   Andar
                 </span>
@@ -965,7 +965,7 @@ const AndarBaharDashboard = () => {
               <div className={`fontTextHeading  poppins-500`}>
                 Side Win :{' '}
                 <span
-                  className={`bg-gradient bg-success text-light border-0 bg-gradient px-2 shadow-xs  poppins-500 rounded-1 ${side_win == 'A' ? '' : 'd-none'}`}
+                  className={`bg-gradient bg-primary text-light border-0 bg-gradient px-2 shadow-xs  poppins-500 rounded-1 ${side_win == 'A' ? '' : 'd-none'}`}
                 >
                   Andar
                 </span>
