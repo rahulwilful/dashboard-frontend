@@ -21,7 +21,7 @@ const AddUser = () => {
   const [user, setUser] = useState({})
   const [userForm, setUserForm] = useState({
     name: '',
-    email: '@gmail.com',
+    user_name: '',
     phone_no: '',
     roleType: '',
     password:"",
@@ -105,8 +105,8 @@ const AddUser = () => {
       showToast('Enter Name', 'info');
       return false;
     }
-    if (userForm.email === '') {
-      showToast('Enter Email', 'info');
+    if (userForm.user_name === '') {
+      showToast('Enter User Name', 'info');
       return false;
     }
     if (userForm.phone_no === '') {
@@ -182,16 +182,16 @@ const AddUser = () => {
                   <div className={`col-12 col-md-6 col-xl-4`}>
                     <div className={`opacity-75`}>
                       <label className={`small mb-1`} htmlFor="Role">
-                        Email
+                        User Name
                       </label>
                       <input
-                       onChange={(e) => setUserForm({...userForm,email:e.target.value})}
+                       onChange={(e) => setUserForm({...userForm,user_name:e.target.value})}
                         className={`form-control  ${s.placeholder_grey}  ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
                         id="Role"
-                        placeholder='Enter Email'
+                        placeholder='Enter User Name'
                         type="text"
                         name=""
-                        value={userForm.email}
+                        value={userForm.user_name}
                       />
                     </div>
                   </div>

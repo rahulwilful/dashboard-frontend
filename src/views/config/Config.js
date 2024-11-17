@@ -56,7 +56,12 @@ const Config = () => {
       console.log(response)
       showToast('Theme added successfully!', 'success')
     } catch (error) {
-      showToast('Error while adding theme', 'error')
+      if(error.status == 409){
+        showToast(`${formData.theme} already exists`, 'error')
+      }else{
+        
+        showToast('Error while adding theme', 'error')
+      }
       console.error(error)
     }
   }
@@ -72,8 +77,12 @@ const Config = () => {
       console.log(response)
       showToast('Table Type added successfully!', 'success')
     } catch (error) {
-      showToast('Error while adding Table Type', 'error')
       console.error(error)
+      if(error.status == 409){
+        showToast(`${formData.game_type_name} already exists`, 'error')
+      }else{
+        showToast('Error while adding Table Type', 'error')
+      }
     }
   }
 
@@ -88,7 +97,11 @@ const Config = () => {
       console.log(response)
       showToast('Background added successfully!', 'success')
     } catch (error) {
-      showToast('Error while adding Background', 'error')
+      if(error.status == 409){
+        showToast(`${formData.background} already exists`, 'error')
+      }else{ 
+        showToast('Error while adding Background', 'error')
+      }
       console.error(error)
     }
   }
@@ -104,7 +117,11 @@ const Config = () => {
       console.log(response)
       showToast('Language added successfully!', 'success')
     } catch (error) {
-      showToast('Error while adding Language', 'error')
+      if(error.status == 409){
+        showToast(`${formData.language} already exists`, 'error')
+      }else{ 
+        showToast('Error while adding Language', 'error')
+      }
       console.error(error)
     }
   }
@@ -120,7 +137,11 @@ const Config = () => {
       console.log(response)
       showToast('Currency added successfully!', 'success')
     } catch (error) {
-      showToast('Error while adding Currency', 'error')
+      if(error.status == 409){
+        showToast(`${formData.currency} already exists`, 'error')
+      }else{ 
+        showToast('Error while adding Currency', 'error')
+      }
       console.error(error)
     }
   }

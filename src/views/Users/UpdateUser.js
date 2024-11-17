@@ -21,7 +21,7 @@ const UpdateUser = () => {
   const [user, setUser] = useState({})
   const [userForm, setUserForm] = useState({
     name: '',
-    email: '',
+    user_name: '',
     phone_no: '',
     roleType: '',
     limits: false,
@@ -160,7 +160,7 @@ const UpdateUser = () => {
                       <div className={`col-12 col-md-6 col-xl-4`}>
                         <div className={`opacity-75`}>
                           <label className={`small mb-1`} htmlFor="Role">
-                            Email
+                           User Name
                           </label>
                           <input
                             disabled
@@ -168,7 +168,7 @@ const UpdateUser = () => {
                             id="Role"
                             type="text"
                             name=""
-                            value={userForm.email}
+                            value={userForm.user_name}
                           />
                         </div>
                       </div>
@@ -305,14 +305,14 @@ const UpdateUser = () => {
                 >
                   Update User
                 </button>
-                <button
+               {/*  <button
                   type="button"
                   data-bs-toggle="modal"
                   data-bs-target="#changePasswordModal"
                   className={`btn ${theme === 'dark' ? 'btn-primary' : 'btn-dark'} btn-sm px-3 bg-gradient capitalize`}
                 >
                   Change Password
-                </button>
+                </button> */}
               </div>
             </div>
           </div>

@@ -641,7 +641,7 @@ const AndarBaharDashboard = () => {
                         <input
                           className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}  `}
                           type="number"
-                          placeholder="To Shoe"
+                          placeholder="NUmber Of Games"
                           onChange={(e) => setCustomLimit(e.target.value)}
                         />
                       </div>

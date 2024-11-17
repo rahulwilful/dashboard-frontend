@@ -124,7 +124,7 @@ const User = () => {
                     <div className={`col-12 col-md-6 col-xl-4`}>
                       <div className={``}>
                         <label className={`small mb-1`} htmlFor="Role">
-                          Email
+                          User Name
                         </label>
                         <input
                           disabled
@@ -132,7 +132,7 @@ const User = () => {
                           id="Role"
                           type="text"
                           name=""
-                          value={user.email}
+                          value={user.user_name}
                         />
                       </div>
                     </div>

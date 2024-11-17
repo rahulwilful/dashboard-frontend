@@ -39,7 +39,7 @@ const Tables = (props) => {
       setTables(data.result)
       let tempData = data.result
 
-      console.log('response: ', data)
+      console.log('table response: ', data)
       if (tempData.length > 0) {
         setDisplay('data')
       }
@@ -87,9 +87,9 @@ const Tables = (props) => {
     }
   }
 
-  const handleNavigate = (id) => {
+  const handleNavigate = (id,game_type) => {
     console.log('handleNavigate', id)
-    navigate(`/limits/edit/table/${id}`)
+    navigate(`/limits/edit/${game_type}/${id}`)
   }
 
   useEffect(() => {
@@ -187,25 +187,25 @@ const Tables = (props) => {
                     src={props.table == 'roulette' ? roulletImage : baccarat[i % 3]}
                     className="card-img-top card-hover2 bg-dark bg-gradient drop_shadow"
                     alt="..."
-                    onClick={() => handleNavigate(table.table_limit_id)}
+                    onClick={() => handleNavigate(table.table_limit_id,table.game_type_name)}
                   />
                 </div>
                 <div className="card-body bg-light ">
                   <h5
-                    onClick={() => handleNavigate(table.table_limit_id)}
+                    onClick={() => handleNavigate(table.table_limit_id,table.game_type_name)}
                     className="card-title fontSubHeading poppins-500"
                     >
                     {table.table_limit_name}
                   </h5>
                   <p
-                    onClick={() => handleNavigate(table.table_limit_id)}
+                    onClick={() => handleNavigate(table.table_limit_id,table.game_type_name)}
                     className="card-text"
                     >
                     Game: {table.game_type_name} <br /> Language: {table.language}
                   </p>
                   <div className="d-flex justify-content-end">
                     <i
-                      onClick={() => handleNavigate(table.table_limit_id)}
+                      onClick={() => handleNavigate(table.table_limit_id,table.game_type_name)}
                       className={`bi bi-pen-fill icon-size font-size icon icon-hover pointer text-shadow icon-hover ${
                         theme === 'light' ? 'text-dark' : 'text-dark'
                       }`}

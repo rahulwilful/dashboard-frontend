@@ -23,7 +23,7 @@ import axiosClient from '../../../axiosClient'
 
 const Login = () => {
   const navigate = useNavigate()
-  const [email, setEmail] = useState('rahul@gmail.com')
+  const [user_name, setUser_name] = useState('rahul@gmail.com')
   const [password, setPassword] = useState('111111')
   const [error, setError] = useState(null)
 
@@ -51,10 +51,10 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log("email: ", email, "password: ", password)
+    console.log("user_name: ", user_name, "password: ", password)
     try {
       const response = await axiosClient.post('user/login', {
-        email,
+        user_name,
         password,
       })
       console.log("response: ", response)
@@ -87,10 +87,10 @@ const Login = () => {
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
                       <CFormInput
-                        placeholder="email"
-                        autoComplete="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="User Name"
+                        autoComplete="user_name"
+                        value={user_name}
+                        onChange={(e) => setUser_name(e.target.value)}
                       />
                     </CInputGroup>
                     <CInputGroup className="mb-4">

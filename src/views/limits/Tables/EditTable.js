@@ -168,6 +168,10 @@ const [currencys, setCurrencys] = useState([])
       showToast('Enter Side Bet Maximum', 'info') 
       return
     }
+    if (!formData.currency_id) return showToast('Select Currency', 'info')
+      if(formData.min_bet > formData.max_bet) return showToast('Minimum Bet should be less than Maximum Bet', 'info',3000)
+        if(formData.side_bet_min > formData.side_bet_max) return showToast('Side Bet Minimum should be less than Side Bet Maximum', 'info',3000)
+  
 
     let dataToSend = {
       ...formData,
@@ -354,7 +358,7 @@ const [currencys, setCurrencys] = useState([])
                     min="0"
                   />
                 </div>
-                <div className="  mt-4 pt-3">
+                <div className={`mt-4 pt-3 ${params.game == 'baccarat' ? 'd-block': 'd-none'}`}>
                   <div className="form-check">
                     <input
                       className="form-check-input animate"

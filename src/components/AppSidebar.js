@@ -35,8 +35,7 @@ const AppSidebar = () => {
   const getLimits = async () => {
     try {
       const { data } = await axiosClient.get('/config/get/table/type')
-      // console.log('response', data)
-
+      
       const tempNavigation = tempNav.map((navItem) => {
         if (user.limits == true && navItem.name === 'Table Limits') {
           return {

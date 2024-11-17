@@ -30,6 +30,7 @@ const _nav = [
   {
     component: CNavGroup,
     name: 'Table Analysis',
+    className: 'text-capitalize',
     to: '/table/analysis',
     icon: <GraphUpArrow className="nav-icon text-light" />,
 

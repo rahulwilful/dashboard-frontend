@@ -439,8 +439,8 @@ const BaccaratDashboard = () => {
               <div
                 className={`col-12 col-md-10 col-xxl-12 border-0 shadow-s poppins-500 box ${s.opacity} ${themeClass} bg-gradient py-2 rounded`}
               >
-                <div className={`row gx-1 gy-2`}>
-                  <div className={`col-12 col-md-6 col-xxl-3 d-flex `}>
+                <div className={`row  gy-2`}>
+                  <div className={`col-12 col-md-6 col-xxl-3 d-flex  `}>
                     <div
                       className={` d-flex gap-2 w-100 justify-content-between   justify-content-sm-evenly align-items-center`}
                     >
@@ -482,17 +482,18 @@ const BaccaratDashboard = () => {
                       ></div>
                     </div>
                   </div>
-                  <div className={`col-12 col-md-6 col-xxl-3 `}>
+                  <div className={`col-12 col-md-6 col-xxl-3  px-1 `}>
                     <div
-                      className={` w-100  d-flex justify-content-evenly w-100 d-flex gap-1  border-end-0  border-end-xxl-1 border-secondary border-opacity-25 `}
+                      className={` w-100 gap-1  d-flex justify-content-evenly w-100 d-flex   border-end-0  border-end-xxl-1 border-secondary border-opacity-25 `}
                     >
-                      <div className="gap-2 fontText w-100 px-0 px-xxl-3  poppins-500 d-flex justify-content-evenly gap-3 align-items-center ">
+                      <div className="gap-1 fontText w-100 px-0 px-xxl-1  poppins-500 d-flex justify-content-evenly gap-0 align-items-center ">
                         <div className={`w-100 `}>
                           <input
                             className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}  `}
                             type="number"
                             placeholder="From Shoe"
                             onChange={(e) => setFromShoe(e.target.value)}
+                            
                           />
                         </div>
                         <div className={`w-100 `}>
@@ -503,7 +504,7 @@ const BaccaratDashboard = () => {
                             onChange={(e) => setToShoe(e.target.value)}
                           />
                         </div>
-                        <div className={`w-100 d-flex justify-content-end `}>
+                        <div className={` d-flex justify-content-end `}>
                           <button
                             className="btn btn-primary bg-gradient btn-sm  fontText"
                             type="button"

@@ -91,6 +91,12 @@ const AllUsers = () => {
 
   const handleToggleUser = async(id) => {
    console.log("id: ",id)
+   for(let i=0;i<users.length;i++){
+    if(users[i].user_id == id && users[i].roleType == 'super_admin'){
+      showToast('Unauthorized', 'error')
+      return
+    }
+   }
 
    try {
     const res = await axiosClient.put(`/user/toggle/active/${id}`)
@@ -125,8 +131,8 @@ const AllUsers = () => {
       minWidth: '100px',
     },
     {
-      name: 'Email',
-      selector: (row) => row.email,
+      name: 'User Name',
+      selector: (row) => row.user_name,
       sortable: true,
     },
     {
