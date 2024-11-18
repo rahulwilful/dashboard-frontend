@@ -33,6 +33,18 @@ const renderCustomizedLabel = ({
   )
 }
 
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="custom-tooltip border d-flex justify-content-center align-items-end  bg-light rounded text-dark text-center p-3">
+        {`Number ${label} Hit ${payload[0].value} times`}
+      </div>
+    );
+  }
+
+  return null;
+};
+
 const DoughnutChartComponent = (props) => {
   const [data, setData] = useState([])
   const [isdataLoaded, setIsdataLoaded] = useState(false)

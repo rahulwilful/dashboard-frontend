@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
+  CAvatar,
   CButton,
   CCard,
   CCardBody,
@@ -9,6 +10,7 @@ import {
   CContainer,
   CForm,
   CFormInput,
+  CImage,
   CInputGroup,
   CInputGroupText,
   CRow,
@@ -20,6 +22,7 @@ import { useNavigate } from 'react-router-dom'
 import showToast from '../../../components/Notification/ShowToast'
 
 import axiosClient from '../../../axiosClient'
+import LOGO from 'src/assets/brand/LOGO.png'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -76,10 +79,27 @@ const Login = () => {
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={4}>
+          <div className='  d-flex justify-content-center mb-3' >
+                    
+                    <div className=' bg-dark p-1 rounded' >
+
+                  <div>
+                    <CImage src={LOGO} style={{ width: '120px' }} />
+                     {/*  <image src={LOGO}  style={{ width: '90px',height: '90px' }}/> */}
+                    </div> 
+                    </div>
+                    
+                  </div>
             <CCardGroup>
+           
               <CCard className="p-4">
                 <CCardBody>
+
                   <CForm onSubmit={handleSubmit}>
+                    {/* <div>
+                      <image src={LOGO}  style={{ width: '90px' }}/>
+                    </div> */}
+                  
                     <h1>Login</h1>
                     <p className="text-body-secondary">Sign In to your account</p>
                     <CInputGroup className="mb-3">
@@ -89,7 +109,7 @@ const Login = () => {
                       <CFormInput
                         placeholder="User Name"
                         autoComplete="user_name"
-                        value={user_name}
+                        value={user_name}x
                         onChange={(e) => setUser_name(e.target.value)}
                       />
                     </CInputGroup>

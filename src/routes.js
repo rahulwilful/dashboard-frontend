@@ -77,7 +77,7 @@ const Login = React.lazy(() => import('./views/pages/login/Login'))
 const MyAccount = React.lazy(() => import('./views/Account/MyAccount'))
 const UpdateAccount = React.lazy(() => import('./views/Account/UpdateAccount'))
 
-const Users = React.lazy(() => import('./views/Users/Users'))
+
 const AllUsers = React.lazy(() => import('./views/Users/AllUsers'))
 const UpdateUser = React.lazy(() => import('./views/Users/UpdateUser'))
 const User = React.lazy(() => import('./views/Users/User'))

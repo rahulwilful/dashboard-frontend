@@ -13,6 +13,8 @@ const AddTable = (props) => {
   const theme = useSelector((state) => state.theme)
   const [languages, setLanguages] = useState([])
   const [themes, setThemes] = useState([])
+  const [themeClass, setThemeClass] = useState('bg-light text-dark border')
+  const [themeBorder, setThemeBorder] = useState('bg-light text-dark border')
   const [backgrounds, setBackgrounds] = useState([])
   const [currencys, setCurrencys] = useState([])
   const [showModal, setShowModal] = useState(false) // State to control modal visibility
@@ -109,6 +111,21 @@ const AddTable = (props) => {
     }
   }
 
+  
+  useEffect(() => {
+    setThemeClass(
+      theme === 'dark'
+        ? `bg-dark text-light border-secondary border-opacity-25 shadow-xs ${s.placeholder_grey}`
+        : `text-dark  border border `,
+    )
+
+    setThemeBorder(
+      theme === 'dark'
+        ? `bg-dark text-light border-secondary  border-opacity-50  ${s.placeholder_grey}`
+        : `text-dark bg-light bg-gradient border `,
+    )
+  }, [theme])
+
   return (
     <>
       {/* Modal */}
@@ -127,34 +144,43 @@ const AddTable = (props) => {
       </Modal>
 
       {/* Main Form */}
-      <div
-        className={`${s.addtable_main} d-flex justify-content-center align-items-center ${theme === 'dark' ? 'text-light' : 'text-dark'}`}
-      >
-        <div className="container">
-          <div className="py-3 h-100 d-flex justify-content-center align-items-center">
-            <div
-              className={`${s.form} border-bottom border-2 border-top ${
-                theme === 'dark' ? 'border-primary' : 'border-dark'
-              } rounded-4 p-4 shadow-lg`}
-            >
-              <div className="d-flex justify-content-between">
+      
+      <div className={`container-xl px-4 mt-4 ${theme === 'dark' ? 'text-light' : 'text-dark'}`}>
+      <div className="d-flex justify-content-between">
                 <div>
                   <i
                     onClick={() => props.toggleAddNew(false)}
-                    className="bi bi-arrow-left text-shadow fs-4 pointer"
+                    className={`bi bi-arrow-left text-shadow fs-4 pointer  ${theme === 'dark' ? 'text-light' : 'text-dark'}`}  
                   ></i>
                 </div>
                 <div className="text-center w-100">
                   <h3 className="text-center pb-2 capitalize animate">{props.table}</h3>
                 </div>
               </div>
-              <div className="row">
-                {/* Left Column */}
-                <div className="col-12 col-md-6">
-                  <div className="mb-2">
+        <div className={`row `}></div>
+        <div className={`col-xl-12  `}>
+          {/* Account details card */}
+          <div
+            className={`card mb-4 border border-secondary border-opacity-50 shadow-xs  text-bg-${theme}`}
+          >
+            <div
+              className={`card-header border-bottom border-secondary border-opacity-25 d-flex justify-content-between`}
+            >
+              <div className={``}>Add User</div>
+            </div>
+            <div className={`card-body`}>
+              <div>
+                {/* Form Group (username) */}
+
+                {/* Form Row */}
+                <div className={`row gx-3 mb3`}>
+                  
+
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                  <div className="mb-3">
                     <label className="animate form-label">Table Name</label>
                     <input
-                      className="animate form-control form-control-sm"
+                      className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder} ${s.placeholder_grey}`}
                       type="text"
                       placeholder="Enter Table Name"
                       name="table_limit_name"
@@ -162,10 +188,74 @@ const AddTable = (props) => {
                       onChange={handleChange}
                     />
                   </div>
-                  <div className="mb-2">
-                    <label className="animate form-label">Theme</label>
+                  </div>
+
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                  <div className="mb-3">
+                  <label className="animate form-label">Minimum Bet</label>
+                    <input
+                     className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder} ${s.placeholder_grey}`}
+                      type="number"
+                      placeholder="Enter Minimum Bet"
+                      name="min_bet"
+                      value={formData.min_bet}
+                      onChange={handleChange}
+                      min="0"
+                    />
+                  </div>
+                  </div>
+
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                  <div className="mb-3">
+                  <label className="animate form-label">Maximum Bet</label>
+                    <input
+                     className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder} ${s.placeholder_grey}`}
+                      type="number"
+                      placeholder="Enter Maximum Bet"
+                      name="max_bet"
+                      value={formData.max_bet}
+                      onChange={handleChange}
+                      min="0"
+                    />
+                  </div>
+                  </div>
+
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                  <div className="mb-3">
+                  <label className="animate form-label">Side Bet Minimum</label>
+                    <input
+                     className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder} ${s.placeholder_grey}`}
+                      type="number"
+                      placeholder="Enter Side Bet Minimum"
+                      name="side_bet_min"
+                      value={formData.side_bet_min}
+                      onChange={handleChange}
+                      min="0"
+                    />
+                  </div>
+                  </div>
+
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                  <div className="mb-3">
+                  <label className="animate form-label">Side Bet Maximum</label>
+                    <input
+                     className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder} ${s.placeholder_grey}`}
+                      type="number"
+                      placeholder="Enter Side Bet Maximum"
+                      name="side_bet_max"
+                      value={formData.side_bet_max}
+                      onChange={handleChange}
+                      min="0"
+                    />
+                  </div>
+                  </div>
+
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                  <div className="mb-3">
+                  <label className="animate form-label">Theme</label>
                     <select
-                      className="animate form-select form-select-sm"
+                     className={`animate form-select form-select-sm ${s.placeholder_grey} bg-${theme} ${themeBorder} ${s.placeholder_grey}`}
+                     
                       name="theme_id"
                       value={formData.theme_id}
                       onChange={handleChange}
@@ -178,10 +268,13 @@ const AddTable = (props) => {
                       ))}
                     </select>
                   </div>
-                  <div className="mb-2">
-                    <label className="animate form-label">Background</label>
+                  </div>
+
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                  <div className="mb-3">
+                  <label className="animate form-label">Background</label>
                     <select
-                      className="animate form-select form-select-sm"
+                      className={`animate form-select form-select-sm ${s.placeholder_grey} bg-${theme} ${themeBorder} ${s.placeholder_grey}`}
                       name="background_id"
                       value={formData.background_id}
                       onChange={handleChange}
@@ -194,10 +287,13 @@ const AddTable = (props) => {
                       ))}
                     </select>
                   </div>
-                  <div className="mb-2">
-                    <label className="animate form-label">Language</label>
+                  </div>
+
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                  <div className="mb-3">
+                  <label className="animate form-label">Language</label>
                     <select
-                      className="animate form-select form-select-sm"
+                      className={`animate form-select form-select-sm ${s.placeholder_grey} bg-${theme} ${themeBorder} ${s.placeholder_grey}`}
                       name="language_id"
                       value={formData.language_id}
                       onChange={handleChange}
@@ -210,11 +306,13 @@ const AddTable = (props) => {
                       ))}
                     </select>
                   </div>
+                  </div>
 
-                  <div className="mb-2">
-                    <label className="animate form-label">Currency</label>
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                  <div className="mb-3">
+                  <label className="animate form-label">Currency</label>
                     <select
-                      className="animate form-select form-select-sm"
+                      className={`animate form-select form-select-sm ${s.placeholder_grey} bg-${theme} ${themeBorder} ${s.placeholder_grey}`}
                       name="currency_id"
                       value={formData.currency_id}
                       onChange={handleChange}
@@ -227,59 +325,11 @@ const AddTable = (props) => {
                       ))}
                     </select>
                   </div>
-                </div>
+                  </div>
 
-                {/* Right Column */}
-                <div className="col-12 col-md-6">
-                  <div className="mb-2">
-                    <label className="animate form-label">Minimum Bet</label>
-                    <input
-                      className="animate form-control form-control-sm"
-                      type="number"
-                      placeholder="Enter Minimum Bet"
-                      name="min_bet"
-                      value={formData.min_bet}
-                      onChange={handleChange}
-                      min="0"
-                    />
-                  </div>
-                  <div className="mb-2">
-                    <label className="animate form-label">Maximum Bet</label>
-                    <input
-                      className="animate form-control form-control-sm"
-                      type="number"
-                      placeholder="Enter Maximum Bet"
-                      name="max_bet"
-                      value={formData.max_bet}
-                      onChange={handleChange}
-                      min="0"
-                    />
-                  </div>
-                  <div className="mb-2">
-                    <label className="animate form-label">Side Bet Minimum</label>
-                    <input
-                      className="animate form-control form-control-sm"
-                      type="number"
-                      placeholder="Enter Side Bet Minimum"
-                      name="side_bet_min"
-                      value={formData.side_bet_min}
-                      onChange={handleChange}
-                      min="0"
-                    />
-                  </div>
-                  <div className="mb-2">
-                    <label className="animate form-label">Side Bet Maximum</label>
-                    <input
-                      className="animate form-control form-control-sm"
-                      type="number"
-                      placeholder="Enter Side Bet Maximum"
-                      name="side_bet_max"
-                      value={formData.side_bet_max}
-                      onChange={handleChange}
-                      min="0"
-                    />
-                  </div>
-                  <div className={`mt-4 pt-3 ${props.table == 'baccarat' ? 'd-block': 'd-none'}`}>
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                  <div className="mb-3">
+                  <div className={` mt-0 mt-md-4 mt-xl-0 ${props.table == 'baccarat' ? 'd-block': 'd-none'}`}>
                     <div className="form-check ">
                       <input
                         className="form-check-input animate"
@@ -293,20 +343,21 @@ const AddTable = (props) => {
                       <label className="form-check-label animate">Commission</label>
                     </div>
                   </div>
-                </div>
-
-                {/* Submit Button */}
-                <div className="d-flex justify-content-center pt-3">
-                  <button
-                    type="button"
-                    onClick={validateForm}
-                    className={`btn ${theme === 'dark' ? 'btn-primary' : 'btn-dark'} px-5 animate`}
-                  >
-                    Add Table
-                  </button>
+                  </div>
+                  </div>
                 </div>
               </div>
             </div>
+          </div>
+          <div className={` px-3 d-flex justify-content-end gap-2`}>
+          <button
+                    type="button"
+                    onClick={validateForm}
+                    className={`btn ${theme === 'dark' ? 'btn-primary' : 'btn-dark'} px-3 animate`}
+                  >
+                    Add Table
+                  </button>
+          
           </div>
         </div>
       </div>

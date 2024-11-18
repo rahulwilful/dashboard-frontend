@@ -12,6 +12,18 @@ import {
   Cell,
 } from 'recharts'
 
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="custom-tooltip border d-flex justify-content-center align-items-end  bg-light rounded text-dark text-center p-3">
+        {`Number ${label} Hit ${payload[0].value} times`}
+      </div>
+    );
+  }
+
+  return null;
+};
+
 const BarChartComponent = (props) => {
   const theme = useSelector((state) => state.theme)
   const [data, setData] = useState([])
@@ -105,7 +117,9 @@ const BarChartComponent = (props) => {
           className="text-shadow fw-bold poppins-300"
         />
         <CartesianGrid strokeDasharray="0 0 " stroke={stroke} vertical={false} />
-        <Tooltip />
+        
+        <Tooltip content={<CustomTooltip />} />
+       {/*  <Tooltip /> */}
 
         {/*  <Legend /> */}
 
