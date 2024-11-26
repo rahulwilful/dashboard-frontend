@@ -343,16 +343,16 @@ const AndarBaharDashboard = () => {
     setSideWin(resData[0].side_win)
     setData(resData)
     setAndarWinVsBaharWin([
-      { name: 'Andar Win', value: andarTotal },
-      { name: 'Bahar Win', value: baharTotal },
+      { name: 'Andar ', value: andarTotal },
+      { name: 'Bahar ', value: baharTotal },
     ])
     setAndarShotWinVsBaharShotWin([
       { name: 'Andar Shot', value: andarShot },
       { name: 'Bahar Shot', value: baharShot },
     ])
     setGraphData([
-      { name: 'Andar Win', value: andarTotal, color: 'rgb(36, 141, 92)' },
-      { name: 'Bahar Win', value: baharTotal, color: 'rgb(255, 43, 50)' },
+      { name: 'Andar ', value: andarTotal, color: 'rgb(36, 141, 92)' },
+      { name: 'Bahar ', value: baharTotal, color: 'rgb(255, 43, 50)' },
       { name: 'Andar Shot', value: andarShot, color: 'rgb(36, 141, 92)' },
       { name: 'Bahar Shot', value: baharShot, color: 'rgb(255, 43, 50)' },
     ])

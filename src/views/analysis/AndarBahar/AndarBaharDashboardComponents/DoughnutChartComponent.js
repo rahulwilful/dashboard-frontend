@@ -33,38 +33,54 @@ const renderCustomizedLabel = ({
   )
 }
 
-const CustomTooltip = ({ active, payload, label }) => {
+// Custom Tooltip Component
+const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
+    const { name, value, percentage } = payload[0].payload;
     return (
-      <div className="custom-tooltip border d-flex justify-content-center align-items-end  bg-light rounded text-dark text-center p-3">
-        {`Number ${label} Hit ${payload[0].value} times`}
+      <div className='bg-light rounded p-2 text-dark'>
+        <p>{` ${name} ${percentage}% is wins`}</p>
+       
       </div>
-    );
+    )
   }
-
   return null;
 };
 
 const DoughnutChartComponent = (props) => {
   const [data, setData] = useState([])
-  const [isdataLoaded, setIsdataLoaded] = useState(false)
   const COLORS = ['rgb(22, 115, 253)', 'rgb(255, 43, 50)', 'rgb(50, 134, 252)', 'rgb(252, 68, 83)']
+
   useEffect(() => {
-    setData(props.doughnutData)
-  })
+    let data = []
+    let total = 0
+    for(let i in props.doughnutData){
+     total = total + props.doughnutData[i].value
+    }
+
+    console.log('total: ',total)
+
+    for(let i in props.doughnutData){
+      data.push({name: props.doughnutData[i].name, value: props.doughnutData[i].value, percentage: (props.doughnutData[i].value/total*100).toFixed(0)})
+     }
+
+     console.log("data: ",data)
+
+    setData(data)
+  }, [props.doughnutData]) // Update when props change
+
   return (
     <div>
       <div className={``}>
-        <ResponsiveContainer width="100%" height={300} className={'text-shadow '}>
+        <ResponsiveContainer width="100%" height={300} className={'text-shadow'}>
           <PieChart>
-            <Tooltip />
+            <Tooltip content={<CustomTooltip />} />
             <Legend />
             <Pie
               className="drop_shadow"
               data={data}
               cx="50%"
               cy="50%"
-              radius={[0, 9, 9, 0]}
               innerRadius={40}
               outerRadius={80}
               fill="#8884d8"

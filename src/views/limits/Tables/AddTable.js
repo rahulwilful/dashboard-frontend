@@ -90,8 +90,10 @@ const AddTable = (props) => {
     if (!formData.language_id) return showToast('Select Language', 'info')
     if (!formData.side_bet_max) return showToast('Enter Side Bet Maximum', 'info')
     if (!formData.currency_id) return showToast('Select Currency', 'info')
-    if(formData.min_bet > formData.max_bet) return showToast('Minimum Bet should be less than Maximum Bet', 'info',3000)
-      if(formData.side_bet_min > formData.side_bet_max) return showToast('Side Bet Minimum should be less than Side Bet Maximum', 'info',3000)
+    if (formData.min_bet > formData.max_bet)
+      return showToast('Minimum Bet should be less than Maximum Bet', 'info', 3000)
+    if (formData.side_bet_min > formData.side_bet_max)
+      return showToast('Side Bet Minimum should be less than Side Bet Maximum', 'info', 3000)
 
     setShowModal(true) // Show modal
   }
@@ -111,7 +113,6 @@ const AddTable = (props) => {
     }
   }
 
-  
   useEffect(() => {
     setThemeClass(
       theme === 'dark'
@@ -144,19 +145,19 @@ const AddTable = (props) => {
       </Modal>
 
       {/* Main Form */}
-      
+
       <div className={`container-xl px-4 mt-4 ${theme === 'dark' ? 'text-light' : 'text-dark'}`}>
-      <div className="d-flex justify-content-between">
-                <div>
-                  <i
-                    onClick={() => props.toggleAddNew(false)}
-                    className={`bi bi-arrow-left text-shadow fs-4 pointer  ${theme === 'dark' ? 'text-light' : 'text-dark'}`}  
-                  ></i>
-                </div>
-                <div className="text-center w-100">
-                  <h3 className="text-center pb-2 capitalize animate">{props.table}</h3>
-                </div>
-              </div>
+        <div className="d-flex justify-content-between">
+          <div>
+            <i
+              onClick={() => props.toggleAddNew(false)}
+              className={`bi bi-arrow-left text-shadow fs-4 pointer  ${theme === 'dark' ? 'text-light' : 'text-dark'}`}
+            ></i>
+          </div>
+          <div className="text-center w-100">
+            <h3 className="text-center pb-2 capitalize animate">{props.table}</h3>
+          </div>
+        </div>
         <div className={`row `}></div>
         <div className={`col-xl-12  `}>
           {/* Account details card */}
@@ -174,190 +175,188 @@ const AddTable = (props) => {
 
                 {/* Form Row */}
                 <div className={`row gx-3 mb3`}>
-                  
-
                   <div className={`col-12 col-md-6 col-xl-4`}>
-                  <div className="mb-3">
-                    <label className="animate form-label">Table Name</label>
-                    <input
-                      className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder} ${s.placeholder_grey}`}
-                      type="text"
-                      placeholder="Enter Table Name"
-                      name="table_limit_name"
-                      value={formData.table_limit_name}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  </div>
-
-                  <div className={`col-12 col-md-6 col-xl-4`}>
-                  <div className="mb-3">
-                  <label className="animate form-label">Minimum Bet</label>
-                    <input
-                     className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder} ${s.placeholder_grey}`}
-                      type="number"
-                      placeholder="Enter Minimum Bet"
-                      name="min_bet"
-                      value={formData.min_bet}
-                      onChange={handleChange}
-                      min="0"
-                    />
-                  </div>
-                  </div>
-
-                  <div className={`col-12 col-md-6 col-xl-4`}>
-                  <div className="mb-3">
-                  <label className="animate form-label">Maximum Bet</label>
-                    <input
-                     className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder} ${s.placeholder_grey}`}
-                      type="number"
-                      placeholder="Enter Maximum Bet"
-                      name="max_bet"
-                      value={formData.max_bet}
-                      onChange={handleChange}
-                      min="0"
-                    />
-                  </div>
-                  </div>
-
-                  <div className={`col-12 col-md-6 col-xl-4`}>
-                  <div className="mb-3">
-                  <label className="animate form-label">Side Bet Minimum</label>
-                    <input
-                     className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder} ${s.placeholder_grey}`}
-                      type="number"
-                      placeholder="Enter Side Bet Minimum"
-                      name="side_bet_min"
-                      value={formData.side_bet_min}
-                      onChange={handleChange}
-                      min="0"
-                    />
-                  </div>
-                  </div>
-
-                  <div className={`col-12 col-md-6 col-xl-4`}>
-                  <div className="mb-3">
-                  <label className="animate form-label">Side Bet Maximum</label>
-                    <input
-                     className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder} ${s.placeholder_grey}`}
-                      type="number"
-                      placeholder="Enter Side Bet Maximum"
-                      name="side_bet_max"
-                      value={formData.side_bet_max}
-                      onChange={handleChange}
-                      min="0"
-                    />
-                  </div>
-                  </div>
-
-                  <div className={`col-12 col-md-6 col-xl-4`}>
-                  <div className="mb-3">
-                  <label className="animate form-label">Theme</label>
-                    <select
-                     className={`animate form-select form-select-sm ${s.placeholder_grey} bg-${theme} ${themeBorder} ${s.placeholder_grey}`}
-                     
-                      name="theme_id"
-                      value={formData.theme_id}
-                      onChange={handleChange}
-                    >
-                      <option value="">Select Theme</option>
-                      {themes.map((theme, i) => (
-                        <option key={i} value={theme.theme_id}>
-                          {theme.theme}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  </div>
-
-                  <div className={`col-12 col-md-6 col-xl-4`}>
-                  <div className="mb-3">
-                  <label className="animate form-label">Background</label>
-                    <select
-                      className={`animate form-select form-select-sm ${s.placeholder_grey} bg-${theme} ${themeBorder} ${s.placeholder_grey}`}
-                      name="background_id"
-                      value={formData.background_id}
-                      onChange={handleChange}
-                    >
-                      <option value="">Select Background</option>
-                      {backgrounds.map((bg) => (
-                        <option key={bg.background_id} value={bg.background_id}>
-                          {bg.background}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  </div>
-
-                  <div className={`col-12 col-md-6 col-xl-4`}>
-                  <div className="mb-3">
-                  <label className="animate form-label">Language</label>
-                    <select
-                      className={`animate form-select form-select-sm ${s.placeholder_grey} bg-${theme} ${themeBorder} ${s.placeholder_grey}`}
-                      name="language_id"
-                      value={formData.language_id}
-                      onChange={handleChange}
-                    >
-                      <option value="">Select Language</option>
-                      {languages.map((lang) => (
-                        <option key={lang.language_id} value={lang.language_id}>
-                          {lang.language}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  </div>
-
-                  <div className={`col-12 col-md-6 col-xl-4`}>
-                  <div className="mb-3">
-                  <label className="animate form-label">Currency</label>
-                    <select
-                      className={`animate form-select form-select-sm ${s.placeholder_grey} bg-${theme} ${themeBorder} ${s.placeholder_grey}`}
-                      name="currency_id"
-                      value={formData.currency_id}
-                      onChange={handleChange}
-                    >
-                      <option value="">Select currency</option>
-                      {currencys.map((curr) => (
-                        <option key={curr.currency_id} value={curr.currency_id}>
-                          {curr.currency}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  </div>
-
-                  <div className={`col-12 col-md-6 col-xl-4`}>
-                  <div className="mb-3">
-                  <div className={` mt-0 mt-md-4 mt-xl-0 ${props.table == 'baccarat' ? 'd-block': 'd-none'}`}>
-                    <div className="form-check ">
+                    <div className="mb-3">
+                      <label className="animate form-label">Table Name</label>
                       <input
-                        className="form-check-input animate"
-                        type="checkbox"
-                        name="commission"
-                        checked={formData.commission}
-                        onChange={() =>
-                          setFormData({ ...formData, commission: !formData.commission })
-                        }
+                        className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder} `}
+                        type="text"
+                        placeholder="Enter Table Name"
+                        name="table_limit_name"
+                        value={formData.table_limit_name}
+                        onChange={handleChange}
                       />
-                      <label className="form-check-label animate">Commission</label>
                     </div>
                   </div>
+
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                    <div className="mb-3">
+                      <label className="animate form-label">Minimum Bet</label>
+                      <input
+                        className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder} `}
+                        type="number"
+                        placeholder="Enter Minimum Bet"
+                        name="min_bet"
+                        value={formData.min_bet}
+                        onChange={handleChange}
+                        min="0"
+                      />
+                    </div>
                   </div>
+
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                    <div className="mb-3">
+                      <label className="animate form-label">Maximum Bet</label>
+                      <input
+                        className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder} `}
+                        type="number"
+                        placeholder="Enter Maximum Bet"
+                        name="max_bet"
+                        value={formData.max_bet}
+                        onChange={handleChange}
+                        min="0"
+                      />
+                    </div>
+                  </div>
+
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                    <div className="mb-3">
+                      <label className="animate form-label">Side Bet Minimum</label>
+                      <input
+                        className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder} `}
+                        type="number"
+                        placeholder="Enter Side Bet Minimum"
+                        name="side_bet_min"
+                        value={formData.side_bet_min}
+                        onChange={handleChange}
+                        min="0"
+                      />
+                    </div>
+                  </div>
+
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                    <div className="mb-3">
+                      <label className="animate form-label">Side Bet Maximum</label>
+                      <input
+                        className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder} `}
+                        type="number"
+                        placeholder="Enter Side Bet Maximum"
+                        name="side_bet_max"
+                        value={formData.side_bet_max}
+                        onChange={handleChange}
+                        min="0"
+                      />
+                    </div>
+                  </div>
+
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                    <div className="mb-3">
+                      <label className="animate form-label">Theme</label>
+                      <select
+                        className={`animate form-select form-select-sm ${s.placeholder_grey} bg-${theme} ${themeBorder} `}
+                        name="theme_id"
+                        value={formData.theme_id}
+                        onChange={handleChange}
+                      >
+                        <option value="">Select Theme</option>
+                        {themes.map((theme, i) => (
+                          <option key={i} value={theme.theme_id}>
+                            {theme.theme}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                    <div className="mb-3">
+                      <label className="animate form-label">Background</label>
+                      <select
+                        className={`animate form-select form-select-sm ${s.placeholder_grey} bg-${theme} ${themeBorder} `}
+                        name="background_id"
+                        value={formData.background_id}
+                        onChange={handleChange}
+                      >
+                        <option value="">Select Background</option>
+                        {backgrounds.map((bg) => (
+                          <option key={bg.background_id} value={bg.background_id}>
+                            {bg.background}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                    <div className="mb-3">
+                      <label className="animate form-label">Language</label>
+                      <select
+                        className={`animate form-select form-select-sm ${s.placeholder_grey} bg-${theme} ${themeBorder} `}
+                        name="language_id"
+                        value={formData.language_id}
+                        onChange={handleChange}
+                      >
+                        <option value="">Select Language</option>
+                        {languages.map((lang) => (
+                          <option key={lang.language_id} value={lang.language_id}>
+                            {lang.language}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                    <div className="mb-3">
+                      <label className="animate form-label">Currency</label>
+                      <select
+                        className={`animate form-select form-select-sm ${s.placeholder_grey} bg-${theme} ${themeBorder} `}
+                        name="currency_id"
+                        value={formData.currency_id}
+                        onChange={handleChange}
+                      >
+                        <option value="">Select currency</option>
+                        {currencys.map((curr) => (
+                          <option key={curr.currency_id} value={curr.currency_id}>
+                            {curr.currency}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                    <div className="mb-3">
+                      <div
+                        className={` mt-0 mt-md-4 mt-xl-0 ${props.table == 'baccarat' ? 'd-block' : 'd-none'}`}
+                      >
+                        <div className="form-check ">
+                          <input
+                            className="form-check-input animate"
+                            type="checkbox"
+                            name="commission"
+                            checked={formData.commission}
+                            onChange={() =>
+                              setFormData({ ...formData, commission: !formData.commission })
+                            }
+                          />
+                          <label className="form-check-label animate">Commission</label>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div className={` px-3 d-flex justify-content-end gap-2`}>
-          <button
-                    type="button"
-                    onClick={validateForm}
-                    className={`btn ${theme === 'dark' ? 'btn-primary' : 'btn-dark'} px-3 animate`}
-                  >
-                    Add Table
-                  </button>
-          
+            <button
+              type="button"
+              onClick={validateForm}
+              className={`btn ${theme === 'dark' ? 'btn-primary' : 'btn-dark'} px-3 animate`}
+            >
+              Add Table
+            </button>
           </div>
         </div>
       </div>

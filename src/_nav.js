@@ -85,6 +85,12 @@ const _nav = [
 
         to: '/settings/update/languages',
       },
+      {
+        component: CNavItem,
+        name: 'Currency',
+
+        to: '/settings/update/currency',
+      },
     ],
   },
   {

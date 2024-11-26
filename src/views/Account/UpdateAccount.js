@@ -215,7 +215,7 @@ const UpdateAccount = () => {
                       <div className={`col-12 col-md-6 col-xl-4`}>
                         <div className={`opacity-75`}>
                           <label className={`small mb-1`} htmlFor="Role">
-                            Email
+                          User Name
                           </label>
                           <input
                             disabled
@@ -223,7 +223,7 @@ const UpdateAccount = () => {
                             id="Role"
                             type="text"
                             name=""
-                            value={userForm.email}
+                            value={userForm.user_name}
                           />
                         </div>
                       </div>

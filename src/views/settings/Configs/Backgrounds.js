@@ -36,16 +36,18 @@ const UpdateBackgrounds = (props) => {
   }
 
   const updateBackground = async () => {
+      let tempForm = {background:form.background.toLowerCase()}
+
     try {
       const { data } = await axiosClient.put(
         `/config/update/background/${form.background_id}`,
-        form,
+        tempForm,
       )
       console.log(data)
       showToast('Background updated successfully!', 'success')
       const temp = backgrounds.map((background) =>
         background.background_id === form.background_id
-          ? { ...background, background: form.background }
+          ? { ...background, background: tempForm.background }
           : background,
       )
       setBackgrounds(temp)
@@ -138,10 +140,12 @@ const UpdateBackgrounds = (props) => {
                 <div class="mb-3">
                  
                   <input
-                    type="email"
+                    type="text"
                     class="form-control"
                     id="exampleInputEmail1"
                     aria-describedby="emailHelp"
+                    value={form.background}
+                    onChange={(e) => setForm({ ...form, background: e.target.value })}
                   />
                  
                 </div>

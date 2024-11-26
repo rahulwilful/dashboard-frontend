@@ -7,6 +7,7 @@ import axiosClient from '../../../axiosClient'
 import roulleteWheel from 'src/assets/images/dashboard/roullete-wheel.png'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { BaccaratTables } from './TableImages'
 
 const UpdateTableLimits = (props) => {
   const theme = useSelector((state) => state.theme)
@@ -142,7 +143,7 @@ const UpdateTableLimits = (props) => {
               <div className="card card-hover shadow border-0  p-0  ">
                 <div className="card-body   m-0 d-flex  ">
                   <div className=" ">
-                    <img src={roulleteWheel} className="" style={{ width: '100px' }} />
+                    <img src={table.game_type_name == 'roulette' ? roulleteWheel : BaccaratTables[i % 20].table} className="" style={{ width: '100px' }} />
                   </div>
                   <div className=" w-100">
                     <div className="">

@@ -1,0 +1,53 @@
+.box {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    overflow: hidden;
+    padding: 2px;
+    border-radius: 7px;
+  }
+  
+  .black::before,
+  .blue::before {
+    content: '';
+    position: absolute;
+    width: 120%;
+    height: 200%;
+    filter: blur(12px);
+    background-image: conic-gradient(rgb(56, 76, 255) 20deg, transparent 120deg);
+    animation: animate 10s linear infinite;
+    z-index: 0;
+    pointer-events: none; /* Prevent pseudo-element from blocking clicks */
+  }
+  
+  .blue::before {
+    background-image: conic-gradient(rgb(238, 56, 255) 20deg, transparent 120deg);
+  }
+
+  .box::after {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    background-color: transparent;
+    border-radius: 5px;
+    z-index: 1;
+    pointer-events: none; /* Prevent pseudo-element from blocking clicks */
+  }
+  
+  .card {
+    position: relative;
+    z-index: 2;
+    pointer-events: auto; /* Ensure card is clickable */
+  }
+  
+  @keyframes animate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  

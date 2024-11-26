@@ -60,6 +60,7 @@ const UpdateTableLimits = React.lazy(() => import('./views/settings/Configs/Upda
 const Backgrounds = React.lazy(() => import('./views/settings/Configs/Backgrounds'))
 const Themes = React.lazy(() => import('./views/settings/Configs/Themes'))
 const Languages = React.lazy(() => import('./views/settings/Configs/Languages'))
+const Currency = React.lazy(() => import('./views/settings/Configs/Currency'))
 
 const RouletteDashboard = React.lazy(() => import('./views/analysis/Roulette/RouletteDashboard'))
 const BaccaratDashboard = React.lazy(() => import('./views/analysis/Baccarat/BaccaratDashboard.js'))
@@ -141,6 +142,7 @@ const routes = [
   { path: '/settings/update/background', name: 'Backgrounds', element: Backgrounds },
   { path: '/settings/update/themes', name: 'Themes', element: Themes },
   { path: '/settings/update/languages', name: 'Languages', element: Languages },
+  { path: '/settings/update/currency', name: 'Currency', element: Currency },
 
   { path: '/rough', name: 'Rough', element: Rough },
   { path: '/rough2', name: 'Rough2', element: Rough2 },

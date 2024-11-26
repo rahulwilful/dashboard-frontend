@@ -18,6 +18,8 @@ import { GetCurrent } from '../../getCurrent'
 
 import NoDataFull from '../NoData/NoDataFull'
 
+import { BaccaratTables } from '../../components/Constants/TableImages'
+
 gsap.registerPlugin(ScrollTrigger)
 
 const TableAnalysis = () => {
@@ -30,8 +32,31 @@ const TableAnalysis = () => {
   const [originaltables, setOriginalTables] = useState([])
   const [search, setSearch] = useState('')
   const [display, setDisplay] = useState('loading')
+  const [image, setImage] = useState('')
 
   const baccarat = [baccaratBlue, baccaratGreen, baccaratPink, baccaratRed]
+
+  const handleFaceImages = () => {
+    console.log("game: ",game , " ",BaccaratTables)
+    if (game.toLowerCase().includes('baccarat'))  setImage(BaccaratTables[0].table) 
+    else if(game.toLowerCase().includes('andar bahar')) setImage(BaccaratTables[1].table)
+    else if(game.toLowerCase().includes('3 card poker')) setImage(BaccaratTables[2].table)
+    else if(game.toLowerCase().includes('5 card poker')) setImage(BaccaratTables[3].table)
+    else if(game.toLowerCase().includes('house taxes')) setImage(BaccaratTables[4].table)
+    else if(game.toLowerCase().includes('mini flush')) setImage(BaccaratTables[5].table)
+    else if(game.toLowerCase().includes('casino war')) setImage(BaccaratTables[6].table)
+    else if(game.toLowerCase().includes('black jack')) setImage(BaccaratTables[7].table)
+    else if(game.toLowerCase().includes('dragon tiger')) setImage(BaccaratTables[8].table)
+    else if(game.toLowerCase().includes('7 up down')) setImage(BaccaratTables[9].table)
+    else if(game.toLowerCase().includes('teen patti')) setImage(BaccaratTables[10].table)
+    else if(game.toLowerCase().includes('texas holdem')) setImage(BaccaratTables[11].table)
+    else if(game.toLowerCase().includes('pai gow')) setImage(BaccaratTables[12].table)
+    else if(game.toLowerCase().includes('bai buu')) setImage(BaccaratTables[13].table)
+    else if(game.toLowerCase().includes('mahjong')) setImage(BaccaratTables[14].table)
+    else if(game.toLowerCase().includes('nui nui')) setImage(BaccaratTables[15].table)
+    else setImage(BaccaratTables[18].table)
+
+  }
 
   const getTables = async () => {
     try {
@@ -44,6 +69,7 @@ const TableAnalysis = () => {
       }else{
         setDisplay('data')
       }
+      handleFaceImages()
      
     } catch (error) {
       console.error(error)
@@ -203,7 +229,7 @@ const TableAnalysis = () => {
               <div className="card border-0 overflow-hidden bg-transparent" style={{ width: '100%' }}>
                 <div className="overflow-hidden">
                   <img
-                    src={game == 'roulette' ? roulletImage : baccarat[i % 3]}
+                    src={game == 'roulette' ? roulletImage :image}
                     className="card-img-top card-hover2 bg-dark bg-gradient drop_shadow"
                     alt="..."
                     

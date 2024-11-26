@@ -13,7 +13,23 @@ import { GetCurrent } from '../../getCurrent.js'
 
 const Config = () => {
   const theme = useSelector((state) => state.theme)
+  const [themeClass, setThemeClass] = useState('bg-light text-dark border')
+  const [themeBorder, setThemeBorder] = useState('bg-light text-dark border')
   const navigate = useNavigate()
+
+  useEffect(() => {
+    setThemeClass(
+      theme === 'dark'
+        ? `bg-dark text-light border-secondary border-opacity-25 shadow-xs ${s.placeholder_grey}`
+        : `text-dark  border border `,
+    )
+
+    setThemeBorder(
+      theme === 'dark'
+        ? `bg-dark text-light border-secondary  border-opacity-50  ${s.placeholder_grey}`
+        : `text-dark bg-light bg-gradient border `,
+    )
+  }, [theme])
 
   const { colorMode, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
   const [formData, setFormData] = useState({
@@ -64,6 +80,14 @@ const Config = () => {
       }
       console.error(error)
     }
+
+    setFormData({
+      game_type_name: '',
+      theme: '',
+      language: '',
+      background: '',
+      currency:"",
+    })
   }
 
   const handleAddTableType = async () => {
@@ -84,6 +108,14 @@ const Config = () => {
         showToast('Error while adding Table Type', 'error')
       }
     }
+
+    setFormData({
+      game_type_name: '',
+      theme: '',
+      language: '',
+      background: '',
+      currency:"",
+    })
   }
 
   const handleAddBackground = async () => {
@@ -104,6 +136,14 @@ const Config = () => {
       }
       console.error(error)
     }
+
+    setFormData({
+      game_type_name: '',
+      theme: '',
+      language: '',
+      background: '',
+      currency:"",
+    })
   }
 
   const handleAddLanguage = async () => {
@@ -124,6 +164,14 @@ const Config = () => {
       }
       console.error(error)
     }
+
+    setFormData({
+      game_type_name: '',
+      theme: '',
+      language: '',
+      background: '',
+      currency:"",
+    })
   }
 
   const handleAddCurrency = async () => {
@@ -144,6 +192,14 @@ const Config = () => {
       }
       console.error(error)
     }
+
+    setFormData({
+      game_type_name: '',
+      theme: '',
+      language: '',
+      background: '',
+      currency:"",
+    })
   }
 
   useEffect(() => {
@@ -365,26 +421,37 @@ const Config = () => {
       </div>
 
       {/* ///////////////////////////////////////////////////////////////////////////////////// */}
-      <div className={`py-3  ${theme === 'dark' ? 'text-light' : 'text-dark'} fade-in `}>
-        <h1 className="text-center animate py-3">Configuration</h1>
-        <div className={`${s.container}  d-flex justify-content-center `}>
-          <div className={` w-100 d-flex justify-content-center align-items-center `}>
+     
+{/* ///////////////////////////////////////////////////////////////////////////////////////////////////////// */}
+      <div className={`container-xl px-4 mt-4 ${theme === 'dark' ? 'text-light' : 'text-dark'}`}>
+        
+        <div className={`row `}></div>
+        <div className={`col-xl-12  `}>
+          {/* Account details card */}
+          <div
+            className={`card mb-4 border border-secondary border-opacity-50 shadow-xs  text-bg-${theme}`}
+          >
             <div
-              className={`row ${s.form} border-bottom border-2 border-top py-3 py-md-5 ${
-                theme === 'dark' ? 'border-primary' : 'border-dark'
-              } rounded-4 p-4 shadow-lg`}
+              className={`card-header border-bottom border-secondary border-opacity-25 d-flex justify-content-between`}
             >
-              <div className="h-100 d-flex flex-column justify-content-evenly ">
-                <div className={`row  w-100`}>
-                  <div className="col-12 col-md-6  ">
+              <div className={``}>Add User</div>
+            </div>
+            <div className={`card-body`}>
+              <div>
+                {/* Form Group (username) */}
+
+                {/* Form Row */}
+                <div className={`row gx-3 mb3`}>
+                 
+
+                  <div className={`col-12 col-md-6 col-xl-4`}>
                     <div className="mb-2  ">
                       <label className="animate form-label">Game Type</label>
                       <div className="d-flex   align-items-center gap-2 flex-md-row">
                         <input
                           type="text"
-                          className={`form-control animate `}
+                          className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder} `}
                           placeholder="Enter"
-                        
                           name="game_type_name"
                           value={formData.game_type_name}
                           onChange={handleChange}
@@ -402,13 +469,14 @@ const Config = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-12 col-md-6  ">
-                    <div className="mb-2  ">
-                      <label className="animate form-label">Theme</label>
-                      <div className="d-flex   align-items-center gap-2 flex-md-row">
+
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                  <div className="mb-2  ">
+                      <label className={`animate form-label ${s.placeholder_grey} ${theme === 'dark' ? 'text-light' : 'text-dark'}`}>Theme</label>
+                      <div className={`d-flex   align-items-center gap-2 flex-md-row `}>
                         <input
                           type="text"
-                          className="form-control animate "
+                          className={`form-control animate ${s.placeholder_grey} ${theme === 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'} ${themeBorder} `}
                           placeholder="Enter"
                           name="theme"
                           value={formData.theme}
@@ -427,13 +495,14 @@ const Config = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-12 col-md-6  ">
-                    <div className="mb-2  ">
-                      <label className="animate form-label">Background</label>
-                      <div className="d-flex   align-items-center gap-2 flex-md-row">
+
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                  <div className="mb-2  ">
+                      <label className={`animate form-label ${s.placeholder_grey} ${theme === 'dark' ? 'text-light' : 'text-dark'}`}>Background</label>
+                      <div className={`d-flex   align-items-center gap-2 flex-md-row `}>
                         <input
                           type="text"
-                          className="form-control animate "
+                          className={`form-control animate ${s.placeholder_grey} ${theme === 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'} ${themeBorder} `}
                           placeholder="Enter"
                           name="background"
                           value={formData.background}
@@ -452,38 +521,15 @@ const Config = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-12 col-md-6  ">
-                    <div className="mb-2  ">
-                      <label className="animate form-label">Language</label>
-                      <div className="d-flex   align-items-center gap-2 flex-md-row">
+
+
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                  <div className="mb-2  ">
+                      <label className={`animate form-label ${s.placeholder_grey} ${theme === 'dark' ? 'text-light' : 'text-dark'}`}>Currency</label>
+                      <div className={`d-flex   align-items-center gap-2 flex-md-row `}>
                         <input
                           type="text"
-                          className="form-control animate "
-                          placeholder="Enter"
-                          name="language"
-                          value={formData.language}
-                          onChange={handleChange}
-                        />
-                        <div className="my-1 px-1 ">
-                          <button
-                            data-bs-toggle="modal"
-                            data-bs-target="#addLanguageModal"
-                            type="button"
-                            className={`btn animate ${theme === 'dark' ? 'btn-primary' : 'btn-dark '} btn-sm  px-3 ${formData.language == '' ? 'disabled' : 'opacity-100'}`}
-                          >
-                            Add
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-12 col-md-6  ">
-                    <div className="mb-2  ">
-                      <label className="animate form-label">Currency</label>
-                      <div className="d-flex   align-items-center gap-2 flex-md-row">
-                        <input
-                          type="text"
-                          className="form-control animate "
+                          className={`form-control animate ${s.placeholder_grey} ${theme === 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'} ${themeBorder} `}
                           placeholder="Enter"
                           name="currency"
                           value={formData.currency}
@@ -502,13 +548,31 @@ const Config = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-12 col-md-6  "></div>
+
+
+                  
+
+                 
+
+                 
+
+                  
+
+                  
+
+
+
+                  
+
+
                 </div>
               </div>
             </div>
           </div>
+         
         </div>
       </div>
+
     </>
   )
 }
