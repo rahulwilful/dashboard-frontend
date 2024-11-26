@@ -9,23 +9,26 @@ import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { BaccaratTables } from './TableImages'
 
+import gsap from 'gsap'
+
 const UpdateTableLimits = (props) => {
+  const [renderKey, setRenderKey] = useState(0)
   const theme = useSelector((state) => state.theme)
   const [search, setSearch] = useState('')
   const navigate = useNavigate()
   const [games, setGames] = useState([])
   const [originalGames, setOriginalGames] = useState([])
-  const [form, setForm] = useState({ game_type_id: '', game_type_name: '' })
+  const [form, setForm] = useState({ game_type_id: '', game_type_name: '',active: true })
   const getGames = async () => {
     const { data } = await axiosClient.get(`/config/get/table/type`)
-    console.log("data: ",data)
+    console.log('data: ', data)
 
     setGames(data.game_types)
     setOriginalGames(data.game_types)
   }
 
   const handleSetForm = (table) => {
-    setForm({ game_type_id: table.game_type_id, game_type_name: table.game_type_name })
+    setForm({ game_type_id: table.game_type_id, game_type_name: table.game_type_name,active: table.active })
   }
 
   const updateTableType = async () => {
@@ -33,13 +36,17 @@ const UpdateTableLimits = (props) => {
       const { data } = await axiosClient.put(`/config/update/game/type/${form.game_type_id}`, form)
       console.log(data)
       showToast('Table Type updated successfully!', 'success')
-      const temp = games
+      let temp = games
       for (let i in temp) {
         if (temp[i].game_type_id == form.game_type_id) {
           temp[i].game_type_name = form.game_type_name
+          temp[i].active = form.active
         }
       }
+     
       setGames(temp)
+      setOriginalGames(temp)
+      setRenderKey(renderKey + 1)
     } catch (error) {
       console.error(error)
       showToast('Error while updating Table Type', 'error')
@@ -56,18 +63,18 @@ const UpdateTableLimits = (props) => {
   }, [])
 
   const handleSearch = (e) => {
-    console.log("handleSearch called")
+    console.log('handleSearch called')
     if (e.target.value === '') {
       setGames(originalGames)
     } else {
       const value = e.target.value.toLowerCase()
-      const filtered = games.filter((game) =>
-        game.game_type_name.toLowerCase().includes(value),
-      )
+      const filtered = games.filter((game) => game.game_type_name.toLowerCase().includes(value))
       setGames(filtered)
       setSearch(value)
-    } 
+    }
   }
+
+
   return (
     <>
       <div
@@ -91,15 +98,27 @@ const UpdateTableLimits = (props) => {
             <div className="modal-body">
               <div className="mb-3">
                 <label htmlFor="game_type_name" className="form-label">
-                  Table Type Name
+                  Game Type
                 </label>
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control "
                   id="game_type_name"
                   value={form.game_type_name}
                   onChange={(e) => setForm({ ...form, game_type_name: e.target.value })}
                 />
+              </div>
+              <div className={``}>
+                <div className="form-check ">
+                  <input
+                    className="form-check-input "
+                    type="checkbox"
+                    name="commission"
+                    checked={form.active}
+                    onChange={() => setForm({ ...form, active: !form.active })}
+                  />
+                  <label className="form-check-label ">Active</label>
+                </div>
               </div>
             </div>
             <div className="modal-footer">
@@ -124,12 +143,12 @@ const UpdateTableLimits = (props) => {
       <div
         className={`table-main  py-2 container ${theme === 'dark' ? 'text-light' : 'text-dark'}`}
       >
-        <h2 className="text-center my-2">Games</h2>
+        <h2 className="text-center my-2 animate">Games</h2>
         <div className={` `}>
           <div class="mb-3">
             <input
               type="input"
-              class="form-control"
+              class="form-control animate"
               placeholder="Search Game"
               onChange={handleSearch}
               id="search"
@@ -137,25 +156,36 @@ const UpdateTableLimits = (props) => {
             />
           </div>
         </div>
-        <div className="row gap-0 w-100 px-3 ">
+        <div className="row gap-0 w-100 px-3 " key={renderKey}>
           {games.map((table, i) => (
-            <div key={i} className="col-12 col-sm-3  mb-3 mb-sm-0 mt-2">
-              <div className="card card-hover shadow border-0  p-0  ">
-                <div className="card-body   m-0 d-flex  ">
-                  <div className=" ">
-                    <img src={table.game_type_name == 'roulette' ? roulleteWheel : BaccaratTables[i % 20].table} className="" style={{ width: '100px' }} />
+            <div key={i} className={`col-12 col-sm-3  mb-3 mb-sm-0 mt-2 `}>
+              <div className={`card card-hover shadow border-0  p-0 animate `}>
+                <div className={`card-body   m-0 d-flex  gap-1 `}>
+                  <div className={` `}>
+                    <img
+                      src={
+                        table.game_type_name == 'roulette'
+                          ? roulleteWheel
+                          : BaccaratTables[i % 20].table
+                      }
+                      className="object-fit-cover "
+                      style={{ width: '60px',height: '60px' }}
+                    />
                   </div>
-                  <div className=" w-100">
-                    <div className="">
-                      <h5 className="card-title  capitalize">{table.game_type_name}</h5>
-                      <p className="card-text capitalize "></p>
+                  <div className={` w-100`}>
+                    <div className={` `}>
+                      <h5 className={`card-title  capitalize `}>{table.game_type_name}</h5>
+                      <p
+                        className={`card-text capitalize  bg-gradient shadow-xs rounded-circle ${table.active == true ? 'bg-success' : 'bg-danger'}`}
+                        style={{ width: 10, height: 10 }}
+                      ></p>
                     </div>
-                    <div className=" d-flex justify-content-end ">
+                    <div className={` d-flex justify-content-end `}>
                       <i
                         onClick={() => handleSetForm(table)}
                         data-bs-toggle="modal"
                         data-bs-target="#exampleModal"
-                        class="bi bi-pen-fill icon-size font-size icon pointer text-shadow icon-hover"
+                        className={`bi bi-pen-fill icon-size font-size icon pointer text-shadow icon-hover`}
                       ></i>
                     </div>
                   </div>

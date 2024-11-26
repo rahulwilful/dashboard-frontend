@@ -35,6 +35,14 @@ const AppSidebar = () => {
   const getLimits = async () => {
     try {
       const { data } = await axiosClient.get('/config/get/table/type')
+
+      let newData = []
+
+      for(let i in data.game_types){
+        if(data.game_types[i].active == true){
+          newData.push(data.game_types[i])
+        }
+      }
       
       const tempNavigation = tempNav.map((navItem) => {
         if (user.limits == true && navItem.name === 'Table Limits') {
@@ -42,7 +50,8 @@ const AppSidebar = () => {
             ...navItem,
             items: [
               ...navItem.items,
-              ...data.game_types.map((tableType) => ({
+             ...newData.map((tableType) => ( {
+             
                 component: 'CNavItem',
                 name: tableType.game_type_name,
                 to: `/limits/${tableType.game_type_name}/${tableType.game_type_id}`,
@@ -55,7 +64,7 @@ const AppSidebar = () => {
             ...navItem,
             items: [
               ...navItem.items,
-              ...data.game_types.map((tableType) => ({
+             ...newData.map((tableType) => ({
                 component: 'CNavItem',
                 name: tableType.game_type_name,
                 to: `/table/analysis/${tableType.game_type_name}/${tableType.game_type_id}`,
