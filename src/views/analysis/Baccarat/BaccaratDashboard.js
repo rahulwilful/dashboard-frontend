@@ -208,7 +208,7 @@ const BaccaratDashboard = () => {
       }
     }
 
-    //console.log('live status: ', live)
+    console.log('live status: ', live)
     setLive(live)
     if (live == true) {
       setLiveData(resData[0])
@@ -440,7 +440,7 @@ const BaccaratDashboard = () => {
                 className={`col-12 col-md-10 col-xxl-12 border-0 shadow-s poppins-500 box ${s.opacity} ${themeClass} bg-gradient py-2 rounded`}
               >
                 <div className={`row  gy-2`}>
-                  <div className={`col-12 col-md-6 col-xxl-3 d-flex  `}>
+                  <div className={`col-12 col-md-6 col-xxl-3 d-flex `}>
                     <div
                       className={` d-flex gap-2 w-100 justify-content-between   justify-content-sm-evenly align-items-center`}
                     >
@@ -590,6 +590,7 @@ const BaccaratDashboard = () => {
                 shoeData={data}
                 dataSize={dataSize}
                 getDataByShoe={getDataByShoe}
+                live= {live}
               />
             </div>
             <div className={`w-100   mt-3`}>

@@ -4,7 +4,7 @@ import DataTable, { createTheme } from 'react-data-table-component'
 import { GetCurrent } from '../../getCurrent'
 import axiosClient from '../../axiosClient'
 import s from './AllUsers.module.css'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import showToast from '../../components/Notification/ShowToast'
 
@@ -63,6 +63,7 @@ const AllUsers = () => {
   const [users, setUsers] = useState([])
   const [renderKey, setRenderKey] = useState(0)
   const [toggleUser, setTuggleUser] = useState({})
+  const navigate = useNavigate()
   let user = ''
   let originalUsers = []
 
@@ -71,6 +72,10 @@ const AllUsers = () => {
      
   
   }, [])
+
+  const handleUpdateUser = (id) => {
+    navigate(`/update/user/${id}`)
+  }
 
   const getCurrent = async () => {
     console.log(" called getCurrent")
@@ -121,6 +126,7 @@ const AllUsers = () => {
    }
   }
 
+  
 
 
   const columns = [

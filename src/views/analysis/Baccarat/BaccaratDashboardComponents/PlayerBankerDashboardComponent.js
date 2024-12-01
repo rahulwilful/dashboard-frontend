@@ -527,6 +527,20 @@ const PlayerBankerDashboardComponent = (props) => {
                   <div className={`w-100`}>
                     <table className={`table-${theme} fontText  table-sm w-100 `}>
                       <tbody>
+                      <tr className='border-bottom border-secondary border-opacity-25 mb-1'>
+                          <td className={`${props.live ? 'text-light' : 'text-danger'}`}>{props.live ? 'Active' : 'Inactive'}</td>
+                          <td className={`d-flex justify-content-center align-items-center py-2`}>
+                            <span
+                              className={`rounded-circle d-flex justify-content-center    ${props.live ? 'bg-success' : 'bg-danger'} text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
+                              style={{
+                                height: '10px',
+                                width: '10px',
+                              }}
+                            >
+                              
+                            </span>
+                          </td>
+                        </tr>
                         <tr>
                           <td>Shoe </td>
                           <td className={`text-end  `}>
@@ -638,6 +652,7 @@ const PlayerBankerDashboardComponent = (props) => {
                             </span>
                           </td>
                         </tr>
+                       
                       </tbody>
                     </table>
                   </div>

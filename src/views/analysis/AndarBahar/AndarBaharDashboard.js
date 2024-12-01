@@ -218,7 +218,7 @@ const AndarBaharDashboard = () => {
       }
     }
 
-    //  console.log('live status: ', live)
+    console.log('live status: ', live)
     setLive(live)
     if (live == true) {
       setLiveData(resData[0])
@@ -540,7 +540,7 @@ const AndarBaharDashboard = () => {
 
   const config = { threshold: 0.1 }
 
-  let observer = new IntersectionObserver(function (entries, self) {
+  /*   let observer = new IntersectionObserver(function (entries, self) {
     let targets = entries.map((entry) => {
       if (entry.isIntersecting) {
         self.unobserve(entry.target)
@@ -550,13 +550,13 @@ const AndarBaharDashboard = () => {
 
     // Call our animation function
     fadeIn(targets)
-  }, config)
+  }, config) */
 
   /* document.querySelectorAll('.box').forEach((box) => {
     observer.observe(box)
   }) */
 
-  function fadeIn(targets) {
+  /*   function fadeIn(targets) {
     gsap.to(targets, {
       opacity: 1,
       y: 0,
@@ -564,7 +564,7 @@ const AndarBaharDashboard = () => {
       stagger: 0.2,
       ease: 'power1.out',
     })
-  }
+  } */
 
   return (
     <div className={` ${theme === 'dark' ? 'text-light' : 'text-dark'} pb-4 `}>
@@ -945,7 +945,7 @@ const AndarBaharDashboard = () => {
             </div>
           </div>
 
-          <div className={`mt-3 box ${s.opacity}`}>
+          <div className={`mt-3 box  ${s.opacity}`}>
             <div
               className={`text-light d-flex w-100 py-1 justify-content-center gap-2 align-items-center font12 ${themeBorder} shadow-s  rounded `}
             >
@@ -1016,6 +1016,19 @@ const AndarBaharDashboard = () => {
                   <i className="bi bi-chevron-right "></i>
                 </button>
               </div>
+              <div className={`fontTextHeading  poppins-500  d-flex justify-content-center align-items-center gap-2 ${live ? 'text-ligt':'text-danger'}`}>
+              <div
+                        className={`me-2 ${live ? 'bg-success' : 'bg-danger'} shadow-s rounded-circle `}
+                        style={{
+                          height: '10px',
+                          width: '10px',
+                        }}
+                      ></div>
+              <div className={``}>
+                Active
+                </div>
+                
+              </div>
             </div>
           </div>
 
@@ -1037,9 +1050,7 @@ const AndarBaharDashboard = () => {
                     <div
                       className={`rounded h-100 d-flex justify-content-center align-items-center shadow-s ${themeBorder} ${showDoughnutChart ? 'd-none' : ''} `}
                     >
-                    
                       <NoData />
-                   
                     </div>
                   </div>
                   <div className={` col-12 col-md-4  box ${s.opacity}`}>
