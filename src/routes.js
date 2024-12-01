@@ -64,9 +64,8 @@ const Currency = React.lazy(() => import('./views/settings/Configs/Currency'))
 
 const RouletteDashboard = React.lazy(() => import('./views/analysis/Roulette/RouletteDashboard'))
 const BaccaratDashboard = React.lazy(() => import('./views/analysis/Baccarat/BaccaratDashboard.js'))
-const AndarBaharDashboard = React.lazy(
-  () => import('./views/analysis/AndarBahar/AndarBaharDashboard.js'),
-)
+const AndarBaharDashboard = React.lazy(() => import('./views/analysis/AndarBahar/AndarBaharDashboard.js'))
+const ThreeCardPokerDashboard = React.lazy(() => import('./views/analysis/3CardPoker/ThreeCardPokerDashboard.js'))
 
 const Rough = React.lazy(() => import('./views/rough/Rough'))
 const Rough2 = React.lazy(() => import('./views/rough/Rough2'))
@@ -106,6 +105,11 @@ const routes = [
 
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: tempDashboard },
+  {
+    path: '/dashboard/threecardpoker/:game/:table_limit_name/:game_type_id/:table_limit_id',
+    name: 'Dashboard',
+    element: ThreeCardPokerDashboard,
+  },
   {
     path: '/dashboard/roulette/:game/:table_limit_name/:game_type_id/:table_limit_id',
     name: 'Dashboard',

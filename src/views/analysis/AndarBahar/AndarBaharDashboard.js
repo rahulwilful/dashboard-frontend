@@ -30,10 +30,10 @@ gsap.registerPlugin(CustomEase)
 const AndarBaharDashboard = () => {
   const navigate = useNavigate()
   const theme = useSelector((state) => state.theme)
+  const { game, table_limit_name, game_type_id, table_limit_id } = useParams()
   const [renderKey, setRenderKey] = useState(0)
   const [display, setDisplay] = useState('loading')
 
-  const { game, table_limit_name, game_type_id, table_limit_id } = useParams()
 
   const [data, setData] = useState([])
   const [index, setIndex] = useState(0)
@@ -100,7 +100,8 @@ const AndarBaharDashboard = () => {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      if (localStorage.getItem('baccaratCallOnTimeInterval') === 'true') {
+      if (localStorage.getItem('andarBaharCallOnTimeInterval') === 'true') {
+        //console.log("data.length: ",data.length)
         //getGameData(limit)
       }
     }, 2000)
@@ -139,7 +140,7 @@ const AndarBaharDashboard = () => {
       }
 
       setRenderKey(renderKey + 1)
-      localStorage.setItem('baccaratCallOnTimeInterval', true)
+      localStorage.setItem('andarBaharCallOnTimeInterval', true)
     } catch (err) {
       console.log('err: ', err)
       setDisplay('nodata')
@@ -147,6 +148,7 @@ const AndarBaharDashboard = () => {
   }
 
   const getCustomeGameDataByRadio = async (limitParam) => {
+    setData([])
     const limitToUse = limitParam || limit
 
     try {
@@ -170,10 +172,11 @@ const AndarBaharDashboard = () => {
       console.log('err: ', err)
       setDisplay('nodata')
     }
-    localStorage.setItem('baccaratCallOnTimeInterval', true)
+    localStorage.setItem('andarBaharCallOnTimeInterval', true)
   }
 
   const getCustomeGameData = async () => {
+    setData([])
     try {
       const res = await axiosClient.get(
         `/game/get/andar_bahar/${game_type_id}/${table_limit_id}/${customLimit}`,
@@ -196,7 +199,36 @@ const AndarBaharDashboard = () => {
       setDisplay('nodata')
     }
 
-    localStorage.setItem('baccaratCallOnTimeInterval', false)
+    localStorage.setItem('andarBaharCallOnTimeInterval', false)
+  }
+
+  const getGameDataByDate = async () => {
+    //  console.log('fromDate ', fromDate, ' toDate ', toDate)
+    setData([])
+    console.log("first date: ", fromDate, 'second date: ', toDate)
+    try {
+      const res = await axiosClient.post(`/game/get/andar_bahar/${game_type_id}/${table_limit_id}`, {
+        from_date: fromDate,
+        to_date: toDate,
+      })
+      //  console.log('res.data.result: ', res.data.result)
+      processData(res.data.result)
+      let data = res.data.result
+      console.log('response: ', data)
+      if (data.length > 0) {
+        setDisplay('data')
+      }
+
+      if (data.length == 0) {
+        setDisplay('nodata')
+      }
+      setRenderKey(renderKey + 1)
+    } catch (err) {
+      console.log('err: ', err)
+      setDisplay('nodata')
+    }
+
+    localStorage.setItem('andarBaharCallOnTimeInterval', false)
   }
 
   const processData = (resData) => {
@@ -218,7 +250,10 @@ const AndarBaharDashboard = () => {
       }
     }
 
-    console.log('live status: ', live)
+    console.log('live status: ', live ," data.length: ",data.length)
+    if(data.length > 0 && live == false) {
+      return
+    }
     setLive(live)
     if (live == true) {
       setLiveData(resData[0])
@@ -342,6 +377,7 @@ const AndarBaharDashboard = () => {
     setWinner(resData[0].winner)
     setSideWin(resData[0].side_win)
     setData(resData)
+    localStorage.setItem('andarBaharDataLength', resData.length)
     setAndarWinVsBaharWin([
       { name: 'Andar ', value: andarTotal },
       { name: 'Bahar ', value: baharTotal },
@@ -362,6 +398,7 @@ const AndarBaharDashboard = () => {
     //  console.log('andarStreak: ', andarStreak)
     //  console.log('baharStreak: ', baharStreak)
   }
+  
 
   const handleIndexChange = (event) => {
     let tempAndarCards2 = []

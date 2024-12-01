@@ -37,25 +37,24 @@ const TableAnalysis = () => {
   const baccarat = [baccaratBlue, baccaratGreen, baccaratPink, baccaratRed]
 
   const handleFaceImages = () => {
-    console.log("game: ",game , " ",BaccaratTables)
-    if (game.toLowerCase().includes('baccarat'))  setImage(BaccaratTables[0].table) 
-    else if(game.toLowerCase().includes('andar bahar')) setImage(BaccaratTables[1].table)
-    else if(game.toLowerCase().includes('3 card poker')) setImage(BaccaratTables[2].table)
-    else if(game.toLowerCase().includes('5 card poker')) setImage(BaccaratTables[3].table)
-    else if(game.toLowerCase().includes('house taxes')) setImage(BaccaratTables[4].table)
-    else if(game.toLowerCase().includes('mini flush')) setImage(BaccaratTables[5].table)
-    else if(game.toLowerCase().includes('casino war')) setImage(BaccaratTables[6].table)
-    else if(game.toLowerCase().includes('black jack')) setImage(BaccaratTables[7].table)
-    else if(game.toLowerCase().includes('dragon tiger')) setImage(BaccaratTables[8].table)
-    else if(game.toLowerCase().includes('7 up down')) setImage(BaccaratTables[9].table)
-    else if(game.toLowerCase().includes('teen patti')) setImage(BaccaratTables[10].table)
-    else if(game.toLowerCase().includes('texas holdem')) setImage(BaccaratTables[11].table)
-    else if(game.toLowerCase().includes('pai gow')) setImage(BaccaratTables[12].table)
-    else if(game.toLowerCase().includes('bai buu')) setImage(BaccaratTables[13].table)
-    else if(game.toLowerCase().includes('mahjong')) setImage(BaccaratTables[14].table)
-    else if(game.toLowerCase().includes('nui nui')) setImage(BaccaratTables[15].table)
+    console.log('game: ', game, ' ', BaccaratTables)
+    if (game.toLowerCase().includes('baccarat')) setImage(BaccaratTables[0].table)
+    else if (game.toLowerCase().includes('andar bahar')) setImage(BaccaratTables[1].table)
+    else if (game.toLowerCase().includes('3 card poker')) setImage(BaccaratTables[2].table)
+    else if (game.toLowerCase().includes('5 card poker')) setImage(BaccaratTables[3].table)
+    else if (game.toLowerCase().includes('house taxes')) setImage(BaccaratTables[4].table)
+    else if (game.toLowerCase().includes('mini flush')) setImage(BaccaratTables[5].table)
+    else if (game.toLowerCase().includes('casino war')) setImage(BaccaratTables[6].table)
+    else if (game.toLowerCase().includes('black jack')) setImage(BaccaratTables[7].table)
+    else if (game.toLowerCase().includes('dragon tiger')) setImage(BaccaratTables[8].table)
+    else if (game.toLowerCase().includes('7 up down')) setImage(BaccaratTables[9].table)
+    else if (game.toLowerCase().includes('teen patti')) setImage(BaccaratTables[10].table)
+    else if (game.toLowerCase().includes('texas holdem')) setImage(BaccaratTables[11].table)
+    else if (game.toLowerCase().includes('pai gow')) setImage(BaccaratTables[12].table)
+    else if (game.toLowerCase().includes('bai buu')) setImage(BaccaratTables[13].table)
+    else if (game.toLowerCase().includes('mahjong')) setImage(BaccaratTables[14].table)
+    else if (game.toLowerCase().includes('nui nui')) setImage(BaccaratTables[15].table)
     else setImage(BaccaratTables[18].table)
-
   }
 
   const getTables = async () => {
@@ -64,13 +63,12 @@ const TableAnalysis = () => {
       console.log('data', data)
       setTables(data.result)
       setOriginalTables(data.result)
-      if(data.result.length == 0){
+      if (data.result.length == 0) {
         setDisplay('nodata')
-      }else{
+      } else {
         setDisplay('data')
       }
       handleFaceImages()
-     
     } catch (error) {
       console.error(error)
       setDisplay('nodata')
@@ -106,15 +104,45 @@ const TableAnalysis = () => {
         `/dashboard/andarbahar/${game_type_name}/${table_limit_name}/${game_type_id}/${table_limit_id}`,
       )
     }
+
+    if (game.toLowerCase().includes('3 card poker')) {
+      navigate(
+        `/dashboard/threecardpoker/${game_type_name}/${table_limit_name}/${game_type_id}/${table_limit_id}`,
+      )
+    }
+
+    if (game.toLowerCase().includes('5 card poker')) {
+      navigate(
+        `/dashboard/threecardpoker/${game_type_name}/${table_limit_name}/${game_type_id}/${table_limit_id}`,
+      )
+    }
+
+    if (game.toLowerCase().includes('house taxes')) {
+      navigate(
+        `/dashboard/threecardpoker/${game_type_name}/${table_limit_name}/${game_type_id}/${table_limit_id}`,
+      )
+    }
+
+    if (game.toLowerCase().includes('mini flush')) {
+      navigate(
+        `/dashboard/threecardpoker/${game_type_name}/${table_limit_name}/${game_type_id}/${table_limit_id}`,
+      )
+    }
+
+    if (game.toLowerCase().includes('casino war')) {
+      navigate(
+        `/dashboard/threecardpoker/${game_type_name}/${table_limit_name}/${game_type_id}/${table_limit_id}`,
+      )
+    }
   }
 
   const handleNavigate = (id) => {
     console.log('handleNavigate', id)
     navigate(`/limits/edit/table/${id}`)
   }
-  const  getCurrent = async ()=>{
-    console.log("called getCurrent")
-  
+  const getCurrent = async () => {
+    console.log('called getCurrent')
+
     await GetCurrent('analysis')
     getTables()
     return
@@ -122,11 +150,9 @@ const TableAnalysis = () => {
 
   useEffect(() => {
     getCurrent()
-   
   }, [game, id])
 
   useEffect(() => {
-
     gsap.fromTo(
       '.fade-in',
       {
@@ -164,7 +190,7 @@ const TableAnalysis = () => {
     return () => {
       observer.disconnect() // Cleanup the observer on component unmount
     }
-  }, [tables, ,game,id, search])
+  }, [tables, , game, id, search])
 
   // Fade-in animation function using GSAP
   function fadeIn(targets) {
@@ -179,94 +205,89 @@ const TableAnalysis = () => {
 
   return (
     <>
-    <div
-      className={` ${theme === 'dark' ? 'text-light' : 'text-dark'} table-main h-100 py-2 container capitalize `}
-      key={game}
-    >
-      <h2 className="text-center my-2">{game}</h2>
-      <div className="w-100 d-flex h-100 justify-content-between align-items-end ">
-        <div className={`${s.form__group} ${s.field}  poppins-400`}>
-          <input
-            onChange={handleSearch}
-            type="input"
-            className={`${s.form__field} ${theme === 'dark' ? 'd-block' : 'd-none'}`}
-            placeholder="Name"
-            required=""
+      <div
+        className={` ${theme === 'dark' ? 'text-light' : 'text-dark'} table-main h-100 py-2 container capitalize `}
+        key={game}
+      >
+        <h2 className="text-center my-2">{game}</h2>
+        <div className="w-100 d-flex h-100 justify-content-between align-items-end ">
+          <div className={`${s.form__group} ${s.field}  poppins-400`}>
+            <input
+              onChange={handleSearch}
+              type="input"
+              className={`${s.form__field} ${theme === 'dark' ? 'd-block' : 'd-none'}`}
+              placeholder="Name"
+              required=""
             />
-          <input
-            onChange={handleSearch}
-            type="input"
-            className={`${s.form__field2} ${theme === 'dark' ? 'd-none' : 'd-block'} text-secondary`}
-            placeholder="Name"
-            required=""
+            <input
+              onChange={handleSearch}
+              type="input"
+              className={`${s.form__field2} ${theme === 'dark' ? 'd-none' : 'd-block'} text-secondary`}
+              placeholder="Name"
+              required=""
             />
-          <label for="name" className={`${s.form__label}`}>
-            Search
-          </label>
+            <label for="name" className={`${s.form__label}`}>
+              Search
+            </label>
+          </div>
         </div>
-
-       
-      </div>
-      <div className={`row gap-0 w-100 px-3`} ref={scrollRef}>
-        {tables.map((table, i) => (
-          <div
-          key={i}
-          className="col-12 col-sm-6 col-md-4 col-xxl-3 mb-3 mb-sm-0 mt-3"
-          style={{ opacity: 0, transform: 'translateY(50px)' }}
-          >
+        <div className={`row gap-0 w-100 px-3`} ref={scrollRef}>
+          {tables.map((table, i) => (
             <div
-              className={`card-hover poppins-400 ${s.box} ${theme === 'light' ? s.black : s.blue} pointer shadow`}
-              onClick={() =>
-                handleViewDashboard(
-                  table.game_type_name,
-                  table.table_limit_name,
-                  table.game_type_id,
-                  table.table_limit_id,
-                )
-              }
+              key={i}
+              className="col-12 col-sm-6 col-md-4 col-xxl-3 mb-3 mb-sm-0 mt-3"
+              style={{ opacity: 0, transform: 'translateY(50px)' }}
+            >
+              <div
+                className={`card-hover poppins-400 ${s.box} ${theme === 'light' ? s.black : s.blue} pointer shadow`}
+                onClick={() =>
+                  handleViewDashboard(
+                    table.game_type_name,
+                    table.table_limit_name,
+                    table.game_type_id,
+                    table.table_limit_id,
+                  )
+                }
               >
-              
-              <div className="card border-0 overflow-hidden bg-transparent" style={{ width: '100%' }}>
-                <div className="overflow-hidden">
-                  <img
-                    src={game == 'roulette' ? roulletImage :image}
-                    className="card-img-top card-hover2 bg-dark bg-gradient drop_shadow"
-                    alt="..."
-                    
+                <div
+                  className="card border-0 overflow-hidden bg-transparent"
+                  style={{ width: '100%' }}
+                >
+                  <div className="overflow-hidden">
+                    <img
+                      src={game == 'roulette' ? roulletImage : image}
+                      className="card-img-top card-hover2 bg-dark bg-gradient drop_shadow"
+                      alt="..."
                     />
-                </div>
-                <div className="card-body bg-light  py-4">
-                  <h5
-                   
-                   className="card-title fontSubHeading poppins-500"
-                   >
-                    {table.table_limit_name}
-                  </h5>
-                  <p
-                    onClick={() =>
-                      handleViewDashboard(
-                        table.game_type_name,
-                        table.table_limit_name,
-                        table.game_type_id,
-                        table.table_limit_id,
-                      )
-                    }
-                    className="card-text"
+                  </div>
+                  <div className="card-body bg-light  py-4">
+                    <h5 className="card-title fontSubHeading poppins-500">
+                      {table.table_limit_name}
+                    </h5>
+                    <p
+                      onClick={() =>
+                        handleViewDashboard(
+                          table.game_type_name,
+                          table.table_limit_name,
+                          table.game_type_id,
+                          table.table_limit_id,
+                        )
+                      }
+                      className="card-text"
                     >
-                    Game: {table.game_type_name} <br /> Language: {table.language}
-                  </p>
-                 
+                      Game: {table.game_type_name} <br /> Language: {table.language}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
-    <div className={`${display == 'nodata' ? 'd-block' : 'd-none'} fade-in`} key={display}>
+      <div className={`${display == 'nodata' ? 'd-block' : 'd-none'} fade-in`} key={display}>
         <NoDataFull />
-    </div>
-        </>
+      </div>
+    </>
   )
 }
 

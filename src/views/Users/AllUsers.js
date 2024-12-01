@@ -64,7 +64,7 @@ const AllUsers = () => {
   const [renderKey, setRenderKey] = useState(0)
   const [toggleUser, setTuggleUser] = useState({})
   const navigate = useNavigate()
-  let user = ''
+  const [user, setUser] = useState({})
   let originalUsers = []
 
   useEffect(() => {
@@ -74,13 +74,29 @@ const AllUsers = () => {
   }, [])
 
   const handleUpdateUser = (id) => {
+    console.log("user: ",user)
+    console.log('users: ', users)
+    console.log('id: ',id)
+    for(let i=0;i<users.length;i++){
+      if(users[i].user_id == id){
+        
+        if(users[i].roleType == 'super_admin' && user.roleType != 'super_admin'){
+          console.log("user to update: ",users[i])
+          showToast('Unauthorized', 'error')
+          return
+        }
+      }
+    }
+    
+  
     navigate(`/update/user/${id}`)
   }
 
   const getCurrent = async () => {
     console.log(" called getCurrent")
     const res = await GetCurrent('users')
-    user = res
+    setUser(res)
+    console.log("res: ",user)
     getUsers()
     return
   }
@@ -159,11 +175,14 @@ const AllUsers = () => {
                   className={`bi bi-eye-fill drop_shadow pointer icon-hover ${theme == 'dark' ? 'text-light' : 'text-dark'} `}
                 ></i>
               </Link>
-              <Link to={`/update/user/${row.user_id}`} className="icon-hover">
+              
                 <i
+                onClick={() => {
+                  handleUpdateUser(row.user_id)
+                }}
                   className={`bi bi-pen-fill drop_shadow pointer icon-hover ${theme == 'dark' ? 'text-light' : 'text-dark'}`}
                 ></i>
-              </Link>
+              
               <i
                 data-bs-toggle="modal"
                 data-bs-target="#toggleUserModel"

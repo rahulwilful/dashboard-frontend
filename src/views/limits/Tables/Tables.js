@@ -136,6 +136,48 @@ const Tables = (props) => {
         `/dashboard/andarbahar/${game_type_name}/${table_limit_name}/${game_type_id}/${table_limit_id}`,
       )
     }
+
+    if (props.table.toLowerCase().includes('3 card poker')) {
+      navigate(
+        `/dashboard/andarbahar/${game_type_name}/${table_limit_name}/${game_type_id}/${table_limit_id}`,
+      )
+    }
+
+    if (props.table.toLowerCase().includes('5 card poker')) {
+      navigate(
+        `/dashboard/andarbahar/${game_type_name}/${table_limit_name}/${game_type_id}/${table_limit_id}`,
+      )
+    }
+
+    if (props.table.toLowerCase().includes('House Taxes')) {
+      navigate(
+        `/dashboard/andarbahar/${game_type_name}/${table_limit_name}/${game_type_id}/${table_limit_id}`,
+      )
+    }
+
+    if (props.table.toLowerCase().includes('mini flush')) {
+      navigate(
+        `/dashboard/andarbahar/${game_type_name}/${table_limit_name}/${game_type_id}/${table_limit_id}`,
+      )
+    }
+
+    if (props.table.toLowerCase().includes('casino war')) {
+      navigate(
+        `/dashboard/andarbahar/${game_type_name}/${table_limit_name}/${game_type_id}/${table_limit_id}`,
+      )
+    }
+
+    if (props.table.toLowerCase().includes('5 card poker')) {
+      navigate(
+        `/dashboard/andarbahar/${game_type_name}/${table_limit_name}/${game_type_id}/${table_limit_id}`,
+      )
+    }
+
+    if (props.table.toLowerCase().includes('5 card poker')) {
+      navigate(
+        `/dashboard/andarbahar/${game_type_name}/${table_limit_name}/${game_type_id}/${table_limit_id}`,
+      )
+    }
   }
 
   const handleNavigate = (id,game_type) => {

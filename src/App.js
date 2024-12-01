@@ -25,6 +25,7 @@ const App = () => {
   useEffect(() => {
     localStorage.setItem('callOnTimeInterval', true)
     localStorage.setItem('baccaratCallOnTimeInterval', true)
+    localStorage.setItem('andarBaharCallOnTimeInterval', true)
     localStorage.setItem('currentShoe', "")
     const urlParams = new URLSearchParams(window.location.href.split('?')[1])
     console.log('colorMode', colorMode)

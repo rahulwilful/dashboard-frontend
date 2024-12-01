@@ -87,7 +87,7 @@ const BaccaratDashboard = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (localStorage.getItem('baccaratCallOnTimeInterval') === 'true') {
-        //getGameData(limit)
+       // getGameData(limit)
       }
     }, 2000)
 
