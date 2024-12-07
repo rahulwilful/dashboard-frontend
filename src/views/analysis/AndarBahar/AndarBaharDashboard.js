@@ -577,7 +577,7 @@ const AndarBaharDashboard = () => {
 
   const config = { threshold: 0.1 }
 
-  /*   let observer = new IntersectionObserver(function (entries, self) {
+    let observer = new IntersectionObserver(function (entries, self) {
     let targets = entries.map((entry) => {
       if (entry.isIntersecting) {
         self.unobserve(entry.target)
@@ -587,13 +587,13 @@ const AndarBaharDashboard = () => {
 
     // Call our animation function
     fadeIn(targets)
-  }, config) */
+  }, config)
 
-  /* document.querySelectorAll('.box').forEach((box) => {
+  document.querySelectorAll('.box').forEach((box) => {
     observer.observe(box)
-  }) */
+  })
 
-  /*   function fadeIn(targets) {
+    function fadeIn(targets) {
     gsap.to(targets, {
       opacity: 1,
       y: 0,
@@ -601,7 +601,7 @@ const AndarBaharDashboard = () => {
       stagger: 0.2,
       ease: 'power1.out',
     })
-  } */
+  }
 
   return (
     <div className={` ${theme === 'dark' ? 'text-light' : 'text-dark'} pb-4 `}>
@@ -616,9 +616,9 @@ const AndarBaharDashboard = () => {
         <div className={`px-2`}>
           <div className={`row    d-flex justify-content-center`}>
             <div
-              className={`col-12 col-md-10 col-xxl-12 border-0 shadow-s poppins-500 box ${s.opacity} ${themeClass} bg-gradient py-2 rounded`}
+              className={`  col-12 col-md-10 col-xxl-12 border-0 shadow-s poppins-500 box ${s.opacity} ${themeClass} bg-gradient py-2 rounded`}
             >
-              <div className={`row gx-1 gy-2`}>
+              <div className={`row gx-1 gy-2 `}>
                 <div className={`col-12 col-md-6 col-xxl-3 d-flex `}>
                   <div
                     className={` d-flex gap-2 w-100 justify-content-between   justify-content-sm-evenly align-items-center`}
@@ -778,7 +778,7 @@ const AndarBaharDashboard = () => {
                         Andar
                       </span>
                     </div>
-                  </div>
+                  </div>  
                   <div className={``}>
                     <div
                       className={`  d-flex position-relative justify-content-start align-items-center overflow-x-auto `}

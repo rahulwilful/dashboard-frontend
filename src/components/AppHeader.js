@@ -40,6 +40,7 @@ const AppHeader = () => {
     setColorMode(color)
     dispatch({ type: 'set', theme: color })
     localStorage.removeItem('coreui-free-react-admin-template-theme', color)
+   // window.location.reload()
   }
 
   useEffect(() => {
@@ -95,14 +96,14 @@ const AppHeader = () => {
           <CDropdown variant="nav-item" placement="bottom-end">
             <CDropdownToggle caret={false}>
               {colorMode === 'dark' ? (
-                <CIcon icon={cilMoon} size="lg" />
+                <CIcon icon={cilMoon} onClick={() => changeTheme('light')} size="lg" />
               ) : colorMode === 'auto' ? (
                 <CIcon icon={cilContrast} size="lg" />
               ) : (
-                <CIcon icon={cilSun} size="lg" />
+                <CIcon icon={cilSun} size="lg" onClick={() => changeTheme('dark')} />
               )}
             </CDropdownToggle>
-            <CDropdownMenu>
+           {/*  <CDropdownMenu>
               <CDropdownItem
                 active={colorMode === 'light'}
                 className="d-flex align-items-center"
@@ -121,16 +122,8 @@ const AppHeader = () => {
               >
                 <CIcon className="me-2" icon={cilMoon} size="lg" /> Dark
               </CDropdownItem>
-              {/*  <CDropdownItem
-                active={colorMode === 'auto'}
-                className="d-flex align-items-center"
-                as="button"
-                type="button"
-                onClick={() => setColorMode('auto')}
-              >
-                <CIcon className="me-2" icon={cilContrast} size="lg" /> Auto
-              </CDropdownItem> */}
-            </CDropdownMenu>
+             
+            </CDropdownMenu> */}
           </CDropdown>
           <li className="nav-item py-1">
             <div className="vr h-100 mx-2 text-body text-opacity-75"></div>
@@ -146,3 +139,5 @@ const AppHeader = () => {
 }
 
 export default AppHeader
+
+

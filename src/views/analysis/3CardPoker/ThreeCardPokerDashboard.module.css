@@ -2,3 +2,18 @@
     color: rgb(184, 184, 184);
     opacity: 1; /* Ensures the color is fully applied */
   }
+
+  .opacity {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  /* 
+    splittedHouseCards = splittedHouseCards.filter(card => card != '');
+    splittedPlayer1Cards = splittedPlayer1Cards.filter(card => card != '');
+    splittedPlayer2Cards = splittedPlayer2Cards.filter(card => card != '');
+    splittedPlayer3Cards = splittedPlayer3Cards.filter(card => card != '');
+    splittedPlayer4Cards = splittedPlayer4Cards.filter(card => card != '');
+    splittedPlayer5Cards = splittedPlayer5Cards.filter(card => card != '');
+    splittedPlayer6Cards = splittedPlayer6Cards.filter(card => card != '');
+    splittedPlayer7Cards = splittedPlayer7Cards.filter(card => card != ''); 
+  */

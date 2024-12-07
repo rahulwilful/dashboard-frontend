@@ -10,9 +10,12 @@ import s from './ThreeCardPokerDashboard.module.css'
 import BarChartComponent from './ThreeCardPokerDashboardComponents/BarChartComponent'
 import PieChartComponent from './ThreeCardPokerDashboardComponents/PieChartComponent'
 import ThreeCardPokerDashboardComponent from './ThreeCardPokerDashboardComponents/ThreeCardPokerDashboardComponent'
+import ShowHouseCards from './ThreeCardPokerDashboardComponents/ShowHouseCards'
+import ShowPlayerCards from './ThreeCardPokerDashboardComponents/ShowPlayerCards'
 
 const ThreeCardPokerDashboard = () => {
   const theme = useSelector((theme) => theme.theme)
+ 
   const navigate = useNavigate()
   const { game, table_limit_name, game_type_id, table_limit_id } = useParams()
   const [data, setData] = useState([])
@@ -34,6 +37,21 @@ const ThreeCardPokerDashboard = () => {
   const [live, setLive] = useState(false)
 
   const [currentWinners, setCurrentWinners] = useState([0, 0, 0, 0, 0, 0, 0])
+  const [houseCards, setHouseCards] = useState([])
+  const [player1cards, setPlayer1Cards] = useState([])
+  const [player2cards, setPlayer2Cards] = useState([])
+  const [player3cards, setPlayer3Cards] = useState([])
+  const [player4cards, setPlayer4Cards] = useState([])
+  const [player5cards, setPlayer5Cards] = useState([])
+  const [player6cards, setPlayer6Cards] = useState([])
+  const [player7cards, setPlayer7Cards] = useState([])
+  const [player1Win,setPlayer1Win] = useState(false)
+  const [player2Win,setPlayer2Win] = useState(false)
+  const [player3Win,setPlayer3Win] = useState(false)
+  const [player4Win,setPlayer4Win] = useState(false)
+  const [player5Win,setPlayer5Win] = useState(false)
+  const [player6Win,setPlayer6Win] = useState(false)
+  const [player7Win,setPlayer7Win] = useState(false)
 
   useEffect(() => {
     setThemeClass(
@@ -44,7 +62,7 @@ const ThreeCardPokerDashboard = () => {
 
     setThemeBorder(
       theme === 'dark'
-        ? `bg-dark bg-gradient bg-opacity-25  text-light border-secondary  border-opacity-50  ${s.placeholder_grey}`
+        ? `bg-dark bg-gradient  bg-opacity-25  text-light border-secondary   border-opacity-50  ${s.placeholder_grey}`
         : `text-dark bg-light bg-gradient border `,
     )
   }, [theme])
@@ -113,7 +131,6 @@ const ThreeCardPokerDashboard = () => {
 
   const processData = (resData) => {
     console.log('data for precess: ', resData)
-    setOriginalData(resData)
 
     let live = false
     const currentTime = new Date()
@@ -150,10 +167,10 @@ const ThreeCardPokerDashboard = () => {
     let player6wins = 0
     let player7wins = 0
 
-    //counting player wins
+    //counting player wins and splitting cards
     for (let i in resData) {
       const splittedWinners = resData[i].winner.split(',')
-      console.log('splittedWinners[i]: ', splittedWinners)
+
       if (splittedWinners[0] && splittedWinners[0] == '1') player1wins++
       if (splittedWinners[1] && splittedWinners[1] == '1') player2wins++
       if (splittedWinners[2] && splittedWinners[2] == '1') player3wins++
@@ -162,6 +179,9 @@ const ThreeCardPokerDashboard = () => {
       if (splittedWinners[5] && splittedWinners[5] == '1') player6wins++
       if (splittedWinners[6] && splittedWinners[6] == '1') player7wins++
     }
+    setOriginalData(resData)
+
+    handleSpliteCrads(resData[0])
 
     const tempData = []
     if (player1wins > 0) tempData.push({ name: 'player 1', wins: player1wins })
@@ -173,6 +193,64 @@ const ThreeCardPokerDashboard = () => {
     if (player7wins > 0) tempData.push({ name: 'player 7', wins: player7wins })
 
     setData(tempData)
+  }
+
+  const handleSpliteCrads = (data) => {
+    let houseCards = []
+    let player1cards = []
+    let player2cards = []
+    let player3cards = []
+    let player4cards = []
+    let player5cards = []
+    let player6cards = []
+    let player7cards = []
+    const temp = ['1', '']
+
+    let splittedHouseCards = data.house_cards.split(',')
+    let splittedPlayer1Cards = data.player1_cards.split(',')
+    let splittedPlayer2Cards = data.player2_cards.split(',')
+    let splittedPlayer3Cards = data.player3_cards.split(',')
+    let splittedPlayer4Cards = data.player4_cards.split(',')
+    let splittedPlayer5Cards = data.player5_cards.split(',')
+    let splittedPlayer6Cards = data.player6_cards.split(',')
+    let splittedPlayer7Cards = data.player7_cards.split(',')
+
+    //removing spaces from array
+    splittedHouseCards = splittedHouseCards.filter((card) => card != '')
+    splittedPlayer1Cards = splittedPlayer1Cards.filter((card) => card != '')
+    splittedPlayer2Cards = splittedPlayer2Cards.filter((card) => card != '')
+    splittedPlayer3Cards = splittedPlayer3Cards.filter((card) => card != '')
+    splittedPlayer4Cards = splittedPlayer4Cards.filter((card) => card != '')
+    splittedPlayer5Cards = splittedPlayer5Cards.filter((card) => card != '')
+    splittedPlayer6Cards = splittedPlayer6Cards.filter((card) => card != '')
+    splittedPlayer7Cards = splittedPlayer7Cards.filter((card) => card != '')
+
+    if (splittedHouseCards.length > 0) houseCards = splittedHouseCards
+    if (splittedPlayer1Cards.length > 0) player1cards = splittedPlayer1Cards
+    if (splittedPlayer2Cards.length > 0) player2cards = splittedPlayer2Cards
+    if (splittedPlayer3Cards.length > 0) player3cards = splittedPlayer3Cards
+    if (splittedPlayer4Cards.length > 0) player4cards = splittedPlayer4Cards
+    if (splittedPlayer5Cards.length > 0) player5cards = splittedPlayer5Cards
+    if (splittedPlayer6Cards.length > 0) player6cards = splittedPlayer6Cards
+    if (splittedPlayer7Cards.length > 0) player7cards = splittedPlayer7Cards
+
+    console.log('HouseCards: ', houseCards)
+    console.log('player1cards: ', player1cards)
+    console.log('player2cards: ', player2cards)
+    console.log('player3cards: ', player3cards)
+    console.log('player4cards: ', player4cards)
+    console.log('player5cards: ', player5cards)
+    console.log('player6cards: ', player6cards)
+    console.log('player7cards: ', player7cards)
+
+    setHouseCards(houseCards)
+    setPlayer1Cards(player1cards)
+    setPlayer2Cards(player2cards)
+    setPlayer3Cards(player3cards)
+    setPlayer4Cards(player4cards)
+    setPlayer5Cards(player5cards)
+    setPlayer6Cards(player6cards)
+    setPlayer7Cards(player7cards)
   }
 
   const getCustomeGameData = async () => {
@@ -242,20 +320,66 @@ const ThreeCardPokerDashboard = () => {
       const tempIndex = index + 1
       setIndex(tempIndex)
       setCurrentWinners(originalData[tempIndex].winner.split(','))
+      handleSpliteCrads(originalData[tempIndex])
       console.log('currentData', originalData[tempIndex].winner.split(','))
     } else {
       if (index == 0) return
       const tempIndex = index - 1
       setIndex(tempIndex)
       setCurrentWinners(originalData[tempIndex].winner.split(','))
+      handleSpliteCrads(originalData[tempIndex])
     }
+    setRenderKey(renderKey + 1)
   }
+
+  useEffect(() => {
+    console.log("currentWinners : ", currentWinners)
+    if(currentWinners.length > 0){
+      
+      if(currentWinners[0] == '1') setPlayer1Win(true)
+      if(currentWinners[2] == '1') setPlayer2Win(true)
+      if(currentWinners[3] == '1') setPlayer3Win(true)
+      if(currentWinners[4] == '1') setPlayer4Win(true)
+      if(currentWinners[5] == '1') setPlayer5Win(true)
+      if(currentWinners[6] == '1') setPlayer6Win(true)
+      if(currentWinners[7] == '1') setPlayer7Win(true)
+    }
+  },[currentWinners])
+
+
+  const config = { threshold: 0.1 }
+
+  let observer = new IntersectionObserver(function (entries, self) {
+  let targets = entries.map((entry) => {
+    if (entry.isIntersecting) {
+      self.unobserve(entry.target)
+      return entry.target
+    }
+  })
+
+  // Call our animation function
+  fadeIn(targets)
+}, config)
+
+document.querySelectorAll('.box').forEach((box) => {
+  observer.observe(box)
+})
+
+  function fadeIn(targets) {
+  gsap.to(targets, {
+    opacity: 1,
+    y: 0,
+    duration: 0.6,
+    stagger: 0.2,
+    ease: 'power1.out',
+  })
+}
 
   return (
     <>
-      <div className={` ${theme === 'dark' ? 'text-light' : 'text-dark'} pb-4  `}>
-        <div className={`px-2`}>
-          <div className={`row    d-flex justify-content-center`}>
+      <div className={` ${theme === 'dark' ? 'text-light' : 'text-dark'} pb-4   position_relative`}>
+        <div className={`px-2 `}>
+          <div className={`row    d-flex justify-content-center  `}>
             <div
               className={`col-12 col-md-10 col-xxl-12 border-0 shadow-s poppins-500 box ${s.opacity} ${themeClass} bg-gradient py-2 rounded`}
             >
@@ -307,7 +431,6 @@ const ThreeCardPokerDashboard = () => {
                     className={` w-100  d-flex justify-content-evenly w-100 d-flex gap-1  border-end-0  border-end-xxl-1 border-secondary border-opacity-25 `}
                   >
                     <div className="gap-2 fontText w-100 px-0 px-xxl-3  poppins-500 d-flex justify-content-evenly gap-3 align-items-center ">
-                     
                       <div className={`w-100  `}>
                         <input
                           className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}  `}
@@ -392,11 +515,11 @@ const ThreeCardPokerDashboard = () => {
             </div>
           </div>
         </div>
-        <div className={` mt-3  ${themeBorder} p-2 rounded shadow-s`}>
-          <div className={`pt-2`}>
-            <ThreeCardPokerDashboardComponent data={currentWinners} />
-          </div>
-          <div className={`d-flex justify-content-center align-items-center gap-3 border-top border-secondary  border-opacity-25 mt-3 pt-1`}>
+        <div className={` mt-2  ${themeBorder} p-2 rounded bg-opacity-100 shadow-s position_top_sticky`}>
+         
+          <div
+            className={`d-flex justify-content-center align-items-center gap-3   pt-1`}
+          >
             <div className={``}>
               <button
                 onClick={() => handleIndexChange('-')}
@@ -432,6 +555,49 @@ const ThreeCardPokerDashboard = () => {
               >
                 <i className="bi bi-chevron-right "></i>
               </button>
+            </div>
+          </div>
+        </div>
+        <div className={` py-2 mt-2`}>
+          <div className={`row px-2 gy-2  `} >
+            <div className={`col-12 col-sm-6 col-md-4 box ${s.opacity}   `}>
+              <ShowHouseCards cards={houseCards} name="House Cards" win={'house'} />
+            </div>
+            <div
+              className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player1cards.length == 0 ? 'd-none' : ''} `}
+            >
+              <ShowPlayerCards cards={player1cards} name="Player 1" win={currentWinners[0]} />
+            </div>
+            <div
+              className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player2cards.length == 0 ? 'd-none' : ''} `}
+            >
+              <ShowPlayerCards cards={player2cards} name="Player 2" win={currentWinners[1]} />
+            </div>
+            <div
+              className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player3cards.length == 0 ? 'd-none' : ''} `}
+            >
+              <ShowPlayerCards cards={player3cards} name="Player 3" win={currentWinners[2]} />
+            </div>
+            <div
+              className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player4cards.length == 0 ? 'd-none' : ''} `}
+            >
+              <ShowPlayerCards cards={player4cards} name="Player 4" win={currentWinners[3]} />
+            </div>
+            <div
+              className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player5cards.length == 0 ? 'd-none' : ''} `}
+            >
+              <ShowPlayerCards cards={player5cards} name="Player 5" win ={currentWinners[4]} />
+            </div>
+            <div
+              className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player6cards.length == 0 ? 'd-none' : ''} `}
+            >
+              <ShowPlayerCards cards={player6cards} name="Player 6" win = {currentWinners[5]} />
+            </div>
+            <div
+              className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player7cards.length == 0 ? 'd-none' : ''} `}
+            >
+              
+              <ShowPlayerCards cards={player7cards} name="Player 7 " win={currentWinners[6]} />
             </div>
           </div>
         </div>

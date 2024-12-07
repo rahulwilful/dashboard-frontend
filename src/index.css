@@ -18,6 +18,16 @@
   
 }
 
+.position_relative{
+  position: relative;
+}
+
+.position_top_sticky{
+  position: sticky;
+  top: 92px;
+  z-index: 100;
+}
+
 .pointer {
   cursor: pointer;
 }

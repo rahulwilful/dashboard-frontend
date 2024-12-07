@@ -36,13 +36,16 @@ import {
 } from '@coreui/react-chartjs'
 import { DocsCallout } from 'src/components'
 import { useSelector } from 'react-redux'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import axiosClient from '../../axiosClient'
 
 import { BaccaratTables } from './DashboardData'
 import GameCard from './DashboardComponents/GameCard'
 import { Cards } from './DashboardComponents/Cards'
 import { Card } from './DashboardComponents/Card'
+
+import { ScrollTrigger } from 'gsap/all'
+import gsap from 'gsap' 
 
 const Dashboard = () => {
   const theme = useSelector((state) => state.theme)
@@ -53,10 +56,16 @@ const Dashboard = () => {
   const [allGames, setAllGames] = useState([])
   const [activeGames, setActiveGames] = useState([])
 
+  const scrollRef = useRef(null) 
+  
+
   const [languages, setLanguages] = useState([])
   const [themes, setThemes] = useState([])
   const [backgrounds, setBackgrounds] = useState([])
   const [currencys, setCurrencys] = useState([])
+
+  const tempData1 =[80,60,52,50,52,60,80]
+  const tempData2 =[50,80,30,50,55,67,40]
 
   const getData = async () => {
     try {
@@ -140,51 +149,76 @@ const Dashboard = () => {
     getData()
   }, [])
 
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger)
+    gsap.from('.animate', {
+      delay: 0.4,
+      opacity: 0,
+      y: 50,
+      duration: 1,
+      ease: 'power4.out',
+      stagger: 0.1,
+    })
+    gsap.from('.on_scroll', {
+      scrollTrigger: {
+        trigger: '.on_scroll',
+        start: 'top bottom',
+        end: 'bottom top',
+        
+      },
+      opacity: 0,
+      y: 50,
+      duration: 1.5,
+      ease: 'power4.out',
+    })
+  }, [theme])
+
   return (
     <div
       className={` ${theme === 'dark' ? 'text-light' : 'text-dark'} pb-4 `}
       style={{ border: 'red' }}
+      key={theme}
     >
       <div className={``}>
         <h1 className="text-center text-shadow"> Dashboard</h1>
         <div className={``}>
           <div className={` my-2 py-2`}>
-            <div className="row">
-              <div className={`col-12 col-sm-6 col-lg-4`}>
-                <Card color='primary' lineColor="white" dotColor='white' textColor='white' dot={true} title='Total Games' value={allGames.length}  />
+            <div className="row" >
+              <div className={`col-12 col-sm-6 col-lg-4 animate`}>
+                <Card color='primary' lineColor="white" dotColor='white' data={tempData1} textColor='white' dot={true} title='Total Games' value={allGames.length}  />
               </div>
-              <div className={`col-12 col-sm-6 col-lg-4`}>
-                <Card color='success' lineColor="white" dotColor='white' textColor='white' dot={false} title='Active Games' value={activeGames.length} />
+              <div className={`col-12 col-sm-6 col-lg-4 animate`}>
+                <Card color='success' lineColor="white" dotColor='white' data={tempData2} textColor='white' dot={false} title='Active Games' value={activeGames.length} />
               </div>
-              <div className={`col-12 col-sm-6 col-lg-4`}>
-                <Card color='warning' lineColor="white" dotColor='white' textColor='white' dot={true} title='Inactive Games' value={allGames.length - activeGames.length} />
+              <div className={`col-12 col-sm-6 col-lg-4 animate`}>
+                <Card color='warning' lineColor="white" dotColor='white' data={tempData1} textColor='white' dot={true} title='Inactive Games' value={allGames.length - activeGames.length} />
               </div>
-              <div className={`col-12 col-sm-6 col-lg-4`}>
-                <Card color='primary' lineColor="white" dotColor='white' textColor='white' dot={true} title='Total Tables' value={allTables.length} />
+              <div className={`col-12 col-sm-6 col-lg-4 animate`}>
+                <Card color='primary' lineColor="white" dotColor='white' data={tempData1} textColor='white' dot={true} title='Total Tables' value={allTables.length} />
               </div>
-              <div className={`col-12 col-sm-6 col-lg-4`}>
-                <Card color='secondary' lineColor="white" dotColor='white' textColor='white' dot={false} title='Languages' value={languages.length} />
+              <div className={`col-12 col-sm-6 col-lg-4 animate`}>
+                <Card color='secondary' lineColor="white" dotColor='white' data={tempData2} textColor='white' dot={false} title='Languages' value={languages.length} />
               </div>
-              <div className={`col-12 col-sm-6 col-lg-4`}>
-                <Card color='danger' lineColor="white" dotColor='white' textColor='white' dot={true} title='Themes' value={themes.length} />
+              <div className={`col-12 col-sm-6 col-lg-4 animate`}>
+                <Card color='danger' lineColor="white" dotColor='white' data={tempData1} textColor='white' dot={true} title='Themes' value={themes.length} />
               </div>
-              <div className={`col-12 col-sm-6 col-lg-4`}>
-                <Card color='info' lineColor="white" dotColor='white' textColor='white' dot={true} title='Backgrounds' value={backgrounds.length} />
+              <div className={`col-12 col-sm-6 col-lg-4 animate`}>
+                <Card color='info' lineColor="white" dotColor='white' data={tempData1} textColor='white' dot={true} title='Backgrounds' value={backgrounds.length} />
               </div>
-              <div className={`col-12 col-sm-6 col-lg-4`}>
-                <Card color='success' lineColor="white" dotColor='white' textColor='white' dot={false} title='Currencys' value={currencys.length} />
+              <div className={`col-12 col-sm-6 col-lg-4 animate`}>
+                <Card color='success' lineColor="white" dotColor='white' data={tempData2} textColor='white' dot={false} title='Currencys' value={currencys.length} />
               </div>
             </div>
           </div>
-          <div className={`row g-3`}>
-            <div className={`col-12 col-sm-6 col-lg-4 `}>
+          <div className={`row g-3`} ref={scrollRef}>
+            <div className={`col-12 col-sm-6 col-lg-4  on_scroll`}>
               <GameCard
                 game={rouletteData[0]?.game_type_name}
                 data={rouletteData}
                 lastNumber={rouletteData[0]?.winning_number}
               />
             </div>
-            <div className={`col-12 col-sm-6 col-lg-4 `}>
+            <div className={`col-12 col-sm-6 col-lg-4  on_scroll`}>
               <GameCard
                 game={baccaratData[0]?.game_type_name}
                 data={baccaratData}
@@ -197,7 +231,7 @@ const Dashboard = () => {
                 }
               />
             </div>
-            <div className={`col-12 col-sm-6 col-lg-4 `}>
+            <div className={`col-12 col-sm-6 col-lg-4  on_scroll`}>
               <GameCard
                 game={andarBaharData[0]?.game_type_name}
                 data={andarBaharData}

@@ -46,21 +46,31 @@ export const Card = (props) => {
                     </span>
                   }
                   title={props.title}
-                  
+                  options={{
+                    tooltips: {
+                      enabled: false,
+                    },
+                    // Disable the on hover labels
+                    plugins: {
+                      datalabels: {
+                        display: false,
+                      },
+                    },
+                  }}
                   chart={
                     <CChartLine
                       className="mt-3 mx-3 drop_shadow"
                       style={{ height: '70px' }}
                       data={{
-                        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                        labels: ['', '', '', '', '', '', ''],
                         datasets: [
                           {
-                            label: 'My First dataset',
+                         
                             backgroundColor: 'transparent',
                             borderColor:props.lineColor,
                             pointBorderColor: props.dot ? props.lineColor : 'transparent', 
                            
-                            data: [80,60,52,50,52,60,80],
+                            data: props.data,
                           },
                         ],
                       }}
@@ -114,3 +124,5 @@ export const Card = (props) => {
     </div>
   )
 }
+
+
