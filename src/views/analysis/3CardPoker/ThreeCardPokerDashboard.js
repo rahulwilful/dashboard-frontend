@@ -13,6 +13,11 @@ import ThreeCardPokerDashboardComponent from './ThreeCardPokerDashboardComponent
 import ShowHouseCards from './ThreeCardPokerDashboardComponents/ShowHouseCards'
 import ShowPlayerCards from './ThreeCardPokerDashboardComponents/ShowPlayerCards'
 
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/all'
+import { useGSAP } from '@gsap/react'
+
+
 const ThreeCardPokerDashboard = () => {
   const theme = useSelector((theme) => theme.theme)
  
@@ -130,8 +135,8 @@ const ThreeCardPokerDashboard = () => {
   }
 
   const processData = (resData) => {
-    console.log('data for precess: ', resData)
-
+    console.log('data for process: ', resData)
+    setOriginalData(resData)
     let live = false
     const currentTime = new Date()
     //  console.log('time: ', currentTime)
@@ -179,7 +184,7 @@ const ThreeCardPokerDashboard = () => {
       if (splittedWinners[5] && splittedWinners[5] == '1') player6wins++
       if (splittedWinners[6] && splittedWinners[6] == '1') player7wins++
     }
-    setOriginalData(resData)
+   
 
     handleSpliteCrads(resData[0])
 
@@ -204,7 +209,7 @@ const ThreeCardPokerDashboard = () => {
     let player5cards = []
     let player6cards = []
     let player7cards = []
-    const temp = ['1', '']
+    
 
     let splittedHouseCards = data.house_cards.split(',')
     let splittedPlayer1Cards = data.player1_cards.split(',')
@@ -515,7 +520,7 @@ document.querySelectorAll('.box').forEach((box) => {
             </div>
           </div>
         </div>
-        <div className={` mt-2  ${themeBorder} p-2 rounded bg-opacity-100 shadow-s position_top_sticky`}>
+        <div className={` mt-2  ${themeBorder} p-2 rounded bg-opacity-100 shadow-s position_top_sticky box ${s.opacity}`}>
          
           <div
             className={`d-flex justify-content-center align-items-center gap-3   pt-1`}
@@ -602,14 +607,14 @@ document.querySelectorAll('.box').forEach((box) => {
           </div>
         </div>
         <div className={`row mt-3`}>
-          <div className={`col-12 col-lg-6 `}>
+          <div className={`col-12 col-lg-6  box ${s.opacity}`}>
             <div
-              className={`  pt-3 pe-3 ${themeBorder} rounded-3 shadow-s h-100 d-flex align-items-center`}
+              className={`  pt-3 pe-3 ${themeBorder} rounded-3 shadow-s h-100 d-flex align-items-center `}
             >
               <BarChartComponent data={data} />
             </div>
           </div>
-          <div className={`col-12 col-lg-6`}>
+          <div className={`col-12 col-lg-6  box ${s.opacity}`}>
             <div className={`  pt-3 pe-3 ${themeBorder} rounded-3 shadow-s`}>
               <PieChartComponent data={data} />
             </div>

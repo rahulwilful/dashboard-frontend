@@ -24,10 +24,12 @@ import { GetCurrent } from '../../../getCurrent.js'
 
 import NoData from '../../NoData/NoData'
 import NoDataFull from '../../NoData/NoDataFull'
+import showToast from '../../../components/Notification/ShowToast.js'
 
 const BaccaratDashboard = () => {
   const navigate = useNavigate()
   const [renderKey, setRenderKey] = useState(0)
+  const [renderDashboardKey, setRenderDashboardKey] = useState(0)
   const { game, table_limit_name, game_type_id, table_limit_id } = useParams()
   const [display, setDisplay] = useState('loading')
 
@@ -45,6 +47,7 @@ const BaccaratDashboard = () => {
   const [themeBorder, setThemeBorder] = useState('bg-light text-dark border')
   const [statistics, setStatistics] = useState('WheelPocketStatistics')
   const [live, setLive] = useState(false)
+  const [updatedData, setUpdatedData] = useState([]) // to store data after fetching live data
 
   const [liveData, setLiveData] = useState({
     date_time: '-',
@@ -88,8 +91,9 @@ const BaccaratDashboard = () => {
     const intervalId = setInterval(() => {
       if (localStorage.getItem('baccaratCallOnTimeInterval') === 'true') {
        // getGameData(limit)
+       checkLive(limit)
       }
-    }, 2000)
+    }, 5000)
 
     return () => clearInterval(intervalId) // Cleanup on unmount
   }, [limit])
@@ -105,6 +109,58 @@ const BaccaratDashboard = () => {
     await GetCurrent('analysis')
     getGameData(10)
     return
+  }
+
+  const checkLive = async (limitParam) => {
+      //  console.log('getGameData: ', limitParam)
+      const limitToUse = limitParam || limit
+      try {
+        const res = await axiosClient.get(`/baccarat/get/${game_type_id}/${table_limit_id}/${limit}`)
+        setShoePlayerBankerComponent(false)
+        //processData(res.data.result)
+        let data = res.data.result
+        setUpdatedData(res.data.result)
+        console.log('response: ', data)
+
+        let live = false
+        const currentTime = new Date()
+    
+        if (data.length > 0 && data[0].date_time) {
+          const resDataTime = new Date(data[0].date_time)
+          const diffInMs = currentTime - resDataTime
+          const diffInMinutes = diffInMs / (1000 * 60)
+    
+          if (diffInMinutes <= 1) {
+            live = true
+          }
+        }
+    
+        console.log('live status: ', live)
+        setLive(live)
+        
+
+        if (data.length > 0) {
+          setDisplay('data')
+        }
+  
+        if (data.length == 0) {
+          setDisplay('nodata')
+        }
+        setRenderKey(renderKey + 1)
+       
+      } catch (err) {
+        console.log('err: ', err)
+        setDisplay('nodata')
+      }
+  
+      localStorage.setItem('baccaratCallOnTimeInterval', true)
+  }
+
+  const updateData = () => {
+    window.location.reload()
+    showToast('Data updated successfully', 'success')
+    setRenderDashboardKey(renderDashboardKey + 1)
+
   }
 
   const getGameDataByDate = async () => {
@@ -288,8 +344,7 @@ const BaccaratDashboard = () => {
       const tempPlayerSplit = resData[i].player_cards.split(',')
       const tempBankerSplit = resData[i].banker_cards.split(',')
 
-      let PlayerSplit = []
-      let BankerSplit = []
+      
 
       //spliting cards to easy access and computations
       resData[i].playerCard1 = tempPlayerSplit[0]
@@ -582,7 +637,7 @@ const BaccaratDashboard = () => {
           </div>
         </div>
 
-        <div className={` ${display == 'data' ? '' : 'd-none'}`}>
+        <div className={` ${display == 'data' ? '' : 'd-none'}`} key={renderDashboardKey}>
           <div className={`position-relative`}>
             <div className={`w-100 mt-2  `} key={renderKey}>
               <PlayerBankerDashboardComponent
@@ -591,6 +646,7 @@ const BaccaratDashboard = () => {
                 dataSize={dataSize}
                 getDataByShoe={getDataByShoe}
                 live= {live}
+                updateData={updateData}
               />
             </div>
             <div className={`w-100   mt-3`}>

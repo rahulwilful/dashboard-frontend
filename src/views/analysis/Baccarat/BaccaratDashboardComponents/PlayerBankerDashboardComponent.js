@@ -531,13 +531,11 @@ const PlayerBankerDashboardComponent = (props) => {
                           <td className={`${props.live ? 'text-light' : 'text-danger'}`}>{props.live ? 'Active' : 'Inactive'}</td>
                           <td className={`d-flex justify-content-center align-items-center py-2`}>
                             <span
-                              className={`rounded-circle d-flex justify-content-center    ${props.live ? 'bg-success' : 'bg-danger'} text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
-                              style={{
-                                height: '10px',
-                                width: '10px',
-                              }}
+                              className={`rounded-circle d-flex justify-content-center    ${props.live ? 'bg-success' : 'bg-danger disabled'} text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25 pointer`}
+                             disabled = {!props.live}
+                             onClick={props.live ? props.updateData : null}
                             >
-                              
+                              <i class="bi bi-arrow-clockwise"></i>
                             </span>
                           </td>
                         </tr>
@@ -677,7 +675,7 @@ const PlayerBankerDashboardComponent = (props) => {
                     </div>
 
                     <div className={`fs-4 ${theme === 'light' ? 'text-dark' : 'text-light'}`}>
-                      {index}
+                     {currentShoeData.length}/{index+1}
                     </div>
                     <div className={``}>
                       <button
@@ -765,7 +763,7 @@ const PlayerBankerDashboardComponent = (props) => {
                         Shoe -{currentShoe}
                       </div>
                     </div>
-                    <div className={``} key={renderKey}>
+                    <div className={``} >
                       <PieChartComponent bankerVsPlayer={bankerVsPlayer} />
                     </div>
                   </div>
@@ -780,7 +778,7 @@ const PlayerBankerDashboardComponent = (props) => {
                           Shoe -{currentShoe}
                         </div>
                       </div>
-                      <div className={``} key={renderKey}>
+                      <div className={``} >
                         <DoughnutChartComponent doughnutData={doughnutData} />
                       </div>
                     </div>
@@ -815,7 +813,7 @@ const PlayerBankerDashboardComponent = (props) => {
                   </div>
                 </div>
                 <div className={`col-12 col-sm-10 h-100 mt-2`}>
-                  <div className={``} key={renderKey}>
+                  <div className={``} >
                     <BarChartComponent sideWin={sideWin} />
                   </div>
                 </div>
