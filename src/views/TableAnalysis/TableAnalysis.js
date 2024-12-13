@@ -275,7 +275,7 @@ const TableAnalysis = () => {
                       }
                       className="card-text"
                     >
-                      Game: {table.game_type_name} <br /> Language: {table.language}
+                      Game: {table.game_type_name} <br /> Min Bet: {table.min_bet} <br /> Max Bet: {table.max_bet}
                     </p>
                   </div>
                 </div>

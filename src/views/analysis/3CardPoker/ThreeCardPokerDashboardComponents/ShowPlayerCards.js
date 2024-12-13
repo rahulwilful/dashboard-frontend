@@ -9,6 +9,8 @@ import { useGSAP } from '@gsap/react'
 
 const ShowPlayerCards = (props) => {
     const [index, setIndex] = useState(0)
+    const green = 'linear-gradient(to bottom, rgb(100, 251, 168), rgb(37, 247, 131))'
+     const red = 'rgb(242, 55, 55)'
 
     const theme = useSelector((theme) => theme.theme)
     const [cards, setCards] = useState([])
@@ -25,8 +27,8 @@ const ShowPlayerCards = (props) => {
   
       setThemeBorder(
         theme === 'dark'
-          ? `bg-dark bg-gradient bg-opacity-25  text-light border-secondary  border-opacity-50  ${s.placeholder_grey}`
-          : `text-dark bg-light bg-gradient border `,
+          ? `   text-light   ${s.placeholder_grey}`
+          : `text-dark    `,
       )
     }, [theme])
   
@@ -78,14 +80,14 @@ const ShowPlayerCards = (props) => {
     }, [cards])
   
     return (
-      <div className={` shadow-s rounded  ${themeBorder} `} key={props.cards}>
+      <div className={` shadow-s rounded   ${themeBorder} `} key={props.cards} style={{background: props.win == true ? green : red}}>
         <div
-          className={`border-bottom border-secondary  border-opacity-25  py-1 px-3 fontTextHeading`}
+          className={`border-bottom  ${ props.win==true ? 'border-secondary' : 'border-light' }  border-opacity-25  py-1 px-3 fontTextHeading`}
         >
           <div className={``}>
             {' '}
             <span
-              className={`bg-gradient ${props.win=='house'?'bg-primary' : props.win==true ? 'bg-success' : 'bg-danger' } text-light border-0 bg-gradient px-2 shadow-xs poppins-500 rounded-1 `}
+              className={`bg-gradient ${props.win=='house'?'bg-primary' : props.win==true ? 'bg-success' : 'bg-danger' } text-light border-0 bg-opacity-75 px-2 shadow-xs poppins-500 rounded-1 `}
             >
              {props.name}
             </span>
@@ -93,7 +95,7 @@ const ShowPlayerCards = (props) => {
         </div>
         <div className={` px-2`}>
           <div
-            className={`  d-flex position-relative justify-content-start align-items-center overflow-x-auto  `}
+            className={`  d-flex position-relative justify-content-start align-items-center overflow-x-auto    `}
             style={{ height: '240px', position: 'relative', width: '100%' }}
             key={index}
           >
@@ -102,15 +104,13 @@ const ShowPlayerCards = (props) => {
                 cards.map((card, i) => (
                   <div
                     key={card.name+1}
-                    className={`animateCards h-100 ${s.cards}`}
+                    className={`animateCards  ${s.cards}`}
                     style={{
                       position: 'absolute',
                       left: `${card.position}rem`,
                     }}
                   >
-                    <div className={`px-2`}>
-                      <div className={``}>{card.name}</div>
-                    </div>
+                    
                     <div className={``}>
                       <img
                         src={card.card}

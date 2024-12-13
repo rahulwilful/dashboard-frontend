@@ -789,14 +789,14 @@ const AndarBaharDashboard = () => {
                         andarCards.map((card, i) => (
                           <div
                             key={i}
-                            className={`animateAndar h-100`}
+                            className={`animateAndar `}
                             style={{
                               position: 'absolute',
                               left: `${card.position}rem`,
                             }}
                           >
                             <div className={`px-2`}>
-                              <div className={``}>{card.name}</div>
+                              <div className={``}>{}</div>
                             </div>
                             <div className={``}>
                               <img
@@ -923,14 +923,14 @@ const AndarBaharDashboard = () => {
                       baharCards.map((card, i) => (
                         <div
                           key={i}
-                          className={`animateBahar h-100`}
+                          className={`animateBahar `}
                           style={{
                             position: 'absolute',
                             left: `${card.position}rem`,
                           }}
                         >
                           <div className={`px-2`}>
-                            <div className={``}>{card.name}</div>
+                            <div className={``}>{}</div>
                           </div>
                           <img
                             src={card.image}

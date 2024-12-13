@@ -104,15 +104,13 @@ const ShowHouseCards = (props) => {
               cards.map((card, i) => (
                 <div
                   key={card.name + 1}
-                  className={`animateCards h-100 ${s.cards}`}
+                  className={`animateCards  ${s.cards}`}
                   style={{
                     position: 'absolute',
                     left: `${card.position}rem`,
                   }}
                 >
-                  <div className={`px-2`}>
-                    <div className={``}>{card.name}</div>
-                  </div>
+                  
                   <div className={``}>
                     <img
                       src={card.card}

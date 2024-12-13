@@ -164,7 +164,7 @@ const BaccaratDashboard = () => {
   }
 
   const getGameDataByDate = async () => {
-    //  console.log('fromDate ', fromDate, ' toDate ', toDate)
+      console.log('fromDate ', fromDate, ' toDate ', toDate)
     try {
       const res = await axiosClient.post(`/game/get/${game}/${game_type_id}/${table_limit_id}`, {
         from_date: fromDate,
@@ -587,7 +587,7 @@ const BaccaratDashboard = () => {
                                 From
                               </span>
                               <input
-                                type="date"
+                                type="datetime-local"
                                 className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
                                 aria-label="Sizing example input"
                                 aria-describedby="inputGroup-sizing-sm"
@@ -606,7 +606,7 @@ const BaccaratDashboard = () => {
                                 To
                               </span>
                               <input
-                                type="date"
+                                type="datetime-local"
                                 className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
                                 aria-label="Sizing example input"
                                 aria-describedby="inputGroup-sizing-sm"

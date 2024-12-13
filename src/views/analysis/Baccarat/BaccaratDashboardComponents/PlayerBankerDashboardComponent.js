@@ -483,7 +483,7 @@ const PlayerBankerDashboardComponent = (props) => {
                         className={`w-100   ${s.cards}  d-flex justify-content-center align-items-center`}
                       >
                         <div className={`h-100 w-100 p-1`}>
-                          <div className={`text-center`}>{currentShoeData[index].playerCard1}</div>
+                          {/* <div className={`text-center`}>{currentShoeData[index].playerCard1}</div> */}
 
                           <img src={playerCardImage1} className="w-100 drop_shadow" />
                         </div>
@@ -494,7 +494,7 @@ const PlayerBankerDashboardComponent = (props) => {
                         className={`w-100  ${s.cards}  d-flex justify-content-center align-items-center`}
                       >
                         <div className={`h-100 w-100 p-1`}>
-                          <div className={`text-center`}>{currentShoeData[index].playerCard2}</div>
+                          {/* <div className={`text-center`}>{currentShoeData[index].playerCard2}</div> */}
 
                           <img src={playerCardImage2} className="w-100 drop_shadow" />
                         </div>
@@ -505,7 +505,7 @@ const PlayerBankerDashboardComponent = (props) => {
                         className={`w-100  ${s.cards}  d-flex justify-content-center align-items-center `}
                       >
                         <div className={`h-100 w-100 p-1`}>
-                          <div className={`text-center`}>{currentShoeData[index].playerCard3}</div>
+                          {/* <div className={`text-center`}>{currentShoeData[index].playerCard3}</div> */}
 
                           <img src={playerCardImage3} className="w-100 drop_shadow" />
                         </div>
@@ -717,7 +717,7 @@ const PlayerBankerDashboardComponent = (props) => {
                         className={`w-100   ${s.cards}  d-flex justify-content-center align-items-center`}
                       >
                         <div className={`h-100 w-100 p-1`}>
-                          <div className={`text-center`}>{currentShoeData[index].bankerCard1}</div>
+                         {/*  <div className={`text-center`}>{currentShoeData[index].bankerCard1}</div> */}
 
                           <img src={bankerCardImage1} className="w-100 drop_shadow" />
                         </div>
@@ -728,7 +728,7 @@ const PlayerBankerDashboardComponent = (props) => {
                         className={`w-100  ${s.cards}  d-flex justify-content-center align-items-center`}
                       >
                         <div className={`h-100 w-100 p-1`}>
-                          <div className={`text-center`}>{currentShoeData[index].bankerCard2}</div>
+                          {/* <div className={`text-center`}>{currentShoeData[index].bankerCard2}</div> */}
 
                           <img src={bankerCardImage2} className="w-100 drop_shadow" />
                         </div>
@@ -739,7 +739,7 @@ const PlayerBankerDashboardComponent = (props) => {
                         className={`w-100  ${s.cards}  d-flex justify-content-center align-items-center `}
                       >
                         <div className={`h-100 w-100 p-1`}>
-                          <div className={`text-center`}>{currentShoeData[index].bankerCard3}</div>
+                          {/* <div className={`text-center`}>{currentShoeData[index].bankerCard3}</div> */}
 
                           <img src={bankerCardImage3} className="w-100 drop_shadow" />
                         </div>
