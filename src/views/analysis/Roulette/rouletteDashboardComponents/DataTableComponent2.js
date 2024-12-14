@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux'
 const DataTableComponent2 = (props) => {
   const [data, setData] = useState([])
   const theme = useSelector((state) => state.theme)
+  const [rowsPerPage, setRowsPerPage] = useState(15)
 
   useEffect(() => {}, [theme])
 
@@ -24,12 +25,12 @@ const DataTableComponent2 = (props) => {
   }, [theme, props.data])
 
   const columns = [
-    {
+   /*  {
       name: 'Table',
       selector: (row) => row.table_Name,
       sortable: true,
       minWidth: '100px',
-    },
+    }, */
     {
       name: 'Date',
       selector: (row) => row.date_time,
@@ -112,7 +113,6 @@ const DataTableComponent2 = (props) => {
       per: 20,
       val: 5000,
     },
-   
   ]
   // Custom styles for DataTable
   const customStyles = {
@@ -149,24 +149,43 @@ const DataTableComponent2 = (props) => {
         className={` ${theme === 'dark' ? 'text-light' : 'text-dark'} ${'bg-' + theme} bg-gradient poppins-500 w-100  rounded overflow-hidden shadow-s `}
       >
         <div className="w-100 px-1 ">
-          <div className="border-bottom py-2 border-secondary border-opacity-50 border-primary px-3 d-flex align-items-center h-100">
+          <div className="border-bottom py-2 border-secondary border-opacity-50 border-primary px-3 d-flex align-items-center justify-content-between h-100">
             <div className=" ">Table2</div>
+            <div className={`d-flex align-items-center mt-2`}>
+              <div className="me-auto ">
+                <select
+                   className={`form-select form-select-sm ${theme == "dark" ? 'bg-dark text-light' : 'bg-light text-dark'} shadow-xs border-0`}
+                  aria-label="Rows per page"
+                  defaultValue={15}
+                  onChange={(e) => setRowsPerPage(parseInt(e.target.value))}
+                  style={{ height: '25px' }}
+                >
+                  <option value={5}>5</option>
+                  <option value={10}>10</option>
+                  <option value={15}>15</option>
+                  <option value={20}>20</option>
+                  <option value={25}>25</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
-        <DataTable
-          className={`font8 text-dark text- pointer ${s.rdt_Pagination}`}
-          columns={columns}
-          data={data}
-          fixedHeader
-          fixedHeaderScrollHeight="300px"
-          pagination
-          theme={theme === 'light' ? 'light' : 'dark'}
-          customStyles={customStyles}
-          highlightOnHover
-          onRowClicked={handleRowClick}
-          paginationPerPage="15"
-          paginationRowsPerPageOptions={[5, 7, 10, 15, 30]}
-        />
+        <div className={``} key={rowsPerPage}>
+          <DataTable
+            className={`font8 text-dark text- pointer ${s.rdt_Pagination}`}
+            columns={columns}
+            data={data}
+            fixedHeader
+            fixedHeaderScrollHeight="300px"
+            pagination
+            theme={theme === 'light' ? 'light' : 'dark'}
+            customStyles={customStyles}
+            highlightOnHover
+            onRowClicked={handleRowClick}
+            paginationPerPage={rowsPerPage}
+            paginationRowsPerPageOptions={[rowsPerPage]}
+          />
+        </div>
       </div>
     </>
   )

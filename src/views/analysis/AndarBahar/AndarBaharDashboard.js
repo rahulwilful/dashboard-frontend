@@ -101,13 +101,63 @@ const AndarBaharDashboard = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (localStorage.getItem('andarBaharCallOnTimeInterval') === 'true') {
-        //console.log("data.length: ",data.length)
-        //getGameData(limit)
+       
+        checkLive(limit)
       }
-    }, 2000)
+    }, 10000)
 
     return () => clearInterval(intervalId)
   }, [limit])
+
+  const checkLive = async (limitParam) => {
+    //  console.log('getGameData: ', limitParam)
+    const limitToUse = limitParam || limit
+    try {
+      const res = await axiosClient.get(
+        `/game/get/andar_bahar/${game_type_id}/${table_limit_id}/${limit}`,
+      )
+     
+      let data = res.data.result
+    
+      console.log('response: ', data)
+
+      let live = false
+      const currentTime = new Date()
+
+      if (data.length > 0 && data[0].date_time) {
+        const resDataTime = new Date(data[0].date_time)
+        const diffInMs = currentTime - resDataTime
+        const diffInMinutes = diffInMs / (1000 * 60)
+
+        if (diffInMinutes <= 1) {
+          live = true
+        }
+      }
+
+      console.log('live status: ', live)
+      setLive(live)
+
+      if (data.length > 0) {
+        setDisplay('data')
+      }
+
+      if (data.length == 0) {
+        setDisplay('nodata')
+      }
+      setRenderKey(renderKey + 1)
+    } catch (err) {
+      console.log('err: ', err)
+      setDisplay('nodata')
+    }
+
+    localStorage.setItem('andarBaharCallOnTimeInterval', true)
+  }
+
+  const updateData = () => {
+    window.location.reload()
+    showToast('Data updated successfully', 'success')
+    
+  }
 
   useEffect(() => {
     getCurrent()
@@ -868,11 +918,7 @@ const AndarBaharDashboard = () => {
                   <div
                     className={` h-100 d-flex flex-column  justify-content-center align-items-center `}
                   >
-                    <div
-                      className={`px-2 d-flex justify-content-start justify-content-md-center align-items-center`}
-                    >
-                      <div className={``}>{jokerCard ? jokerCard : ''}</div>
-                    </div>
+                    
                     <div
                       className={`d-flex justify-content-start justify-content-md-center align-items-center `}
                     >
@@ -1054,16 +1100,17 @@ const AndarBaharDashboard = () => {
                 </button>
               </div>
               <div className={`fontTextHeading  poppins-500  d-flex justify-content-center align-items-center gap-2 ${live ? 'text-ligt':'text-danger'}`}>
-              <div
-                        className={`me-2 ${live ? 'bg-success' : 'bg-danger'} shadow-s rounded-circle `}
-                        style={{
-                          height: '10px',
-                          width: '10px',
-                        }}
-                      ></div>
               <div className={``}>
                 Active
                 </div>
+                <span
+                  className={`rounded-circle d-flex justify-content-center    ${live ? 'bg-success' : 'bg-danger disabled'} text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25 pointer`}
+                  disabled={!live}
+                  onClick={live ? updateData : null}
+                  >
+                  <i class="bi bi-arrow-clockwise"></i>
+                </span>
+             
                 
               </div>
             </div>

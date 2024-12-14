@@ -17,10 +17,9 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/all'
 import { useGSAP } from '@gsap/react'
 
-
 const ThreeCardPokerDashboard = () => {
   const theme = useSelector((theme) => theme.theme)
- 
+
   const navigate = useNavigate()
   const { game, table_limit_name, game_type_id, table_limit_id } = useParams()
   const [data, setData] = useState([])
@@ -43,6 +42,8 @@ const ThreeCardPokerDashboard = () => {
 
   const [currentWinners, setCurrentWinners] = useState([0, 0, 0, 0, 0, 0, 0])
   const [houseCards, setHouseCards] = useState([])
+  const [extraHouseCards,setExtraHouseCards] = useState([])
+  const [showExtraHouseCards,setShowExtraHouseCards] = useState(false)
   const [player1cards, setPlayer1Cards] = useState([])
   const [player2cards, setPlayer2Cards] = useState([])
   const [player3cards, setPlayer3Cards] = useState([])
@@ -50,13 +51,13 @@ const ThreeCardPokerDashboard = () => {
   const [player5cards, setPlayer5Cards] = useState([])
   const [player6cards, setPlayer6Cards] = useState([])
   const [player7cards, setPlayer7Cards] = useState([])
-  const [player1Win,setPlayer1Win] = useState(false)
-  const [player2Win,setPlayer2Win] = useState(false)
-  const [player3Win,setPlayer3Win] = useState(false)
-  const [player4Win,setPlayer4Win] = useState(false)
-  const [player5Win,setPlayer5Win] = useState(false)
-  const [player6Win,setPlayer6Win] = useState(false)
-  const [player7Win,setPlayer7Win] = useState(false)
+  const [player1Win, setPlayer1Win] = useState(false)
+  const [player2Win, setPlayer2Win] = useState(false)
+  const [player3Win, setPlayer3Win] = useState(false)
+  const [player4Win, setPlayer4Win] = useState(false)
+  const [player5Win, setPlayer5Win] = useState(false)
+  const [player6Win, setPlayer6Win] = useState(false)
+  const [player7Win, setPlayer7Win] = useState(false)
 
   useEffect(() => {
     setThemeClass(
@@ -72,6 +73,10 @@ const ThreeCardPokerDashboard = () => {
     )
   }, [theme])
 
+  useEffect(()=>{
+    console.log('display: ',display)
+  },[display])
+
   useEffect(() => {
     getGameData()
     console.log('game:- ', game)
@@ -81,16 +86,46 @@ const ThreeCardPokerDashboard = () => {
     console.log('display:- ', display)
   }, [display])
 
-  const getGameData = async (limitParam) => {
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (localStorage.getItem('threeCardPokerCallOnTimeInterval') === 'true') {
+        // getGameData(limit)
+        //checkLive(limit)
+      }
+    }, 10000)
+
+    return () => clearInterval(intervalId) // Cleanup on unmount
+  }, [limit])
+
+  const checkLive = async (limitParam) => {
+    //  console.log('getGameData: ', limitParam)
     const limitToUse = limitParam || limit
     try {
       const res = await axiosClient.get(
         `/game/get/3_card_poker/${game_type_id}/${table_limit_id}/${limit}`,
       )
-      console.log('response: ', res.data.result)
-      processData(res.data.result)
+      //setShoePlayerBankerComponent(false)
+      //processData(res.data.result)
       let data = res.data.result
+     // setUpdatedData(res.data.result)
       console.log('response: ', data)
+
+      let live = false
+      const currentTime = new Date()
+
+      if (data.length > 0 && data[0].date_time) {
+        const resDataTime = new Date(data[0].date_time)
+        const diffInMs = currentTime - resDataTime
+        const diffInMinutes = diffInMs / (1000 * 60)
+
+        if (diffInMinutes <= 1) {
+          live = true
+        }
+      }
+
+      console.log('live status: ', live)
+      setLive(live)
+
       if (data.length > 0) {
         setDisplay('data')
       }
@@ -98,6 +133,38 @@ const ThreeCardPokerDashboard = () => {
       if (data.length == 0) {
         setDisplay('nodata')
       }
+      setRenderKey(renderKey + 1)
+    } catch (err) {
+      console.log('err: ', err)
+      setDisplay('nodata')
+    }
+
+    localStorage.setItem('threeCardPokerCallOnTimeInterval', true)
+  }
+
+  const updateData = () => {
+    window.location.reload()
+    showToast('Data updated successfully', 'success')
+    
+  }
+
+  const getGameData = async (limitParam) => {
+    const limitToUse = limitParam || limit
+    try {
+      const res = await axiosClient.get(
+        `/game/get/3_card_poker/${game_type_id}/${table_limit_id}/${limit}`,
+      )
+      console.log('response: ', res.data.result)
+      let data = res.data.result
+      console.log('response: ', data)
+      if (data.length > 0) {
+        setDisplay('data')
+      }
+      
+      if (data.length == 0) {
+        setDisplay('nodata')
+      }
+      processData(res.data.result)
 
       setRenderKey(renderKey + 1)
       localStorage.setItem('threeCardPokerCallOnTimeInterval', true)
@@ -158,9 +225,9 @@ const ThreeCardPokerDashboard = () => {
       return
     }
     setLive(live)
-    if (live == true) {
+  /*   if (live == true) {
       setLiveData(resData[0])
-    }
+    } */
 
     setCurrentWinners(resData[0].winner.split(','))
 
@@ -174,6 +241,7 @@ const ThreeCardPokerDashboard = () => {
 
     //counting player wins and splitting cards
     for (let i in resData) {
+      if(resData[i].extra.length> 0) setShowExtraHouseCards(true)
       const splittedWinners = resData[i].winner.split(',')
 
       if (splittedWinners[0] && splittedWinners[0] == '1') player1wins++
@@ -184,7 +252,6 @@ const ThreeCardPokerDashboard = () => {
       if (splittedWinners[5] && splittedWinners[5] == '1') player6wins++
       if (splittedWinners[6] && splittedWinners[6] == '1') player7wins++
     }
-   
 
     handleSpliteCrads(resData[0])
 
@@ -202,6 +269,7 @@ const ThreeCardPokerDashboard = () => {
 
   const handleSpliteCrads = (data) => {
     let houseCards = []
+    let extraHouseCards =[]
     let player1cards = []
     let player2cards = []
     let player3cards = []
@@ -209,9 +277,9 @@ const ThreeCardPokerDashboard = () => {
     let player5cards = []
     let player6cards = []
     let player7cards = []
-    
 
     let splittedHouseCards = data.house_cards.split(',')
+    let splittedExtraHouseCards = data.extra.split(',')
     let splittedPlayer1Cards = data.player1_cards.split(',')
     let splittedPlayer2Cards = data.player2_cards.split(',')
     let splittedPlayer3Cards = data.player3_cards.split(',')
@@ -222,6 +290,7 @@ const ThreeCardPokerDashboard = () => {
 
     //removing spaces from array
     splittedHouseCards = splittedHouseCards.filter((card) => card != '')
+    splittedExtraHouseCards = splittedExtraHouseCards.filter((card) => card != '')
     splittedPlayer1Cards = splittedPlayer1Cards.filter((card) => card != '')
     splittedPlayer2Cards = splittedPlayer2Cards.filter((card) => card != '')
     splittedPlayer3Cards = splittedPlayer3Cards.filter((card) => card != '')
@@ -231,6 +300,7 @@ const ThreeCardPokerDashboard = () => {
     splittedPlayer7Cards = splittedPlayer7Cards.filter((card) => card != '')
 
     if (splittedHouseCards.length > 0) houseCards = splittedHouseCards
+    if (splittedExtraHouseCards.length > 0) extraHouseCards = splittedExtraHouseCards
     if (splittedPlayer1Cards.length > 0) player1cards = splittedPlayer1Cards
     if (splittedPlayer2Cards.length > 0) player2cards = splittedPlayer2Cards
     if (splittedPlayer3Cards.length > 0) player3cards = splittedPlayer3Cards
@@ -239,14 +309,15 @@ const ThreeCardPokerDashboard = () => {
     if (splittedPlayer6Cards.length > 0) player6cards = splittedPlayer6Cards
     if (splittedPlayer7Cards.length > 0) player7cards = splittedPlayer7Cards
 
-    console.log('HouseCards: ', houseCards)
+   /*  console.log('HouseCards: ', houseCards)
     console.log('player1cards: ', player1cards)
     console.log('player2cards: ', player2cards)
     console.log('player3cards: ', player3cards)
     console.log('player4cards: ', player4cards)
     console.log('player5cards: ', player5cards)
     console.log('player6cards: ', player6cards)
-    console.log('player7cards: ', player7cards)
+    console.log('player7cards: ', player7cards) */
+    console.log('extraHouseCards: ', extraHouseCards)
 
     setHouseCards(houseCards)
     setPlayer1Cards(player1cards)
@@ -256,6 +327,7 @@ const ThreeCardPokerDashboard = () => {
     setPlayer5Cards(player5cards)
     setPlayer6Cards(player6cards)
     setPlayer7Cards(player7cards)
+    setExtraHouseCards(extraHouseCards)
   }
 
   const getCustomeGameData = async () => {
@@ -338,51 +410,52 @@ const ThreeCardPokerDashboard = () => {
   }
 
   useEffect(() => {
-    console.log("currentWinners : ", currentWinners)
-    if(currentWinners.length > 0){
-      
-      if(currentWinners[0] == '1') setPlayer1Win(true)
-      if(currentWinners[2] == '1') setPlayer2Win(true)
-      if(currentWinners[3] == '1') setPlayer3Win(true)
-      if(currentWinners[4] == '1') setPlayer4Win(true)
-      if(currentWinners[5] == '1') setPlayer5Win(true)
-      if(currentWinners[6] == '1') setPlayer6Win(true)
-      if(currentWinners[7] == '1') setPlayer7Win(true)
+    console.log('currentWinners : ', currentWinners)
+    if (currentWinners.length > 0) {
+      if (currentWinners[0] == '1') setPlayer1Win(true)
+      if (currentWinners[2] == '1') setPlayer2Win(true)
+      if (currentWinners[3] == '1') setPlayer3Win(true)
+      if (currentWinners[4] == '1') setPlayer4Win(true)
+      if (currentWinners[5] == '1') setPlayer5Win(true)
+      if (currentWinners[6] == '1') setPlayer6Win(true)
+      if (currentWinners[7] == '1') setPlayer7Win(true)
     }
-  },[currentWinners])
-
+  }, [currentWinners])
 
   const config = { threshold: 0.1 }
 
   let observer = new IntersectionObserver(function (entries, self) {
-  let targets = entries.map((entry) => {
-    if (entry.isIntersecting) {
-      self.unobserve(entry.target)
-      return entry.target
-    }
+    let targets = entries.map((entry) => {
+      if (entry.isIntersecting) {
+        self.unobserve(entry.target)
+        return entry.target
+      }
+    })
+
+    // Call our animation function
+    fadeIn(targets)
+  }, config)
+
+  document.querySelectorAll('.box').forEach((box) => {
+    observer.observe(box)
   })
-
-  // Call our animation function
-  fadeIn(targets)
-}, config)
-
-document.querySelectorAll('.box').forEach((box) => {
-  observer.observe(box)
-})
 
   function fadeIn(targets) {
-  gsap.to(targets, {
-    opacity: 1,
-    y: 0,
-    duration: 0.6,
-    stagger: 0.2,
-    ease: 'power1.out',
-  })
-}
+    gsap.to(targets, {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      stagger: 0.2,
+      ease: 'power1.out',
+    })
+  }
 
   return (
     <>
       <div className={` ${theme === 'dark' ? 'text-light' : 'text-dark'} pb-4   position_relative`}>
+      <div className={`text-center text-shadow capitalize poppins-400`}>
+          <h3> {table_limit_name ? table_limit_name : 'Title'}</h3>
+        </div>
         <div className={`px-2 `}>
           <div className={`row    d-flex justify-content-center  `}>
             <div
@@ -472,7 +545,7 @@ document.querySelectorAll('.box').forEach((box) => {
                               From
                             </span>
                             <input
-                              type="date"
+                              type="datetime-local"
                               className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
                               aria-label="Sizing example input"
                               aria-describedby="inputGroup-sizing-sm"
@@ -491,7 +564,7 @@ document.querySelectorAll('.box').forEach((box) => {
                               To
                             </span>
                             <input
-                              type="date"
+                              type="datetime-local"
                               className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
                               aria-label="Sizing example input"
                               aria-describedby="inputGroup-sizing-sm"
@@ -520,24 +593,25 @@ document.querySelectorAll('.box').forEach((box) => {
             </div>
           </div>
         </div>
-        <div className={` mt-2  ${themeBorder} p-2 rounded bg-opacity-100 shadow-s position_top_sticky box ${s.opacity}`}>
-         
-          <div
-            className={`d-flex justify-content-center align-items-center gap-3   pt-1`}
+        <div className={` ${display == 'data' ? '' : 'd-none'}`}>
+
+        <div
+          className={` mt-2  ${themeBorder} px-2 rounded bg-opacity-100 shadow-s position_top_sticky box ${s.opacity} `}
           >
+          <div className={`d-flex justify-content-center align-items-center gap-3   py-1`}>
             <div className={``}>
               <button
                 onClick={() => handleIndexChange('-')}
                 type="button"
                 className={`btn btn-primary btn-sm ${index == 0 ? 'd-none' : ''} `}
-              >
+                >
                 <i className="bi bi-chevron-left"></i>
               </button>
               <button
                 disabled
                 type="button"
                 className={`btn btn-primary btn-sm ${index == 0 ? '' : 'd-none'}`}
-              >
+                >
                 <i className="bi bi-chevron-left"></i>
               </button>
             </div>
@@ -550,58 +624,78 @@ document.querySelectorAll('.box').forEach((box) => {
                 onClick={() => handleIndexChange('+')}
                 type="button"
                 className={`btn btn-primary btn-sm ${index < originalData.length - 1 ? '' : 'd-none'}`}
-              >
+                >
                 <i className="bi bi-chevron-right  "></i>
               </button>
               <button
                 disabled
                 type="button"
                 className={`btn btn-primary btn-sm ${index >= originalData.length - 1 ? '' : 'd-none'}`}
-              >
+                >
                 <i className="bi bi-chevron-right "></i>
               </button>
+            </div>
+            <div className={``}>
+              <div className={`d-flex gap-3 ${live ? 'text-light' : 'text-danger'}`}>
+                <div>
+
+                {live ? 'Active' : 'Inactive'}
+                </div>
+                <div>
+                  
+                <span
+                  className={`rounded-circle d-flex justify-content-center    ${live ? 'bg-success' : 'bg-danger disabled'} text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25 pointer`}
+                  disabled={!live}
+                  onClick={live ? updateData : null}
+                  >
+                  <i class="bi bi-arrow-clockwise"></i>
+                </span>
+                  </div>
+              </div>
             </div>
           </div>
         </div>
         <div className={` py-2 mt-2`}>
-          <div className={`row px-2 gy-2  `} >
+          <div className={`row px-2 gy-2  `}>
             <div className={`col-12 col-sm-6 col-md-4 box ${s.opacity}   `}>
               <ShowHouseCards cards={houseCards} name="House Cards" win={'house'} />
             </div>
+            <div className={`col-12 col-sm-6 col-md-4 box ${s.opacity} ${showExtraHouseCards ? '':'d-none'}   `}>
+              <ShowHouseCards cards={extraHouseCards} name="Extra Cards" win={'house'} />
+            </div>
             <div
               className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player1cards.length == 0 ? 'd-none' : ''} `}
-            >
+              >
               <ShowPlayerCards cards={player1cards} name="Player 1" win={currentWinners[0]} />
             </div>
             <div
               className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player2cards.length == 0 ? 'd-none' : ''} `}
-            >
+              >
               <ShowPlayerCards cards={player2cards} name="Player 2" win={currentWinners[1]} />
             </div>
             <div
               className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player3cards.length == 0 ? 'd-none' : ''} `}
-            >
+              >
               <ShowPlayerCards cards={player3cards} name="Player 3" win={currentWinners[2]} />
             </div>
             <div
               className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player4cards.length == 0 ? 'd-none' : ''} `}
-            >
+              >
               <ShowPlayerCards cards={player4cards} name="Player 4" win={currentWinners[3]} />
             </div>
             <div
               className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player5cards.length == 0 ? 'd-none' : ''} `}
-            >
-              <ShowPlayerCards cards={player5cards} name="Player 5" win ={currentWinners[4]} />
+              >
+              <ShowPlayerCards cards={player5cards} name="Player 5" win={currentWinners[4]} />
             </div>
             <div
               className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player6cards.length == 0 ? 'd-none' : ''} `}
-            >
-              <ShowPlayerCards cards={player6cards} name="Player 6" win = {currentWinners[5]} />
+              >
+              <ShowPlayerCards cards={player6cards} name="Player 6" win={currentWinners[5]} />
             </div>
             <div
               className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player7cards.length == 0 ? 'd-none' : ''} `}
-            >
-              
+              >
               <ShowPlayerCards cards={player7cards} name="Player 7 " win={currentWinners[6]} />
             </div>
           </div>
@@ -610,7 +704,7 @@ document.querySelectorAll('.box').forEach((box) => {
           <div className={`col-12 col-lg-6  box ${s.opacity}`}>
             <div
               className={`  pt-3 pe-3 ${themeBorder} rounded-3 shadow-s h-100 d-flex align-items-center `}
-            >
+              >
               <BarChartComponent data={data} />
             </div>
           </div>
@@ -620,6 +714,10 @@ document.querySelectorAll('.box').forEach((box) => {
             </div>
           </div>
         </div>
+              </div>
+      </div>
+      <div className={`${display == 'nodata' ? '' : 'd-none'}`}>
+      <NoDataFull />
       </div>
     </>
   )

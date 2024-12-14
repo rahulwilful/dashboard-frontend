@@ -555,7 +555,8 @@ const RouletteDashboard = () => {
                               From
                             </span>
                             <input
-                              type="date"
+                            style={{maxWidth:'150px'}}
+                              type="datetime-local"
                               className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
                               aria-label="Sizing example input"
                               aria-describedby="inputGroup-sizing-sm"
@@ -572,7 +573,8 @@ const RouletteDashboard = () => {
                               To
                             </span>
                             <input
-                              type="date"
+                            style={{maxWidth:'150px'}}
+                              type="datetime-local"
                               className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
                               aria-label="Sizing example input"
                               aria-describedby="inputGroup-sizing-sm"

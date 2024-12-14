@@ -35,7 +35,7 @@ const ShowPlayerCards = (props) => {
   
   
     useEffect(() => {
-     console.log(props.name," wins: " , props.win)
+     //console.log(props.name," wins: " , props.win)
   
       let tempCards = []
     
@@ -63,7 +63,7 @@ const ShowPlayerCards = (props) => {
         }
       }
   
-      console.log("tempCards: ",tempCards)
+      //console.log("tempCards: ",tempCards)
   
       setCards(tempCards)
     }, [props.cards])

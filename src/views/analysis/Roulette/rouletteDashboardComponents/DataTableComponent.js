@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux'
 const DataTableComponent = (props) => {
   const [data, setData] = useState([])
   const theme = useSelector((state) => state.theme)
+  const [rowsPerPage, setRowsPerPage] = useState(7)
 
   useEffect(() => {
     if (props.data) {
@@ -115,11 +116,29 @@ const DataTableComponent = (props) => {
         className={` ${theme === 'dark' ? 'text-light' : 'text-dark'} ${'bg-' + theme} bg-gradient poppins-500 w-100   rounded overflow-hidden shadow-s`}
       >
         <div className="w-100 px-1">
-          <div className="border-bottom border-secondary border-opacity-50 border-primary px-3 d-flex align-items-center h-100">
+          <div className="border-bottom border-secondary border-opacity-50 border-primary px-3 d-flex py-1 justify-content-between align-items-center h-100">
             <div className=" ">History</div>
+            <div className={`d-flex align-items-center mt-2`}>
+              <div className="me-auto">
+                <select
+                  className={`form-select form-select-sm ${theme == "dark" ? 'bg-dark text-light' : 'bg-light text-dark'} shadow-xs border-0`}
+                  aria-label="Rows per page"
+                  defaultValue={7}
+                  onChange={(e) => setRowsPerPage(parseInt(e.target.value))}
+                  style={{ height: '25px' }}
+                >
+                 
+                  <option value={7}>7</option>
+                  <option value={10}>10</option>
+                  <option value={13}>13</option>
+                  <option value={15}>15</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
         <DataTable
+        key={rowsPerPage}
           className={`font8 text-dark overflow-x-scroll pointer ${s.rdt_Pagination}`}
           columns={columns}
           data={data}
@@ -130,8 +149,9 @@ const DataTableComponent = (props) => {
           customStyles={customStyles}
           highlightOnHover
           onRowClicked={handleRowClick}
-          paginationPerPage="7"
-          paginationRowsPerPageOptions={[5, 7, 10, 15]}
+          paginationPerPage={rowsPerPage}
+          paginationRowsPerPageOptions={[rowsPerPage]}
+          
           
         />
       </div>

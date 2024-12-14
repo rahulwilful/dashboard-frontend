@@ -90,10 +90,10 @@ const BaccaratDashboard = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (localStorage.getItem('baccaratCallOnTimeInterval') === 'true') {
-       // getGameData(limit)
-       checkLive(limit)
+        // getGameData(limit)
+        checkLive(limit)
       }
-    }, 5000)
+    }, 10000)
 
     return () => clearInterval(intervalId) // Cleanup on unmount
   }, [limit])
@@ -112,59 +112,56 @@ const BaccaratDashboard = () => {
   }
 
   const checkLive = async (limitParam) => {
-      //  console.log('getGameData: ', limitParam)
-      const limitToUse = limitParam || limit
-      try {
-        const res = await axiosClient.get(`/baccarat/get/${game_type_id}/${table_limit_id}/${limit}`)
-        setShoePlayerBankerComponent(false)
-        //processData(res.data.result)
-        let data = res.data.result
-        setUpdatedData(res.data.result)
-        console.log('response: ', data)
+    //  console.log('getGameData: ', limitParam)
+    const limitToUse = limitParam || limit
+    try {
+      const res = await axiosClient.get(`/baccarat/get/${game_type_id}/${table_limit_id}/${limit}`)
+      setShoePlayerBankerComponent(false)
+      //processData(res.data.result)
+      let data = res.data.result
+      setUpdatedData(res.data.result)
+      console.log('response: ', data)
 
-        let live = false
-        const currentTime = new Date()
-    
-        if (data.length > 0 && data[0].date_time) {
-          const resDataTime = new Date(data[0].date_time)
-          const diffInMs = currentTime - resDataTime
-          const diffInMinutes = diffInMs / (1000 * 60)
-    
-          if (diffInMinutes <= 1) {
-            live = true
-          }
-        }
-    
-        console.log('live status: ', live)
-        setLive(live)
-        
+      let live = false
+      const currentTime = new Date()
 
-        if (data.length > 0) {
-          setDisplay('data')
+      if (data.length > 0 && data[0].date_time) {
+        const resDataTime = new Date(data[0].date_time)
+        const diffInMs = currentTime - resDataTime
+        const diffInMinutes = diffInMs / (1000 * 60)
+
+        if (diffInMinutes <= 1) {
+          live = true
         }
-  
-        if (data.length == 0) {
-          setDisplay('nodata')
-        }
-        setRenderKey(renderKey + 1)
-       
-      } catch (err) {
-        console.log('err: ', err)
+      }
+
+      console.log('live status: ', live)
+      setLive(live)
+
+      if (data.length > 0) {
+        setDisplay('data')
+      }
+
+      if (data.length == 0) {
         setDisplay('nodata')
       }
-  
-      localStorage.setItem('baccaratCallOnTimeInterval', true)
+      setRenderKey(renderKey + 1)
+    } catch (err) {
+      console.log('err: ', err)
+      setDisplay('nodata')
+    }
+
+    localStorage.setItem('baccaratCallOnTimeInterval', true)
   }
 
   const updateData = () => {
     window.location.reload()
     showToast('Data updated successfully', 'success')
-    setRenderDashboardKey(renderDashboardKey + 1)
-
+    
   }
 
   const getGameDataByDate = async () => {
-      console.log('fromDate ', fromDate, ' toDate ', toDate)
+    console.log('fromDate ', fromDate, ' toDate ', toDate)
     try {
       const res = await axiosClient.post(`/game/get/${game}/${game_type_id}/${table_limit_id}`, {
         from_date: fromDate,
@@ -343,8 +340,6 @@ const BaccaratDashboard = () => {
 
       const tempPlayerSplit = resData[i].player_cards.split(',')
       const tempBankerSplit = resData[i].banker_cards.split(',')
-
-      
 
       //spliting cards to easy access and computations
       resData[i].playerCard1 = tempPlayerSplit[0]
@@ -548,7 +543,6 @@ const BaccaratDashboard = () => {
                             type="number"
                             placeholder="From Shoe"
                             onChange={(e) => setFromShoe(e.target.value)}
-                            
                           />
                         </div>
                         <div className={`w-100 `}>
@@ -645,7 +639,7 @@ const BaccaratDashboard = () => {
                 shoeData={data}
                 dataSize={dataSize}
                 getDataByShoe={getDataByShoe}
-                live= {live}
+                live={live}
                 updateData={updateData}
               />
             </div>

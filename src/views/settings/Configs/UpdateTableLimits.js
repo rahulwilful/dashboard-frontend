@@ -117,7 +117,7 @@ const UpdateTableLimits = (props) => {
                     checked={form.active}
                     onChange={() => setForm({ ...form, active: !form.active })}
                   />
-                  <label className="form-check-label ">Active</label>
+                  <label className="form-check-label ">Analysis</label>
                 </div>
               </div>
             </div>
