@@ -26,8 +26,8 @@ import LOGO from 'src/assets/brand/LOGO.png'
 
 const Login = () => {
   const navigate = useNavigate()
-  const [user_name, setUser_name] = useState('rahul@gmail.com')
-  const [password, setPassword] = useState('111111')
+  const [user_name, setUser_name] = useState('')
+  const [password, setPassword] = useState('')
   const [error, setError] = useState(null)
 
   useEffect(() => { 

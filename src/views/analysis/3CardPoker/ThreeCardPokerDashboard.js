@@ -42,8 +42,8 @@ const ThreeCardPokerDashboard = () => {
 
   const [currentWinners, setCurrentWinners] = useState([0, 0, 0, 0, 0, 0, 0])
   const [houseCards, setHouseCards] = useState([])
-  const [extraHouseCards,setExtraHouseCards] = useState([])
-  const [showExtraHouseCards,setShowExtraHouseCards] = useState(false)
+  const [communityCards,setCommunityCards] = useState([])
+  const [showCommunityCards,setShowCommunityCards] = useState(false)
   const [player1cards, setPlayer1Cards] = useState([])
   const [player2cards, setPlayer2Cards] = useState([])
   const [player3cards, setPlayer3Cards] = useState([])
@@ -241,7 +241,7 @@ const ThreeCardPokerDashboard = () => {
 
     //counting player wins and splitting cards
     for (let i in resData) {
-      if(resData[i].extra.length> 0) setShowExtraHouseCards(true)
+      if(resData[i].community_cards.length> 0) setShowCommunityCards(true)
       const splittedWinners = resData[i].winner.split(',')
 
       if (splittedWinners[0] && splittedWinners[0] == '1') player1wins++
@@ -279,7 +279,7 @@ const ThreeCardPokerDashboard = () => {
     let player7cards = []
 
     let splittedHouseCards = data.house_cards.split(',')
-    let splittedExtraHouseCards = data.extra.split(',')
+    let splittedExtraHouseCards = data.community_cards.split(',')
     let splittedPlayer1Cards = data.player1_cards.split(',')
     let splittedPlayer2Cards = data.player2_cards.split(',')
     let splittedPlayer3Cards = data.player3_cards.split(',')
@@ -327,7 +327,7 @@ const ThreeCardPokerDashboard = () => {
     setPlayer5Cards(player5cards)
     setPlayer6Cards(player6cards)
     setPlayer7Cards(player7cards)
-    setExtraHouseCards(extraHouseCards)
+    setCommunityCards(extraHouseCards)
   }
 
   const getCustomeGameData = async () => {
@@ -660,8 +660,8 @@ const ThreeCardPokerDashboard = () => {
             <div className={`col-12 col-sm-6 col-md-4 box ${s.opacity}   `}>
               <ShowHouseCards cards={houseCards} name="House Cards" win={'house'} />
             </div>
-            <div className={`col-12 col-sm-6 col-md-4 box ${s.opacity} ${showExtraHouseCards ? '':'d-none'}   `}>
-              <ShowHouseCards cards={extraHouseCards} name="Extra Cards" win={'house'} />
+            <div className={`col-12 col-sm-6 col-md-4 box ${s.opacity} ${showCommunityCards ? '':'d-none'}   `}>
+              <ShowHouseCards cards={communityCards} name="Community Cards" win={'community'}  />
             </div>
             <div
               className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player1cards.length == 0 ? 'd-none' : ''} `}

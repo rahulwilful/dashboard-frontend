@@ -88,7 +88,7 @@ const ShowHouseCards = (props) => {
           <div className={``}>
             {' '}
             <span
-              className={`bg-gradient ${props.win == 'house' ? 'bg-primary' : props.win == true ? 'bg-success' : 'bg-danger'} text-light border-0 bg-gradient px-2 shadow-xs poppins-500 rounded-1 `}
+              className={`bg-gradient ${props.win == 'house' ? 'bg-primary' : props.win == "community" ? 'bg-info' : 'bg-danger'} text-light border-0 bg-gradient px-2 shadow-xs poppins-500 rounded-1 `}
             >
               {props.name}
             </span>
@@ -137,7 +137,7 @@ const ShowHouseCards = (props) => {
           <div className={``}>
             {' '}
             <span
-              className={`bg-gradient bg-primary text-light border-0 bg-gradient px-2 shadow-xs poppins-500 rounded-1 `}
+              className={`bg-gradient ${props.win == 'house' ? 'bg-primary' : props.win == "community" ? 'bg-info' : 'bg-danger'} text-light border-0 bg-gradient px-2 shadow-xs poppins-500 rounded-1 `}
             >
               {props.name}
             </span>
