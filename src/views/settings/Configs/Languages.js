@@ -47,7 +47,6 @@ const UpdateLanguages = (props) => {
     console.log('form after setting', form)
   }, [languages, form])
 
- 
   useEffect(() => {
     getCurrent()
   }, [])
@@ -57,7 +56,7 @@ const UpdateLanguages = (props) => {
     await GetCurrent('settings')
     getLanguages()
     console.log('user ', user)
-    return 
+    return
   }
   return (
     <>

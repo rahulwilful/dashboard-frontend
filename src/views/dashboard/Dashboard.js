@@ -45,7 +45,7 @@ import { Cards } from './DashboardComponents/Cards'
 import { Card } from './DashboardComponents/Card'
 
 import { ScrollTrigger } from 'gsap/all'
-import gsap from 'gsap' 
+import gsap from 'gsap'
 
 const Dashboard = () => {
   const theme = useSelector((state) => state.theme)
@@ -56,73 +56,71 @@ const Dashboard = () => {
   const [allGames, setAllGames] = useState([])
   const [activeGames, setActiveGames] = useState([])
 
-  const scrollRef = useRef(null) 
-  
+  const scrollRef = useRef(null)
 
   const [languages, setLanguages] = useState([])
   const [themes, setThemes] = useState([])
   const [backgrounds, setBackgrounds] = useState([])
   const [currencys, setCurrencys] = useState([])
 
-  const tempData1 =[80,60,52,50,52,60,80]
-  const tempData2 =[50,80,30,50,55,67,40]
+  const tempData1 = [80, 60, 52, 50, 52, 60, 80]
+  const tempData2 = [50, 80, 30, 50, 55, 67, 40]
 
   const getData = async () => {
     try {
       const rouletteRes = await axiosClient.post(`/game/get/latest/data/of/roulette`)
 
-      console.log('rouletteRes : ', rouletteRes)
+      //console.log('rouletteRes : ', rouletteRes)
       setRouletteData(rouletteRes.data.result)
     } catch (e) {
-      console.log(e)
+      //console.log(e)
     }
 
     try {
       const andar_baharRes = await axiosClient.post(`/game/get/latest/data/of/andar_bahar`)
 
-      console.log('andar_baharRes : ', andar_baharRes)
+      //console.log('andar_baharRes : ', andar_baharRes)
       setAndarBaharData(andar_baharRes.data.result)
     } catch (e) {
-      console.log(e)
+      //console.log(e)
     }
 
     try {
       const baccaratRes = await axiosClient.post(`/game/get/latest/data/of/baccarat`)
 
-      console.log('baccaratRes : ', baccaratRes)
+      //console.log('baccaratRes : ', baccaratRes)
       setBaccaratData(baccaratRes.data.result)
     } catch (e) {
-      console.log(e)
+      //console.log(e)
     }
 
     try {
       const tableRes = await axiosClient.get(`/table/limits/get/all/tables`)
 
-      console.log('tableRes : ', tableRes)
+      //console.log('tableRes : ', tableRes)
       setAllTables(tableRes.data.result)
     } catch (e) {
-      console.log(e)
+      //console.log(e)
     }
 
     try {
       const gameRes = await axiosClient.get(`/game/get/all/games`)
 
-      console.log('gameRes : ', gameRes)
+      //console.log('gameRes : ', gameRes)
       setAllGames(gameRes.data.result)
       let temp = gameRes.data.result
       let temp2 = []
-      for(let i in temp){
-        if(temp[i].active == 1){
-        temp2.push(temp[i])
+      for (let i in temp) {
+        if (temp[i].active == 1) {
+          temp2.push(temp[i])
         }
       }
       setActiveGames(temp2)
     } catch (e) {
-      console.log(e)
+      //console.log(e)
     }
 
     try {
-      
       const response = await axiosClient.get('config/get/configs')
       const { languages, themes, backgrounds, currencys } = response.data
       setLanguages(languages)
@@ -130,10 +128,9 @@ const Dashboard = () => {
       setBackgrounds(backgrounds)
       setCurrencys(currencys)
     } catch (error) {
-      console.error('Error fetching configs:', error)
+      //console.error('Error fetching configs:', error)
     }
   }
-
 
   useEffect(() => {
     setInterval(() => {
@@ -142,7 +139,7 @@ const Dashboard = () => {
   }, [])
 
   useEffect(() => {
-    console.log('allGames : ', allGames)
+    //console.log('allGames : ', allGames)
   }, [allGames])
 
   useEffect(() => {
@@ -164,7 +161,6 @@ const Dashboard = () => {
         trigger: '.on_scroll',
         start: 'top bottom',
         end: 'bottom top',
-        
       },
       opacity: 0,
       y: 50,
@@ -183,30 +179,102 @@ const Dashboard = () => {
         <h1 className="text-center text-shadow"> Dashboard</h1>
         <div className={``}>
           <div className={` my-2 py-2`}>
-            <div className="row" >
+            <div className="row">
               <div className={`col-12 col-sm-6 col-lg-4 animate`}>
-                <Card color='primary' lineColor="white" dotColor='white' data={tempData1} textColor='white' dot={true} title='Total Games' value={allGames.length}  />
+                <Card
+                  color="primary"
+                  lineColor="white"
+                  dotColor="white"
+                  data={tempData1}
+                  textColor="white"
+                  dot={true}
+                  title="Total Games"
+                  value={allGames.length}
+                />
               </div>
               <div className={`col-12 col-sm-6 col-lg-4 animate`}>
-                <Card color='success' lineColor="white" dotColor='white' data={tempData2} textColor='white' dot={false} title='Active Games' value={activeGames.length} />
+                <Card
+                  color="success"
+                  lineColor="white"
+                  dotColor="white"
+                  data={tempData2}
+                  textColor="white"
+                  dot={false}
+                  title="Active Games"
+                  value={activeGames.length}
+                />
               </div>
               <div className={`col-12 col-sm-6 col-lg-4 animate`}>
-                <Card color='warning' lineColor="white" dotColor='white' data={tempData1} textColor='white' dot={true} title='Inactive Games' value={allGames.length - activeGames.length} />
+                <Card
+                  color="warning"
+                  lineColor="white"
+                  dotColor="white"
+                  data={tempData1}
+                  textColor="white"
+                  dot={true}
+                  title="Inactive Games"
+                  value={allGames.length - activeGames.length}
+                />
               </div>
               <div className={`col-12 col-sm-6 col-lg-4 animate`}>
-                <Card color='primary' lineColor="white" dotColor='white' data={tempData1} textColor='white' dot={true} title='Total Tables' value={allTables.length} />
+                <Card
+                  color="primary"
+                  lineColor="white"
+                  dotColor="white"
+                  data={tempData1}
+                  textColor="white"
+                  dot={true}
+                  title="Total Tables"
+                  value={allTables.length}
+                />
               </div>
               <div className={`col-12 col-sm-6 col-lg-4 animate`}>
-                <Card color='secondary' lineColor="white" dotColor='white' data={tempData2} textColor='white' dot={false} title='Languages' value={languages.length} />
+                <Card
+                  color="secondary"
+                  lineColor="white"
+                  dotColor="white"
+                  data={tempData2}
+                  textColor="white"
+                  dot={false}
+                  title="Languages"
+                  value={languages.length}
+                />
               </div>
               <div className={`col-12 col-sm-6 col-lg-4 animate`}>
-                <Card color='danger' lineColor="white" dotColor='white' data={tempData1} textColor='white' dot={true} title='Themes' value={themes.length} />
+                <Card
+                  color="danger"
+                  lineColor="white"
+                  dotColor="white"
+                  data={tempData1}
+                  textColor="white"
+                  dot={true}
+                  title="Themes"
+                  value={themes.length}
+                />
               </div>
               <div className={`col-12 col-sm-6 col-lg-4 animate`}>
-                <Card color='info' lineColor="white" dotColor='white' data={tempData1} textColor='white' dot={true} title='Backgrounds' value={backgrounds.length} />
+                <Card
+                  color="info"
+                  lineColor="white"
+                  dotColor="white"
+                  data={tempData1}
+                  textColor="white"
+                  dot={true}
+                  title="Backgrounds"
+                  value={backgrounds.length}
+                />
               </div>
               <div className={`col-12 col-sm-6 col-lg-4 animate`}>
-                <Card color='success' lineColor="white" dotColor='white' data={tempData2} textColor='white' dot={false} title='Currencys' value={currencys.length} />
+                <Card
+                  color="success"
+                  lineColor="white"
+                  dotColor="white"
+                  data={tempData2}
+                  textColor="white"
+                  dot={false}
+                  title="Currencys"
+                  value={currencys.length}
+                />
               </div>
             </div>
           </div>

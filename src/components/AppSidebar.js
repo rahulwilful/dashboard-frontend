@@ -35,25 +35,24 @@ const AppSidebar = () => {
   const getLimits = async () => {
     try {
       const { data } = await axiosClient.get('/config/get/table/type')
-      console.log("side bar data: " ,data)
+      console.log('side bar data: ', data)
 
       let analysisData = []
       let tableLimitData = data.game_types
 
-      for(let i in data.game_types){
-        if(data.game_types[i].active == true){
+      for (let i in data.game_types) {
+        if (data.game_types[i].active == true) {
           analysisData.push(data.game_types[i])
         }
       }
-      
+
       const tempNavigation = tempNav.map((navItem) => {
         if (user.limits == true && navItem.name === 'Table Limits') {
           return {
             ...navItem,
             items: [
               ...navItem.items,
-             ...tableLimitData.map((tableType) => ( {
-             
+              ...tableLimitData.map((tableType) => ({
                 component: 'CNavItem',
                 name: tableType.game_type_name,
                 to: `/limits/${tableType.game_type_name}/${tableType.game_type_id}`,
@@ -66,7 +65,7 @@ const AppSidebar = () => {
             ...navItem,
             items: [
               ...navItem.items,
-             ...analysisData.map((tableType) => ({
+              ...analysisData.map((tableType) => ({
                 component: 'CNavItem',
                 name: tableType.game_type_name,
                 to: `/table/analysis/${tableType.game_type_name}/${tableType.game_type_id}`,
@@ -77,7 +76,15 @@ const AppSidebar = () => {
         return navItem
       })
 
-      console.log('newNavigation: ', tempNavigation)
+      if (user.roleType == 'super_admin') {
+        console.log('newNavigation: ', tempNavigation, user.roleType)
+      }
+      tempNavigation[4].items.push({
+        component: 'CNavItem',
+        name: 'Manage Data',
+
+        to: '/settings/update/manage/data',
+      })
 
       let newNavigation = []
       newNavigation.push(tempNavigation[0])
@@ -87,13 +94,26 @@ const AppSidebar = () => {
         newNavigation.push(tempNavigation[2])
       if (user.config == true || user.roleType == 'super_admin')
         newNavigation.push(tempNavigation[3])
-      if (user.settings == true || user.roleType == 'super_admin')
+      if (user.settings == true || user.roleType == 'super_admin') {
+        /* if (user.roleType === 'super_admin') {
+          tempNavigation[4].push({
+            component: 'CNavItem',
+            name: 'Manage Data',
+
+            to: '/settings/update/manage/data',
+          })
+          newNavigation.push(tempNavigation[4])
+        } else {
+          newNavigation.push(tempNavigation[4])
+        } */
         newNavigation.push(tempNavigation[4])
+        console.log('Settings', tempNavigation[4])
+      }
       if (user.users == true || user.roleType == 'super_admin')
         newNavigation.push(tempNavigation[5])
 
       setNavigation(newNavigation)
-      setKey((prevKey) => prevKey + 1) // Update key to force re-render
+      setKey((prevKey) => prevKey + 1)
     } catch (error) {
       console.error(error)
     }

@@ -30,76 +30,67 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const [error, setError] = useState(null)
 
-  useEffect(() => { 
+  useEffect(() => {
     getCurrent()
   }, [])
 
-  const  getCurrent = async ()=>{
-    console.log("called getCurrent")
-  
-    try{
+  const getCurrent = async () => {
+    console.log('called getCurrent')
+
+    try {
       const res = await axiosClient.get(`/user/get/current`)
-    //  console.log('res.data.result: ', res)
-      if(res){
-       // navigate('/')
+      //  console.log('res.data.result: ', res)
+      if (res) {
+        // navigate('/')
       }
-    
-    }catch(err){
-     
-  
-    }
+    } catch (err) {}
     return
-    
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log("user_name: ", user_name, "password: ", password)
+    console.log('handleSubmit called')
+    console.log('user_name: ', user_name, 'password: ', password)
     try {
       const response = await axiosClient.post('user/login', {
         user_name,
         password,
       })
-      console.log("response: ", response)
+      console.log('Login successful, response: ', response)
       localStorage.setItem('token', response.data.token)
-      navigate('/')
-      
+      console.log('Token stored in localStorage')
+      window.location.href = '/'
     } catch (err) {
+      console.error('Error during login: ', err)
       setError(err.response.data.message)
-      if(err.status == 403){
-        showToast("Forbidden , please contact admin","error")
+      if (err.status == 403) {
+        showToast('Forbidden , please contact admin', 'error')
+        console.log('Forbidden error toast shown')
       }
     }
   }
-
-
 
   return (
     <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={4}>
-          <div className='  d-flex justify-content-center mb-3' >
-                    
-                    <div className=' bg-dark p-1 rounded' >
-
-                  <div>
-                    <CImage src={LOGO} style={{ width: '120px' }} />
-                     {/*  <image src={LOGO}  style={{ width: '90px',height: '90px' }}/> */}
-                    </div> 
-                    </div>
-                    
-                  </div>
+            <div className="  d-flex justify-content-center mb-3">
+              <div className=" bg-dark p-1 rounded">
+                <div>
+                  <CImage src={LOGO} style={{ width: '120px' }} />
+                  {/*  <image src={LOGO}  style={{ width: '90px',height: '90px' }}/> */}
+                </div>
+              </div>
+            </div>
             <CCardGroup>
-           
               <CCard className="p-4">
                 <CCardBody>
-
                   <CForm onSubmit={handleSubmit}>
                     {/* <div>
                       <image src={LOGO}  style={{ width: '90px' }}/>
                     </div> */}
-                  
+
                     <h1>Login</h1>
                     <p className="text-body-secondary">Sign In to your account</p>
                     <CInputGroup className="mb-3">
@@ -109,7 +100,8 @@ const Login = () => {
                       <CFormInput
                         placeholder="User Name"
                         autoComplete="user_name"
-                        value={user_name}x
+                        value={user_name}
+                        x
                         onChange={(e) => setUser_name(e.target.value)}
                       />
                     </CInputGroup>
@@ -133,7 +125,7 @@ const Login = () => {
                         </CButton>
                       </CCol>
                       <CCol xs={6} className="text-right">
-                       {/*  <CButton color="link" className="px-0">
+                        {/*  <CButton color="link" className="px-0">
                           Forgot password?
                         </CButton> */}
                       </CCol>
@@ -141,22 +133,7 @@ const Login = () => {
                   </CForm>
                 </CCardBody>
               </CCard>
-              {/* <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
-                <CCardBody className="text-center">
-                  <div>
-                    <h2>Sign up</h2>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                      tempor incididunt ut labore et dolore magna aliqua.
-                    </p>
-                    <Link to="/register">
-                      <CButton color="primary" className="mt-3" active tabIndex={-1}>
-                        Register Now!
-                      </CButton>
-                    </Link>
-                  </div>
-                </CCardBody>
-              </CCard> */}
+           
             </CCardGroup>
           </CCol>
         </CRow>

@@ -61,11 +61,16 @@ const Backgrounds = React.lazy(() => import('./views/settings/Configs/Background
 const Themes = React.lazy(() => import('./views/settings/Configs/Themes'))
 const Languages = React.lazy(() => import('./views/settings/Configs/Languages'))
 const Currency = React.lazy(() => import('./views/settings/Configs/Currency'))
+const ManageData = React.lazy(() => import('./views/settings/Configs/ManageData'))
 
 const RouletteDashboard = React.lazy(() => import('./views/analysis/Roulette/RouletteDashboard'))
 const BaccaratDashboard = React.lazy(() => import('./views/analysis/Baccarat/BaccaratDashboard.js'))
-const AndarBaharDashboard = React.lazy(() => import('./views/analysis/AndarBahar/AndarBaharDashboard.js'))
-const ThreeCardPokerDashboard = React.lazy(() => import('./views/analysis/3CardPoker/ThreeCardPokerDashboard.js'))
+const AndarBaharDashboard = React.lazy(
+  () => import('./views/analysis/AndarBahar/AndarBaharDashboard.js'),
+)
+const ThreeCardPokerDashboard = React.lazy(
+  () => import('./views/analysis/3CardPoker/ThreeCardPokerDashboard.js'),
+)
 
 const Rough = React.lazy(() => import('./views/rough/Rough'))
 const Rough2 = React.lazy(() => import('./views/rough/Rough2'))
@@ -76,7 +81,6 @@ const Login = React.lazy(() => import('./views/pages/login/Login'))
 
 const MyAccount = React.lazy(() => import('./views/Account/MyAccount'))
 const UpdateAccount = React.lazy(() => import('./views/Account/UpdateAccount'))
-
 
 const AllUsers = React.lazy(() => import('./views/Users/AllUsers'))
 const UpdateUser = React.lazy(() => import('./views/Users/UpdateUser'))
@@ -147,6 +151,7 @@ const routes = [
   { path: '/settings/update/themes', name: 'Themes', element: Themes },
   { path: '/settings/update/languages', name: 'Languages', element: Languages },
   { path: '/settings/update/currency', name: 'Currency', element: Currency },
+  { path: '/settings/update/manage/data', name: 'deleteData', element: ManageData },
 
   { path: '/rough', name: 'Rough', element: Rough },
   { path: '/rough2', name: 'Rough2', element: Rough2 },

@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react'
 import roulletImage from 'src/assets/images/tables/2.png'
 import { BaccaratTables } from '../../../components/Constants/TableImages'
 import { useSelector } from 'react-redux'
-import s from  './GameCard.module.css'
+import s from './GameCard.module.css'
 
 const GameCard = (props) => {
   const [image, setImage] = useState()
 
   const handleFaceImages = () => {
-    console.log('game: ', props.game, ' ', BaccaratTables)
+    //console.log('game: ', props.game, ' ', BaccaratTables)
     if (props.game.toLowerCase().includes('baccarat')) setImage(BaccaratTables[0].table)
     else if (props.game.toLowerCase().includes('andar bahar')) setImage(BaccaratTables[1].table)
     else if (props.game.toLowerCase().includes('3 card poker')) setImage(BaccaratTables[2].table)
@@ -29,14 +29,13 @@ const GameCard = (props) => {
   }
 
   useEffect(() => {
-    if(props.game ){
-
-        handleFaceImages()
+    if (props.game) {
+      handleFaceImages()
     }
-  },[props])
+  }, [props])
   const theme = useSelector((state) => state.theme)
 
-  console.log(props.data[0]?.table_limit_name)
+  //console.log(props.data[0]?.table_limit_name)
 
   return (
     <div

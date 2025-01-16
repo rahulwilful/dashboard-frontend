@@ -18,6 +18,11 @@ export async function   GetCurrent (data )  {
         return false
       }
       if(data){
+        if(data == 'super_admin' && user.roleType != 'super_admin'){
+          window.location.href = '/'
+          return false
+         
+        }
         if(data == 'limits' &&  user.limits == false && user.roleType != 'super_admin'){
           window.location.href = '/'
           return false
@@ -38,6 +43,7 @@ export async function   GetCurrent (data )  {
           return false
          
         }
+        
       }
       return res.data.user
     }catch(err){
