@@ -1,0 +1,53 @@
+.card_container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@media (max-width: 575px) {
+  .card_container {
+    width: 70%;
+  }
+}
+
+@media (min-width: 576px) {
+  .card_container {
+    width: 80%;
+  }
+}
+
+/* Medium devices (tablets,
+   768px and up) */
+
+@media (min-width: 768px) {
+  .form {
+    width: 60%;
+  }
+  .card_container {
+    width: 40%;
+  }
+}
+
+/* Large devices (desktops
+  , 992px and up) */
+
+@media (min-width: 992px) {
+  .card_container {
+    width: 40%;
+  }
+}
+
+/* Extra large devices (lar
+  ge desktops, 1200px and up) */
+
+@media (min-width: 1200px) {
+  .card_container {
+    width: 26%;
+  }
+}
+
+/* Extra extra large devices (larger desktops, 1400px and up) */
+
+@media (min-width: 1400px) {
+}
