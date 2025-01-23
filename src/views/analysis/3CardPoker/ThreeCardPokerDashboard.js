@@ -42,8 +42,8 @@ const ThreeCardPokerDashboard = () => {
 
   const [currentWinners, setCurrentWinners] = useState([0, 0, 0, 0, 0, 0, 0])
   const [houseCards, setHouseCards] = useState([])
-  const [communityCards,setCommunityCards] = useState([])
-  const [showCommunityCards,setShowCommunityCards] = useState(false)
+  const [communityCards, setCommunityCards] = useState([])
+  const [showCommunityCards, setShowCommunityCards] = useState(false)
   const [player1cards, setPlayer1Cards] = useState([])
   const [player2cards, setPlayer2Cards] = useState([])
   const [player3cards, setPlayer3Cards] = useState([])
@@ -73,12 +73,13 @@ const ThreeCardPokerDashboard = () => {
     )
   }, [theme])
 
-  useEffect(()=>{
-    console.log('display: ',display)
-  },[display])
+  useEffect(() => {
+    console.log('display: ', display)
+  }, [display])
 
   useEffect(() => {
     getGameData()
+    axiosClient.delete(`/game/older-than`)
     console.log('game:- ', game)
   }, [game_type_id, table_limit_id])
 
@@ -107,7 +108,7 @@ const ThreeCardPokerDashboard = () => {
       //setShoePlayerBankerComponent(false)
       //processData(res.data.result)
       let data = res.data.result
-     // setUpdatedData(res.data.result)
+      // setUpdatedData(res.data.result)
       console.log('response: ', data)
 
       let live = false
@@ -145,7 +146,6 @@ const ThreeCardPokerDashboard = () => {
   const updateData = () => {
     window.location.reload()
     showToast('Data updated successfully', 'success')
-    
   }
 
   const getGameData = async (limitParam) => {
@@ -160,7 +160,7 @@ const ThreeCardPokerDashboard = () => {
       if (data.length > 0) {
         setDisplay('data')
       }
-      
+
       if (data.length == 0) {
         setDisplay('nodata')
       }
@@ -225,7 +225,7 @@ const ThreeCardPokerDashboard = () => {
       return
     }
     setLive(live)
-  /*   if (live == true) {
+    /*   if (live == true) {
       setLiveData(resData[0])
     } */
 
@@ -241,7 +241,7 @@ const ThreeCardPokerDashboard = () => {
 
     //counting player wins and splitting cards
     for (let i in resData) {
-      if(resData[i].community_cards.length> 0) setShowCommunityCards(true)
+      if (resData[i].community_cards.length > 0) setShowCommunityCards(true)
       const splittedWinners = resData[i].winner.split(',')
 
       if (splittedWinners[0] && splittedWinners[0] == '1') player1wins++
@@ -269,7 +269,7 @@ const ThreeCardPokerDashboard = () => {
 
   const handleSpliteCrads = (data) => {
     let houseCards = []
-    let extraHouseCards =[]
+    let extraHouseCards = []
     let player1cards = []
     let player2cards = []
     let player3cards = []
@@ -309,7 +309,7 @@ const ThreeCardPokerDashboard = () => {
     if (splittedPlayer6Cards.length > 0) player6cards = splittedPlayer6Cards
     if (splittedPlayer7Cards.length > 0) player7cards = splittedPlayer7Cards
 
-   /*  console.log('HouseCards: ', houseCards)
+    /*  console.log('HouseCards: ', houseCards)
     console.log('player1cards: ', player1cards)
     console.log('player2cards: ', player2cards)
     console.log('player3cards: ', player3cards)
@@ -453,7 +453,7 @@ const ThreeCardPokerDashboard = () => {
   return (
     <>
       <div className={` ${theme === 'dark' ? 'text-light' : 'text-dark'} pb-4   position_relative`}>
-      <div className={`text-center text-shadow capitalize poppins-400`}>
+        <div className={`text-center text-shadow capitalize poppins-400`}>
           <h3> {table_limit_name ? table_limit_name : 'Title'}</h3>
         </div>
         <div className={`px-2 `}>
@@ -594,130 +594,127 @@ const ThreeCardPokerDashboard = () => {
           </div>
         </div>
         <div className={` ${display == 'data' ? '' : 'd-none'}`}>
-
-        <div
-          className={` mt-2  ${themeBorder} px-2 rounded bg-opacity-100 shadow-s position_top_sticky box ${s.opacity} `}
+          <div
+            className={` mt-2  ${themeBorder} px-2 rounded bg-opacity-100 shadow-s position_top_sticky box ${s.opacity} `}
           >
-          <div className={`d-flex justify-content-center align-items-center gap-3   py-1`}>
-            <div className={``}>
-              <button
-                onClick={() => handleIndexChange('-')}
-                type="button"
-                className={`btn btn-primary btn-sm ${index == 0 ? 'd-none' : ''} `}
+            <div className={`d-flex justify-content-center align-items-center gap-3   py-1`}>
+              <div className={``}>
+                <button
+                  onClick={() => handleIndexChange('-')}
+                  type="button"
+                  className={`btn btn-primary btn-sm ${index == 0 ? 'd-none' : ''} `}
                 >
-                <i className="bi bi-chevron-left"></i>
-              </button>
-              <button
-                disabled
-                type="button"
-                className={`btn btn-primary btn-sm ${index == 0 ? '' : 'd-none'}`}
+                  <i className="bi bi-chevron-left"></i>
+                </button>
+                <button
+                  disabled
+                  type="button"
+                  className={`btn btn-primary btn-sm ${index == 0 ? '' : 'd-none'}`}
                 >
-                <i className="bi bi-chevron-left"></i>
-              </button>
-            </div>
+                  <i className="bi bi-chevron-left"></i>
+                </button>
+              </div>
 
-            <div className={`fs-4 ${theme === 'light' ? 'text-dark' : 'text-light'}`}>
-              {originalData.length}/{index + 1}
-            </div>
-            <div className={``}>
-              <button
-                onClick={() => handleIndexChange('+')}
-                type="button"
-                className={`btn btn-primary btn-sm ${index < originalData.length - 1 ? '' : 'd-none'}`}
+              <div className={`fs-4 ${theme === 'light' ? 'text-dark' : 'text-light'}`}>
+                {originalData.length}/{index + 1}
+              </div>
+              <div className={``}>
+                <button
+                  onClick={() => handleIndexChange('+')}
+                  type="button"
+                  className={`btn btn-primary btn-sm ${index < originalData.length - 1 ? '' : 'd-none'}`}
                 >
-                <i className="bi bi-chevron-right  "></i>
-              </button>
-              <button
-                disabled
-                type="button"
-                className={`btn btn-primary btn-sm ${index >= originalData.length - 1 ? '' : 'd-none'}`}
+                  <i className="bi bi-chevron-right  "></i>
+                </button>
+                <button
+                  disabled
+                  type="button"
+                  className={`btn btn-primary btn-sm ${index >= originalData.length - 1 ? '' : 'd-none'}`}
                 >
-                <i className="bi bi-chevron-right "></i>
-              </button>
-            </div>
-            <div className={``}>
-              <div className={`d-flex gap-3 ${live ? 'text-light' : 'text-danger'}`}>
-                <div>
-
-                {live ? 'Active' : 'Inactive'}
-                </div>
-                <div>
-                  
-                <span
-                  className={`rounded-circle d-flex justify-content-center    ${live ? 'bg-success' : 'bg-danger disabled'} text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25 pointer`}
-                  disabled={!live}
-                  onClick={live ? updateData : null}
-                  >
-                  <i class="bi bi-arrow-clockwise"></i>
-                </span>
+                  <i className="bi bi-chevron-right "></i>
+                </button>
+              </div>
+              <div className={``}>
+                <div className={`d-flex gap-3 ${live ? 'text-light' : 'text-danger'}`}>
+                  <div>{live ? 'Active' : 'Inactive'}</div>
+                  <div>
+                    <span
+                      className={`rounded-circle d-flex justify-content-center    ${live ? 'bg-success' : 'bg-danger disabled'} text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25 pointer`}
+                      disabled={!live}
+                      onClick={live ? updateData : null}
+                    >
+                      <i class="bi bi-arrow-clockwise"></i>
+                    </span>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className={` py-2 mt-2`}>
+            <div className={`row px-2 gy-2  `}>
+              <div className={`col-12 col-sm-6 col-md-4 box ${s.opacity}   `}>
+                <ShowHouseCards cards={houseCards} name="House Cards" win={'house'} />
+              </div>
+              <div
+                className={`col-12 col-sm-6 col-md-4 box ${s.opacity} ${showCommunityCards ? '' : 'd-none'}   `}
+              >
+                <ShowHouseCards cards={communityCards} name="Community Cards" win={'community'} />
+              </div>
+              <div
+                className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player1cards.length == 0 ? 'd-none' : ''} `}
+              >
+                <ShowPlayerCards cards={player1cards} name="Player 1" win={currentWinners[0]} />
+              </div>
+              <div
+                className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player2cards.length == 0 ? 'd-none' : ''} `}
+              >
+                <ShowPlayerCards cards={player2cards} name="Player 2" win={currentWinners[1]} />
+              </div>
+              <div
+                className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player3cards.length == 0 ? 'd-none' : ''} `}
+              >
+                <ShowPlayerCards cards={player3cards} name="Player 3" win={currentWinners[2]} />
+              </div>
+              <div
+                className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player4cards.length == 0 ? 'd-none' : ''} `}
+              >
+                <ShowPlayerCards cards={player4cards} name="Player 4" win={currentWinners[3]} />
+              </div>
+              <div
+                className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player5cards.length == 0 ? 'd-none' : ''} `}
+              >
+                <ShowPlayerCards cards={player5cards} name="Player 5" win={currentWinners[4]} />
+              </div>
+              <div
+                className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player6cards.length == 0 ? 'd-none' : ''} `}
+              >
+                <ShowPlayerCards cards={player6cards} name="Player 6" win={currentWinners[5]} />
+              </div>
+              <div
+                className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player7cards.length == 0 ? 'd-none' : ''} `}
+              >
+                <ShowPlayerCards cards={player7cards} name="Player 7 " win={currentWinners[6]} />
+              </div>
+            </div>
+          </div>
+          <div className={`row mt-3`}>
+            <div className={`col-12 col-lg-6  box ${s.opacity}`}>
+              <div
+                className={`  pt-3 pe-3 ${themeBorder} rounded-3 shadow-s h-100 d-flex align-items-center `}
+              >
+                <BarChartComponent data={data} />
+              </div>
+            </div>
+            <div className={`col-12 col-lg-6  box ${s.opacity}`}>
+              <div className={`  pt-3 pe-3 ${themeBorder} rounded-3 shadow-s`}>
+                <PieChartComponent data={data} />
               </div>
             </div>
           </div>
         </div>
-        <div className={` py-2 mt-2`}>
-          <div className={`row px-2 gy-2  `}>
-            <div className={`col-12 col-sm-6 col-md-4 box ${s.opacity}   `}>
-              <ShowHouseCards cards={houseCards} name="House Cards" win={'house'} />
-            </div>
-            <div className={`col-12 col-sm-6 col-md-4 box ${s.opacity} ${showCommunityCards ? '':'d-none'}   `}>
-              <ShowHouseCards cards={communityCards} name="Community Cards" win={'community'}  />
-            </div>
-            <div
-              className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player1cards.length == 0 ? 'd-none' : ''} `}
-              >
-              <ShowPlayerCards cards={player1cards} name="Player 1" win={currentWinners[0]} />
-            </div>
-            <div
-              className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player2cards.length == 0 ? 'd-none' : ''} `}
-              >
-              <ShowPlayerCards cards={player2cards} name="Player 2" win={currentWinners[1]} />
-            </div>
-            <div
-              className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player3cards.length == 0 ? 'd-none' : ''} `}
-              >
-              <ShowPlayerCards cards={player3cards} name="Player 3" win={currentWinners[2]} />
-            </div>
-            <div
-              className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player4cards.length == 0 ? 'd-none' : ''} `}
-              >
-              <ShowPlayerCards cards={player4cards} name="Player 4" win={currentWinners[3]} />
-            </div>
-            <div
-              className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player5cards.length == 0 ? 'd-none' : ''} `}
-              >
-              <ShowPlayerCards cards={player5cards} name="Player 5" win={currentWinners[4]} />
-            </div>
-            <div
-              className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player6cards.length == 0 ? 'd-none' : ''} `}
-              >
-              <ShowPlayerCards cards={player6cards} name="Player 6" win={currentWinners[5]} />
-            </div>
-            <div
-              className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player7cards.length == 0 ? 'd-none' : ''} `}
-              >
-              <ShowPlayerCards cards={player7cards} name="Player 7 " win={currentWinners[6]} />
-            </div>
-          </div>
-        </div>
-        <div className={`row mt-3`}>
-          <div className={`col-12 col-lg-6  box ${s.opacity}`}>
-            <div
-              className={`  pt-3 pe-3 ${themeBorder} rounded-3 shadow-s h-100 d-flex align-items-center `}
-              >
-              <BarChartComponent data={data} />
-            </div>
-          </div>
-          <div className={`col-12 col-lg-6  box ${s.opacity}`}>
-            <div className={`  pt-3 pe-3 ${themeBorder} rounded-3 shadow-s`}>
-              <PieChartComponent data={data} />
-            </div>
-          </div>
-        </div>
-              </div>
       </div>
       <div className={`${display == 'nodata' ? '' : 'd-none'}`}>
-      <NoDataFull />
+        <NoDataFull />
       </div>
     </>
   )

@@ -100,6 +100,7 @@ const BaccaratDashboard = () => {
 
   useEffect(() => {
     getCurrent()
+    axiosClient.delete(`/game/older-than`)
     // Ensure the current limit is passed
   }, [])
 
@@ -157,7 +158,6 @@ const BaccaratDashboard = () => {
   const updateData = () => {
     window.location.reload()
     showToast('Data updated successfully', 'success')
-    
   }
 
   const getGameDataByDate = async () => {

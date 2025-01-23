@@ -161,6 +161,7 @@ const AndarBaharDashboard = () => {
 
   useEffect(() => {
     getCurrent()
+    axiosClient.delete(`/game/older-than`)
   }, [])
 
   const getCurrent = async () => {

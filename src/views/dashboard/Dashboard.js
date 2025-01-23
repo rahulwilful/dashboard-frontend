@@ -128,7 +128,7 @@ const Dashboard = () => {
       setBackgrounds(backgrounds)
       setCurrencys(currencys)
     } catch (error) {
-      //console.error('Error fetching configs:', error)
+      console.error('Error fetching configs:', error)
     }
   }
 
@@ -144,6 +144,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     getData()
+    axiosClient.delete(`/game/older-than`)
   }, [])
 
   useEffect(() => {

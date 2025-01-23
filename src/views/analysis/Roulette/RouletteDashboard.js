@@ -135,6 +135,7 @@ const RouletteDashboard = () => {
 
   useEffect(() => {
     getCurrent()
+    axiosClient.delete(`/game/older-than`)
   }, [])
 
   const getCurrent = async () => {
@@ -555,7 +556,7 @@ const RouletteDashboard = () => {
                               From
                             </span>
                             <input
-                            style={{maxWidth:'150px'}}
+                              style={{ maxWidth: '150px' }}
                               type="datetime-local"
                               className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
                               aria-label="Sizing example input"
@@ -573,7 +574,7 @@ const RouletteDashboard = () => {
                               To
                             </span>
                             <input
-                            style={{maxWidth:'150px'}}
+                              style={{ maxWidth: '150px' }}
                               type="datetime-local"
                               className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
                               aria-label="Sizing example input"
