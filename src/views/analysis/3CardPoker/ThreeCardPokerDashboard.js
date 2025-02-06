@@ -201,34 +201,45 @@ const ThreeCardPokerDashboard = () => {
     localStorage.setItem('threeCardPokerCallOnTimeInterval', true)
   }
 
+  /**
+   * Processes the data received from the API to update the state variables.
+   *
+   * @param {Array} resData - The data received from the API.
+   */
   const processData = (resData) => {
     console.log('data for process: ', resData)
     setOriginalData(resData)
+
     let live = false
     const currentTime = new Date()
-    //  console.log('time: ', currentTime)
 
-    //checking if connection is live
-    // Check if resData[0].date_time exists and is exactly 1 minute before current time
+    // Check if the connection is live based on the date_time of the first entry
     if (resData.length > 0 && resData[0].date_time) {
       const resDataTime = new Date(resData[0].date_time)
       const diffInMs = currentTime - resDataTime
       const diffInMinutes = diffInMs / (1000 * 60)
 
+      // Set live to true if the difference is 1 minute or less
       if (diffInMinutes <= 1) {
-        live = true // Set live to true if difference is 1 minute or less
+        live = true
       }
     }
 
     console.log('live status: ', live, ' data.length: ', data.length)
-    if (data.length > 0 && live == false) {
+
+    // If data is already loaded and the connection is not live, return early
+    if (data.length > 0 && !live) {
       return
     }
-    setLive(live)
-    /*   if (live == true) {
-      setLiveData(resData[0])
-    } */
 
+    setLive(live)
+
+    // If live, update live data
+    if (live) {
+      setLiveData(resData[0])
+    }
+
+    // Set the current winners based on the first entry
     setCurrentWinners(resData[0].winner.split(','))
 
     let player1wins = 0
@@ -239,7 +250,7 @@ const ThreeCardPokerDashboard = () => {
     let player6wins = 0
     let player7wins = 0
 
-    //counting player wins and splitting cards
+    // Count player wins and split cards
     for (let i in resData) {
       if (resData[i].community_cards.length > 0) setShowCommunityCards(true)
       const splittedWinners = resData[i].winner.split(',')
@@ -253,7 +264,8 @@ const ThreeCardPokerDashboard = () => {
       if (splittedWinners[6] && splittedWinners[6] == '1') player7wins++
     }
 
-    handleSpliteCrads(resData[0])
+    // Split cards for the first entry
+    handleSpliteCards(resData[0])
 
     const tempData = []
     if (player1wins > 0) tempData.push({ name: 'player 1', wins: player1wins })
@@ -267,7 +279,12 @@ const ThreeCardPokerDashboard = () => {
     setData(tempData)
   }
 
-  const handleSpliteCrads = (data) => {
+  /**
+   * Splits the cards from the data and updates the state variables.
+   *
+   * @param {Object} data - The data containing the cards for house, community, and players.
+   */
+  const handleSpliteCards = (data) => {
     let houseCards = []
     let extraHouseCards = []
     let player1cards = []
@@ -278,6 +295,7 @@ const ThreeCardPokerDashboard = () => {
     let player6cards = []
     let player7cards = []
 
+    // Split the cards for house, community, and players
     let splittedHouseCards = data.house_cards.split(',')
     let splittedExtraHouseCards = data.community_cards.split(',')
     let splittedPlayer1Cards = data.player1_cards.split(',')
@@ -288,7 +306,7 @@ const ThreeCardPokerDashboard = () => {
     let splittedPlayer6Cards = data.player6_cards.split(',')
     let splittedPlayer7Cards = data.player7_cards.split(',')
 
-    //removing spaces from array
+    // Remove any empty strings from the arrays
     splittedHouseCards = splittedHouseCards.filter((card) => card != '')
     splittedExtraHouseCards = splittedExtraHouseCards.filter((card) => card != '')
     splittedPlayer1Cards = splittedPlayer1Cards.filter((card) => card != '')
@@ -299,6 +317,7 @@ const ThreeCardPokerDashboard = () => {
     splittedPlayer6Cards = splittedPlayer6Cards.filter((card) => card != '')
     splittedPlayer7Cards = splittedPlayer7Cards.filter((card) => card != '')
 
+    // Update the state variables with the split cards
     if (splittedHouseCards.length > 0) houseCards = splittedHouseCards
     if (splittedExtraHouseCards.length > 0) extraHouseCards = splittedExtraHouseCards
     if (splittedPlayer1Cards.length > 0) player1cards = splittedPlayer1Cards
@@ -309,16 +328,9 @@ const ThreeCardPokerDashboard = () => {
     if (splittedPlayer6Cards.length > 0) player6cards = splittedPlayer6Cards
     if (splittedPlayer7Cards.length > 0) player7cards = splittedPlayer7Cards
 
-    /*  console.log('HouseCards: ', houseCards)
-    console.log('player1cards: ', player1cards)
-    console.log('player2cards: ', player2cards)
-    console.log('player3cards: ', player3cards)
-    console.log('player4cards: ', player4cards)
-    console.log('player5cards: ', player5cards)
-    console.log('player6cards: ', player6cards)
-    console.log('player7cards: ', player7cards) */
     console.log('extraHouseCards: ', extraHouseCards)
 
+    // Set the state variables with the split cards
     setHouseCards(houseCards)
     setPlayer1Cards(player1cards)
     setPlayer2Cards(player2cards)
@@ -388,24 +400,35 @@ const ThreeCardPokerDashboard = () => {
 
     localStorage.setItem('threeCardPokerCallOnTimeInterval', false)
   }
-
   const handleIndexChange = (event) => {
+    // Log the original data for debugging
     console.log('originalData: ', originalData)
 
-    if (event == '+') {
-      if (index == originalData.length - 1) return
+    // Check if the event is '+' for incrementing the index
+    if (event === '+') {
+      // Prevent incrementing if the index is already at the last element
+      if (index === originalData.length - 1) return
+      // Increment index
       const tempIndex = index + 1
-      setIndex(tempIndex)
+      setIndex(tempIndex) 
+      // Update the current winners state with the new index
       setCurrentWinners(originalData[tempIndex].winner.split(','))
-      handleSpliteCrads(originalData[tempIndex])
+      // Split cards for the new index
+      handleSpliteCards(originalData[tempIndex])
+      // Log current data for debugging
       console.log('currentData', originalData[tempIndex].winner.split(','))
     } else {
-      if (index == 0) return
+      // Prevent decrementing if the index is already at the first element
+      if (index === 0) return
+      // Decrement index
       const tempIndex = index - 1
       setIndex(tempIndex)
+      // Update the current winners state with the new index
       setCurrentWinners(originalData[tempIndex].winner.split(','))
-      handleSpliteCrads(originalData[tempIndex])
+      // Split cards for the new index
+      handleSpliteCards(originalData[tempIndex])
     }
+    // Update the render key to trigger re-render
     setRenderKey(renderKey + 1)
   }
 

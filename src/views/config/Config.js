@@ -37,7 +37,7 @@ const Config = () => {
     theme: '',
     language: '',
     background: '',
-    currency:"",
+    currency: '',
   })
 
   useEffect(() => {
@@ -72,10 +72,9 @@ const Config = () => {
       console.log(response)
       showToast('Theme added successfully!', 'success')
     } catch (error) {
-      if(error.status == 409){
+      if (error.status == 409) {
         showToast(`${formData.theme} already exists`, 'error')
-      }else{
-        
+      } else {
         showToast('Error while adding theme', 'error')
       }
       console.error(error)
@@ -86,7 +85,7 @@ const Config = () => {
       theme: '',
       language: '',
       background: '',
-      currency:"",
+      currency: '',
     })
   }
 
@@ -102,9 +101,9 @@ const Config = () => {
       showToast('Table Type added successfully!', 'success')
     } catch (error) {
       console.error(error)
-      if(error.status == 409){
+      if (error.status == 409) {
         showToast(`${formData.game_type_name} already exists`, 'error')
-      }else{
+      } else {
         showToast('Error while adding Table Type', 'error')
       }
     }
@@ -114,7 +113,7 @@ const Config = () => {
       theme: '',
       language: '',
       background: '',
-      currency:"",
+      currency: '',
     })
   }
 
@@ -129,9 +128,9 @@ const Config = () => {
       console.log(response)
       showToast('Background added successfully!', 'success')
     } catch (error) {
-      if(error.status == 409){
+      if (error.status == 409) {
         showToast(`${formData.background} already exists`, 'error')
-      }else{ 
+      } else {
         showToast('Error while adding Background', 'error')
       }
       console.error(error)
@@ -142,7 +141,7 @@ const Config = () => {
       theme: '',
       language: '',
       background: '',
-      currency:"",
+      currency: '',
     })
   }
 
@@ -157,9 +156,9 @@ const Config = () => {
       console.log(response)
       showToast('Language added successfully!', 'success')
     } catch (error) {
-      if(error.status == 409){
+      if (error.status == 409) {
         showToast(`${formData.language} already exists`, 'error')
-      }else{ 
+      } else {
         showToast('Error while adding Language', 'error')
       }
       console.error(error)
@@ -170,7 +169,7 @@ const Config = () => {
       theme: '',
       language: '',
       background: '',
-      currency:"",
+      currency: '',
     })
   }
 
@@ -185,9 +184,9 @@ const Config = () => {
       console.log(response)
       showToast('Currency added successfully!', 'success')
     } catch (error) {
-      if(error.status == 409){
+      if (error.status == 409) {
         showToast(`${formData.currency} already exists`, 'error')
-      }else{ 
+      } else {
         showToast('Error while adding Currency', 'error')
       }
       console.error(error)
@@ -198,7 +197,7 @@ const Config = () => {
       theme: '',
       language: '',
       background: '',
-      currency:"",
+      currency: '',
     })
   }
 
@@ -421,10 +420,9 @@ const Config = () => {
       </div>
 
       {/* ///////////////////////////////////////////////////////////////////////////////////// */}
-     
-{/* ///////////////////////////////////////////////////////////////////////////////////////////////////////// */}
+
+      {/* ///////////////////////////////////////////////////////////////////////////////////////////////////////// */}
       <div className={`container-xl px-4 mt-4 ${theme === 'dark' ? 'text-light' : 'text-dark'}`}>
-        
         <div className={`row `}></div>
         <div className={`col-xl-12  `}>
           {/* Account details card */}
@@ -442,8 +440,6 @@ const Config = () => {
 
                 {/* Form Row */}
                 <div className={`row gx-3 mb3`}>
-                 
-
                   <div className={`col-12 col-md-6 col-xl-4`}>
                     <div className="mb-2  ">
                       <label className="animate form-label">Game Type</label>
@@ -471,8 +467,12 @@ const Config = () => {
                   </div>
 
                   <div className={`col-12 col-md-6 col-xl-4`}>
-                  <div className="mb-2  ">
-                      <label className={`animate form-label ${s.placeholder_grey} ${theme === 'dark' ? 'text-light' : 'text-dark'}`}>Theme</label>
+                    <div className="mb-2  ">
+                      <label
+                        className={`animate form-label ${s.placeholder_grey} ${theme === 'dark' ? 'text-light' : 'text-dark'}`}
+                      >
+                        Theme
+                      </label>
                       <div className={`d-flex   align-items-center gap-2 flex-md-row `}>
                         <input
                           type="text"
@@ -497,8 +497,12 @@ const Config = () => {
                   </div>
 
                   <div className={`col-12 col-md-6 col-xl-4`}>
-                  <div className="mb-2  ">
-                      <label className={`animate form-label ${s.placeholder_grey} ${theme === 'dark' ? 'text-light' : 'text-dark'}`}>Background</label>
+                    <div className="mb-2  ">
+                      <label
+                        className={`animate form-label ${s.placeholder_grey} ${theme === 'dark' ? 'text-light' : 'text-dark'}`}
+                      >
+                        Background
+                      </label>
                       <div className={`d-flex   align-items-center gap-2 flex-md-row `}>
                         <input
                           type="text"
@@ -522,10 +526,13 @@ const Config = () => {
                     </div>
                   </div>
 
-
                   <div className={`col-12 col-md-6 col-xl-4`}>
-                  <div className="mb-2  ">
-                      <label className={`animate form-label ${s.placeholder_grey} ${theme === 'dark' ? 'text-light' : 'text-dark'}`}>Currency</label>
+                    <div className="mb-2  ">
+                      <label
+                        className={`animate form-label ${s.placeholder_grey} ${theme === 'dark' ? 'text-light' : 'text-dark'}`}
+                      >
+                        Currency
+                      </label>
                       <div className={`d-flex   align-items-center gap-2 flex-md-row `}>
                         <input
                           type="text"
@@ -548,31 +555,41 @@ const Config = () => {
                       </div>
                     </div>
                   </div>
-
-
-                  
-
-                 
-
-                 
-
-                  
-
-                  
-
-
-
-                  
-
-
+                  <div className={`col-12 col-md-6 col-xl-4`}>
+                    <div className="mb-2">
+                      <label
+                        className={`animate form-label ${s.placeholder_grey} ${theme === 'dark' ? 'text-light' : 'text-dark'}`}
+                      >
+                        Language
+                      </label>
+                      <div className={`d-flex align-items-center gap-2 flex-md-row`}>
+                        <input
+                          type="text"
+                          className={`form-control animate ${s.placeholder_grey} ${theme === 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'} ${themeBorder}`}
+                          placeholder="Enter"
+                          name="language"
+                          value={formData.language}
+                          onChange={handleChange}
+                        />
+                        <div className="my-1 px-1">
+                          <button
+                            data-bs-toggle="modal"
+                            data-bs-target="#addLanguageModal"
+                            type="button"
+                            className={`btn animate ${theme === 'dark' ? 'btn-primary' : 'btn-dark'} btn-sm px-3 ${formData.language === '' ? 'disabled' : 'opacity-100'}`}
+                          >
+                            Add
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-         
         </div>
       </div>
-
     </>
   )
 }

@@ -78,7 +78,6 @@ const DataTableComponent = (props) => {
       per: 20,
       val: 5000,
     },
-    
   ]
 
   // Custom styles for DataTable
@@ -121,13 +120,12 @@ const DataTableComponent = (props) => {
             <div className={`d-flex align-items-center mt-2`}>
               <div className="me-auto">
                 <select
-                  className={`form-select form-select-sm ${theme == "dark" ? 'bg-dark text-light' : 'bg-light text-dark'} shadow-xs border-0`}
+                  className={`form-select form-select-sm ${theme == 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'} shadow-xs border-0`}
                   aria-label="Rows per page"
                   defaultValue={7}
                   onChange={(e) => setRowsPerPage(parseInt(e.target.value))}
                   style={{ height: '25px' }}
                 >
-                 
                   <option value={7}>7</option>
                   <option value={10}>10</option>
                   <option value={13}>13</option>
@@ -138,7 +136,7 @@ const DataTableComponent = (props) => {
           </div>
         </div>
         <DataTable
-        key={rowsPerPage}
+          key={rowsPerPage}
           className={`font8 text-dark overflow-x-scroll pointer ${s.rdt_Pagination}`}
           columns={columns}
           data={data}
@@ -151,8 +149,6 @@ const DataTableComponent = (props) => {
           onRowClicked={handleRowClick}
           paginationPerPage={rowsPerPage}
           paginationRowsPerPageOptions={[rowsPerPage]}
-          
-          
         />
       </div>
     </>

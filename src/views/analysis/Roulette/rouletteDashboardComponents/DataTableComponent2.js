@@ -16,8 +16,6 @@ const DataTableComponent2 = (props) => {
 
   useEffect(() => {
     if (props.data) {
-      //console.log('props.data', props.data)
-      //setData(tempData)
       setData(props.data)
     } else {
       setData(tempData)
@@ -25,12 +23,6 @@ const DataTableComponent2 = (props) => {
   }, [theme, props.data])
 
   const columns = [
-   /*  {
-      name: 'Table',
-      selector: (row) => row.table_Name,
-      sortable: true,
-      minWidth: '100px',
-    }, */
     {
       name: 'Date',
       selector: (row) => row.date_time,
@@ -154,7 +146,7 @@ const DataTableComponent2 = (props) => {
             <div className={`d-flex align-items-center mt-2`}>
               <div className="me-auto ">
                 <select
-                   className={`form-select form-select-sm ${theme == "dark" ? 'bg-dark text-light' : 'bg-light text-dark'} shadow-xs border-0`}
+                  className={`form-select form-select-sm ${theme == 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'} shadow-xs border-0`}
                   aria-label="Rows per page"
                   defaultValue={15}
                   onChange={(e) => setRowsPerPage(parseInt(e.target.value))}

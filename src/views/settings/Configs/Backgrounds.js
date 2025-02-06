@@ -12,6 +12,7 @@ import roulleteWheel from 'src/assets/images/dashboard/roullete-wheel.png'
 import { useNavigate } from 'react-router-dom'
 
 import { GetCurrent } from '../../../getCurrent'
+import NoDataFull from '../../NoData/NoDataFull'
 
 const UpdateBackgrounds = (props) => {
   const [parent, animateParent] = useAutoAnimate()
@@ -23,10 +24,16 @@ const UpdateBackgrounds = (props) => {
 
   const [form, setForm] = useState({ background_id: '', background: '' })
   const [search, setSearch] = useState('')
+  const [display, setDisplay] = useState('loading')
+
   const getBackgrounds = async () => {
     const { data } = await axiosClient.get(`/config/get/background`)
-    console.log(data)
-
+    //  console.log(data)
+    if (data) {
+      setDisplay('data')
+    } else {
+      setDisplay('nodata')
+    }
     setBackgrounds(data.backgrounds)
     setOriginalBackgrounds(data.backgrounds)
   }
@@ -36,7 +43,7 @@ const UpdateBackgrounds = (props) => {
   }
 
   const updateBackground = async () => {
-      let tempForm = {background:form.background.toLowerCase()}
+    let tempForm = { background: form.background.toLowerCase() }
 
     try {
       const { data } = await axiosClient.put(
@@ -138,7 +145,6 @@ const UpdateBackgrounds = (props) => {
             <div className="modal-body">
               <div className="mb-3 ">
                 <div class="mb-3">
-                 
                   <input
                     type="text"
                     class="form-control"
@@ -147,7 +153,6 @@ const UpdateBackgrounds = (props) => {
                     value={form.background}
                     onChange={(e) => setForm({ ...form, background: e.target.value })}
                   />
-                 
                 </div>
               </div>
             </div>
@@ -175,7 +180,7 @@ const UpdateBackgrounds = (props) => {
         </label>
         <input type="text" className="form-control " id="search" onChange={handleSearch} />
       </div>
-      <div className="table-responsive animate">
+      <div className={`table-responsive animate ${display == 'data' ? '' : 'd-none'}`}>
         <table
           className={`table table-striped ${theme === 'dark' ? 'table-dark' : 'table-light'} table-hover table-bordered table-sm rounded`}
         >
@@ -193,7 +198,7 @@ const UpdateBackgrounds = (props) => {
                 <td className="">
                   <div className="" style={{ height: '1rem', width: '1rem' }}>
                     <div
-                      className="w-100 rounded h-100"
+                      className={`w-100 rounded h-100`}
                       style={{
                         width: '10px',
                         height: '10px',
@@ -207,13 +212,16 @@ const UpdateBackgrounds = (props) => {
                     onClick={() => handleSetForm(background)}
                     data-bs-toggle="modal"
                     data-bs-target="#exampleModal"
-                    class="bi bi-pen-fill icon-size font-size icon pointer text-shadow icon-hover "
+                    className={`bi bi-pen-fill icon-size font-size icon pointer text-shadow icon-hover`}
                   ></i>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+      </div>
+      <div className={`${display == 'nodata' ? '' : 'd-none'}`}>
+        <NoDataFull />
       </div>
     </>
   )

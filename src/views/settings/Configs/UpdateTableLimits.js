@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux'
 import { BaccaratTables } from './TableImages'
 
 import gsap from 'gsap'
+import NoDataFull from '../../NoData/NoDataFull'
 
 const UpdateTableLimits = (props) => {
   const [renderKey, setRenderKey] = useState(0)
@@ -18,17 +19,27 @@ const UpdateTableLimits = (props) => {
   const navigate = useNavigate()
   const [games, setGames] = useState([])
   const [originalGames, setOriginalGames] = useState([])
-  const [form, setForm] = useState({ game_type_id: '', game_type_name: '',active: true })
+  const [display, setDisplay] = useState('loading')
+  const [form, setForm] = useState({ game_type_id: '', game_type_name: '', active: true })
   const getGames = async () => {
     const { data } = await axiosClient.get(`/config/get/table/type`)
     console.log('data: ', data)
 
+    if (data) {
+      setDisplay('data')
+    } else {
+      setDisplay('nodata')
+    }
     setGames(data.game_types)
     setOriginalGames(data.game_types)
   }
 
   const handleSetForm = (table) => {
-    setForm({ game_type_id: table.game_type_id, game_type_name: table.game_type_name,active: table.active })
+    setForm({
+      game_type_id: table.game_type_id,
+      game_type_name: table.game_type_name,
+      active: table.active,
+    })
   }
 
   const updateTableType = async () => {
@@ -43,7 +54,7 @@ const UpdateTableLimits = (props) => {
           temp[i].active = form.active
         }
       }
-     
+
       setGames(temp)
       setOriginalGames(temp)
       setRenderKey(renderKey + 1)
@@ -73,7 +84,6 @@ const UpdateTableLimits = (props) => {
       setSearch(value)
     }
   }
-
 
   return (
     <>
@@ -140,15 +150,13 @@ const UpdateTableLimits = (props) => {
       </div>
 
       {/* ///////////////////////////////////////////////////////////////////////// */}
-      <div
-        className={`table-main  py-2 container ${theme === 'dark' ? 'text-light' : 'text-dark'}`}
-      >
-        <h2 className="text-center my-2 animate">Games</h2>
-        <div className={` `}>
-          <div class="mb-3">
+      <div className={`table-main py-2 container ${theme === 'dark' ? 'text-light' : 'text-dark'}`}>
+        <h2 className={`text-center my-2 animate`}>Games</h2>
+        <div className={``}>
+          <div className={`mb-3`}>
             <input
               type="input"
-              class="form-control animate"
+              className={`form-control animate`}
               placeholder="Search Game"
               onChange={handleSearch}
               id="search"
@@ -156,31 +164,34 @@ const UpdateTableLimits = (props) => {
             />
           </div>
         </div>
-        <div className="row gap-0 w-100 px-3 " key={renderKey}>
+        <div
+          className={`row gap-0 w-100 px-3 ${display == 'data' ? '' : 'd-none'}`}
+          key={renderKey}
+        >
           {games.map((table, i) => (
-            <div key={i} className={`col-12 col-sm-3  mb-3 mb-sm-0 mt-2 `}>
-              <div className={`card card-hover shadow border-0  p-0 animate `}>
-                <div className={`card-body   m-0 d-flex  gap-1 `}>
-                  <div className={` `}>
+            <div key={i} className={`col-12 col-sm-3 mb-3 mb-sm-0 mt-2`}>
+              <div className={`card card-hover shadow border-0 p-0 animate`}>
+                <div className={`card-body m-0 d-flex gap-1`}>
+                  <div className={``}>
                     <img
                       src={
                         table.game_type_name == 'roulette'
                           ? roulleteWheel
                           : BaccaratTables[i % 20].table
                       }
-                      className="object-fit-cover "
-                      style={{ width: '60px',height: '60px' }}
+                      className={`object-fit-cover`}
+                      style={{ width: '60px', height: '60px' }}
                     />
                   </div>
-                  <div className={` w-100`}>
-                    <div className={` `}>
-                      <h5 className={`card-title  capitalize `}>{table.game_type_name}</h5>
+                  <div className={`w-100`}>
+                    <div className={``}>
+                      <h5 className={`card-title capitalize`}>{table.game_type_name}</h5>
                       <p
-                        className={`card-text capitalize  bg-gradient shadow-xs rounded-circle ${table.active == true ? 'bg-success' : 'bg-danger'}`}
+                        className={`card-text capitalize bg-gradient shadow-xs rounded-circle ${table.active == true ? 'bg-success' : 'bg-danger'}`}
                         style={{ width: 10, height: 10 }}
                       ></p>
                     </div>
-                    <div className={` d-flex justify-content-end `}>
+                    <div className={`d-flex justify-content-end`}>
                       <i
                         onClick={() => handleSetForm(table)}
                         data-bs-toggle="modal"
@@ -193,6 +204,9 @@ const UpdateTableLimits = (props) => {
               </div>
             </div>
           ))}
+        </div>
+        <div className={`${display == 'nodata' ? '' : 'd-none'}`}>
+          <NoDataFull />
         </div>
       </div>
     </>

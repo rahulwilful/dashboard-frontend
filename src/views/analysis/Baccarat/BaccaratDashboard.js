@@ -240,33 +240,41 @@ const BaccaratDashboard = () => {
     localStorage.setItem('baccaratCallOnTimeInterval', true)
   }
 
+  /**
+   * Processes the data obtained from the API and updates the state variables.
+   * @param {array} resData - The data obtained from the API.
+   */
   const processData = async (resData) => {
+    // Store the raw data in the state variable
     setRawData(resData)
-    //  console.log('res.data.result: ', resData)
 
+    // Get the list of shoes from the API
     const resShoes = await axiosClient.get(`/baccarat/get/shoes/${game_type_id}/${table_limit_id}`)
 
-    //console.log('resShoes:', resShoes)
-
+    // Initialize the variables
     let live = false
     const currentTime = new Date()
 
+    // Check if the first entry has a date_time
     if (resData.length > 0 && resData[0].date_time) {
       const resDataTime = new Date(resData[0].date_time)
       const diffInMs = currentTime - resDataTime
       const diffInMinutes = diffInMs / (1000 * 60)
 
+      // If the difference is 1 minute or less, set live to true
       if (diffInMinutes <= 1) {
         live = true
       }
     }
 
+    // Update the live status
     console.log('live status: ', live)
     setLive(live)
     if (live == true) {
       setLiveData(resData[0])
     }
 
+    // Initialize the variables
     let shoes = []
     let tempShoe = resData[0].shoe_no
     let tempData = []
@@ -280,6 +288,7 @@ const BaccaratDashboard = () => {
     let flag = 0
     let tempCurrentWinner = ''
 
+    // Find the current winner
     for (let i in resData) {
       if (resData[i].winner == 'B' || resData[i].winner == 'P') {
         tempCurrentWinner = resData[i].winner
@@ -287,8 +296,7 @@ const BaccaratDashboard = () => {
       }
     }
 
-    //console.log('tempCurrentWinner: ', tempCurrentWinner)
-
+    // Initialize the variables
     let bankerVsPlayer = [
       { name: 'Player', value: 0 },
       { name: 'Banker', value: 0 },
@@ -296,6 +304,7 @@ const BaccaratDashboard = () => {
     ]
     const sideWin = SideWin
 
+    // Loop through the data and find the streaks
     for (let i = 0; i < resData.length; i++) {
       if (i < resData.length - 2 && tempCurrentWinner == resData[i + 1].winner) {
         tempStreak.push(tempCurrentWinner)
@@ -310,6 +319,7 @@ const BaccaratDashboard = () => {
       }
     }
 
+    // Loop through the data and find the wins
     for (let i = 0; i < resData.length; i++) {
       if (resData[i].winner == 'P') bankerVsPlayer[0].value += 1
       if (resData[i].winner == 'B') bankerVsPlayer[1].value += 1
@@ -329,7 +339,7 @@ const BaccaratDashboard = () => {
       if (resData[i].side_win == 'SD') sideWin[13].value += 1
       if (resData[i].side_win == 'DT') sideWin[14].value += 1
 
-      //finding streaks palyer win and banker win
+      //checking if shoe number is different
       if (tempShoe != resData[i].shoe_no) {
         shoes.push(tempShoe)
 
@@ -338,6 +348,7 @@ const BaccaratDashboard = () => {
         tempData = []
       }
 
+      //spliting cards to easy access and computations
       const tempPlayerSplit = resData[i].player_cards.split(',')
       const tempBankerSplit = resData[i].banker_cards.split(',')
 
@@ -390,13 +401,14 @@ const BaccaratDashboard = () => {
       { name: 'Banker Pair', value: bankerPair },
     ]
 
-    //console.log('bankerVsPlayer : ', bankerVsPlayer)
+    // console.log('bankerVsPlayer : ', bankerVsPlayer)
 
-    //console.log('doughnutData : ', doughnutData)
-    //  console.log('sideWin : ', sideWin)
+    // console.log('doughnutData : ', doughnutData)
+    // console.log('sideWin : ', sideWin)
     sideWin[0].value = playerStreak
     sideWin[1].value = bankerStreak
 
+    // Update the state variables
     setBankerVsPlayer(bankerVsPlayer)
     setShoes(resShoes.data.result)
     setData(data)

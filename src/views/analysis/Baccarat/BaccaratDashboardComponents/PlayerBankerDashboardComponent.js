@@ -64,36 +64,44 @@ const PlayerBankerDashboardComponent = (props) => {
   const [bankerCardImage2, setBankerCardImage2] = useState(null)
   const [bankerCardImage3, setBankerCardImage3] = useState(null)
 
+  /**
+   * Processes the shoe data to update the state variables for visualization and analysis.
+   *
+   * @param {Array} shoeData - The data received from the API containing shoe information.
+   */
   const processData = (shoeData) => {
     console.log('processData: ', shoeData)
-    if (shoeData.length == 0) return
+
+    // Return early if there is no data
+    if (shoeData.length === 0) return
+
+    // Reset the values of ShoeSideWin
     for (let i in ShoeSideWin) {
       ShoeSideWin[i].value = 0
     }
 
+    // Set the size of the shoe data
     setShoeDataSize(shoeData.length)
-    let shoes = []
-    let tempShoe = shoeData[0].shoe
-    let tempData = []
-    let data = []
-    let sideWin = ShoeSideWin
+
+    // Initialize variables to track streaks, pairs, and winners
     let playerStreak = 0
     let bankerStreak = 0
     let playerPair = 0
     let bankerPair = 0
     let streak = []
     let tempStreak = []
-    let flag = 0
     let tempCurrentWinner = shoeData[0].winner
+
+    // Initialize bankerVsPlayer to track the count of wins for Player, Banker, and Tie
     let bankerVsPlayer = [
       { name: 'Player', value: 0 },
       { name: 'Banker', value: 0 },
       { name: 'Tie', value: 0 },
     ]
-    let tempShoes = []
 
+    // Iterate through the shoe data to identify streaks
     for (let i = 0; i < shoeData.length; i++) {
-      if (i < shoeData.length - 2 && tempCurrentWinner == shoeData[i + 1].winner) {
+      if (i < shoeData.length - 2 && tempCurrentWinner === shoeData[i + 1].winner) {
         tempStreak.push(tempCurrentWinner)
       } else {
         if (tempStreak.length > 0) {
@@ -106,66 +114,69 @@ const PlayerBankerDashboardComponent = (props) => {
       }
     }
 
+    // Count the number of player and banker streaks
     for (let i in streak) {
-      if (streak[i][0] == 'P') {
+      if (streak[i][0] === 'P') {
         playerStreak++
       }
-      if (streak[i][0] == 'B') {
+      if (streak[i][0] === 'B') {
         bankerStreak++
       }
     }
 
-    //console.log('streak: ', streak)
-
+    // Iterate through the shoe data to update win counts, pairs, and side wins
     for (let i = 0; i < shoeData.length; i++) {
-      if (shoeData[i].winner == 'P') bankerVsPlayer[0].value += 1
-      if (shoeData[i].winner == 'B') bankerVsPlayer[1].value += 1
-      if (shoeData[i].winner == 'T') bankerVsPlayer[2].value += 1
+      if (shoeData[i].winner === 'P') bankerVsPlayer[0].value += 1
+      if (shoeData[i].winner === 'B') bankerVsPlayer[1].value += 1
+      if (shoeData[i].winner === 'T') bankerVsPlayer[2].value += 1
 
-      if (shoeData[i].playerCard1 == shoeData[i].playerCard2) playerPair += 1
-      if (shoeData[i].bankerCard1 == shoeData[i].bankerCard2) bankerPair += 1
+      if (shoeData[i].playerCard1 === shoeData[i].playerCard2) playerPair += 1
+      if (shoeData[i].bankerCard1 === shoeData[i].bankerCard2) bankerPair += 1
       if (
         shoeData[i].playerCard3 &&
-        shoeData[i].playerCard1 != shoeData[i].playerCard2 &&
-        shoeData[i].playerCard2 == shoeData[i].playerCard3
+        shoeData[i].playerCard1 !== shoeData[i].playerCard2 &&
+        shoeData[i].playerCard2 === shoeData[i].playerCard3
       ) {
         playerPair += 1
       }
       if (
         shoeData[i].bankerCard3 &&
-        shoeData[i].bankerCard1 != shoeData[i].bankerCard2 &&
-        shoeData[i].bankerCard2 == shoeData[i].bankerCard3
+        shoeData[i].bankerCard1 !== shoeData[i].bankerCard2 &&
+        shoeData[i].bankerCard2 === shoeData[i].bankerCard3
       ) {
         bankerPair += 1
       }
 
-      if (shoeData[i].side_win == 'PP') sideWin[2].value += 1
-      if (shoeData[i].side_win == 'BP') sideWin[3].value += 1
-      if (shoeData[i].side_win == 'TG') sideWin[4].value += 1
-      if (shoeData[i].side_win == 'S6') sideWin[5].value += 1
-      if (shoeData[i].side_win == 'TGR') sideWin[6].value += 1
-      if (shoeData[i].side_win == 'TP') sideWin[7].value += 1
-      if (shoeData[i].side_win == 'TW') sideWin[8].value += 1
-      if (shoeData[i].side_win == 'TT') sideWin[9].value += 1
-      if (shoeData[i].side_win == 'BT') sideWin[10].value += 1
-      if (shoeData[i].side_win == 'ST') sideWin[11].value += 1
-      if (shoeData[i].side_win == 'BD') sideWin[12].value += 1
-      if (shoeData[i].side_win == 'SD') sideWin[13].value += 1
-      if (shoeData[i].side_win == 'DT') sideWin[14].value += 1
+      // Update side win counts based on the side_win property
+      if (shoeData[i].side_win === 'PP') sideWin[2].value += 1
+      if (shoeData[i].side_win === 'BP') sideWin[3].value += 1
+      if (shoeData[i].side_win === 'TG') sideWin[4].value += 1
+      if (shoeData[i].side_win === 'S6') sideWin[5].value += 1
+      if (shoeData[i].side_win === 'TGR') sideWin[6].value += 1
+      if (shoeData[i].side_win === 'TP') sideWin[7].value += 1
+      if (shoeData[i].side_win === 'TW') sideWin[8].value += 1
+      if (shoeData[i].side_win === 'TT') sideWin[9].value += 1
+      if (shoeData[i].side_win === 'BT') sideWin[10].value += 1
+      if (shoeData[i].side_win === 'ST') sideWin[11].value += 1
+      if (shoeData[i].side_win === 'BD') sideWin[12].value += 1
+      if (shoeData[i].side_win === 'SD') sideWin[13].value += 1
+      if (shoeData[i].side_win === 'DT') sideWin[14].value += 1
     }
 
+    // Update the sideWin array with the streak counts
     sideWin[0].value = playerStreak
     sideWin[1].value = bankerStreak
 
+    // Prepare the doughnut data for visualization
     const doughnutData = [
       { name: 'Player Streak', value: playerStreak },
       { name: 'Banker Streak', value: bankerStreak },
-
       { name: 'Player Pair', value: playerPair },
       { name: 'Banker Pair', value: bankerPair },
     ]
 
-    if (playerStreak == 0 && bankerStreak == 0 && playerPair == 0 && bankerPair == 0) {
+    // Determine whether to show the doughnut chart based on the data
+    if (playerStreak === 0 && bankerStreak === 0 && playerPair === 0 && bankerPair === 0) {
       setShowDoughnut(false)
       console.log('false')
     } else {
@@ -173,7 +184,7 @@ const PlayerBankerDashboardComponent = (props) => {
       console.log('true')
     }
 
-    setShoes(tempShoes)
+    // Update the state variables with the processed data
     setBankerVsPlayer(bankerVsPlayer)
     setDoughnutData(doughnutData)
     setSideWin(sideWin)
@@ -262,29 +273,47 @@ const PlayerBankerDashboardComponent = (props) => {
     }
   }, [currentShoeData])
 
-  const handleShoeChange = (selectedOption) => {
-    console.log('handleShoeChange: ', selectedOption)
-    let flag = 0
+ /**
+ * Handles the change of the selected shoe from the dropdown.
+ *
+ * @param {Object} selectedOption - The selected shoe option from the dropdown.
+ */
+const handleShoeChange = (selectedOption) => {
+  console.log('handleShoeChange: ', selectedOption);
 
-    for (let i = 0; i < shoeData.length; i++) {
-      if (shoeData[i].shoe == selectedOption.value) {
-        setCurrentShoeData(shoeData[i].data)
-        processData(shoeData[i].data)
-        setCurrentOption(selectedOption)
-        setCurrentShoe(selectedOption.value)
-        localStorage.setItem('currentShoe', selectedOption.value)
+  let flag = 0;
 
-        flag = 1
-      }
+  // Iterate through the shoeData to find the selected shoe
+  for (let i = 0; i < shoeData.length; i++) {
+    if (shoeData[i].shoe == selectedOption.value) {
+      // Update the currentShoeData with the data of the selected shoe
+      setCurrentShoeData(shoeData[i].data);
+
+      // Process the data of the selected shoe
+      processData(shoeData[i].data);
+
+      // Update the currentOption and currentShoe with the selected shoe
+      setCurrentOption(selectedOption);
+      setCurrentShoe(selectedOption.value);
+
+      // Store the selected shoe in localStorage
+      localStorage.setItem('currentShoe', selectedOption.value);
+
+      flag = 1;
+      break;
     }
-    if (flag == 0) {
-      getDataByShoe(selectedOption.value)
-      localStorage.setItem('currentShoe', selectedOption.value)
-    }
-
-    setIndex(0)
-    handleCardImages(0)
   }
+
+  // If the selected shoe is not found in shoeData, fetch the data from the server
+  if (flag == 0) {
+    getDataByShoe(selectedOption.value);
+    localStorage.setItem('currentShoe', selectedOption.value);
+  }
+
+  // Reset the index to 0 and update the card images for the new shoe
+  setIndex(0);
+  handleCardImages(0);
+};
 
   const getDataByShoe = async (shoe) => {
     console.log('getDataByShoe: ', shoe)
@@ -527,13 +556,15 @@ const PlayerBankerDashboardComponent = (props) => {
                   <div className={`w-100`}>
                     <table className={`table-${theme} fontText  table-sm w-100 `}>
                       <tbody>
-                      <tr className='border-bottom border-secondary border-opacity-25 mb-1'>
-                          <td className={`${props.live ? 'text-light' : 'text-danger'}`}>{props.live ? 'Active' : 'Inactive'}</td>
+                        <tr className="border-bottom border-secondary border-opacity-25 mb-1">
+                          <td className={`${props.live ? 'text-light' : 'text-danger'}`}>
+                            {props.live ? 'Active' : 'Inactive'}
+                          </td>
                           <td className={`d-flex justify-content-center align-items-center py-2`}>
                             <span
                               className={`rounded-circle d-flex justify-content-center    ${props.live ? 'bg-success' : 'bg-danger disabled'} text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25 pointer`}
-                             disabled = {!props.live}
-                             onClick={props.live ? props.updateData : null}
+                              disabled={!props.live}
+                              onClick={props.live ? props.updateData : null}
                             >
                               <i class="bi bi-arrow-clockwise"></i>
                             </span>
@@ -650,7 +681,6 @@ const PlayerBankerDashboardComponent = (props) => {
                             </span>
                           </td>
                         </tr>
-                       
                       </tbody>
                     </table>
                   </div>
@@ -675,7 +705,7 @@ const PlayerBankerDashboardComponent = (props) => {
                     </div>
 
                     <div className={`fs-4 ${theme === 'light' ? 'text-dark' : 'text-light'}`}>
-                     {currentShoeData.length}/{index+1}
+                      {currentShoeData.length}/{index + 1}
                     </div>
                     <div className={``}>
                       <button
@@ -696,7 +726,9 @@ const PlayerBankerDashboardComponent = (props) => {
                   </div>
                 </div>
               </div>
-              <div className={`col-12  ${bankerCardImage1 ? 'h-100' : 'h-full'}  col-md-5 boxPlayerBanker ${s.opacity} `}>
+              <div
+                className={`col-12  ${bankerCardImage1 ? 'h-100' : 'h-full'}  col-md-5 boxPlayerBanker ${s.opacity} `}
+              >
                 <div
                   className={`w-100  ${bankerCardImage1 ? 'h-75' : 'h-100'}  shadow-s rounded ${themeBorder} bg-gradient player   px-1`}
                 >
@@ -717,7 +749,7 @@ const PlayerBankerDashboardComponent = (props) => {
                         className={`w-100   ${s.cards}  d-flex justify-content-center align-items-center`}
                       >
                         <div className={`h-100 w-100 p-1`}>
-                         {/*  <div className={`text-center`}>{currentShoeData[index].bankerCard1}</div> */}
+                          {/*  <div className={`text-center`}>{currentShoeData[index].bankerCard1}</div> */}
 
                           <img src={bankerCardImage1} className="w-100 drop_shadow" />
                         </div>
@@ -763,7 +795,7 @@ const PlayerBankerDashboardComponent = (props) => {
                         Shoe -{currentShoe}
                       </div>
                     </div>
-                    <div className={``} >
+                    <div className={``}>
                       <PieChartComponent bankerVsPlayer={bankerVsPlayer} />
                     </div>
                   </div>
@@ -778,7 +810,7 @@ const PlayerBankerDashboardComponent = (props) => {
                           Shoe -{currentShoe}
                         </div>
                       </div>
-                      <div className={``} >
+                      <div className={``}>
                         <DoughnutChartComponent doughnutData={doughnutData} />
                       </div>
                     </div>
@@ -813,7 +845,7 @@ const PlayerBankerDashboardComponent = (props) => {
                   </div>
                 </div>
                 <div className={`col-12 col-sm-10 h-100 mt-2`}>
-                  <div className={``} >
+                  <div className={``}>
                     <BarChartComponent sideWin={sideWin} />
                   </div>
                 </div>

@@ -9,16 +9,17 @@ import { CFormInput, CFormCheck, CButton } from '@coreui/react'
 import { ScrollTrigger } from 'gsap/all'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
+
 import BarChartComponent from './rouletteDashboardComponents/BarChartComponent.js'
 import RadarChartComponent from './rouletteDashboardComponents/RadarChartComponent.js'
-
-import roulleteWheel from 'src/assets/images/roulleteDashboard/roulleteWheel.png'
 import DataTableComponent from './rouletteDashboardComponents/DataTableComponent.js'
-
 import DataTableComponent2 from './rouletteDashboardComponents/DataTableComponent2.js'
 import WheelPocketStatistics from './rouletteDashboardComponents/WheelPocketStatistics.js'
 import DropZoneStatistics from './rouletteDashboardComponents/DropZoneStatistics.js'
 import WinStatistics from './rouletteDashboardComponents/WinStatistics.js'
+
+import roulleteWheel from 'src/assets/images/roulleteDashboard/roulleteWheel.png'
+
 
 import { GetCurrent } from '../../../getCurrent.js'
 
@@ -119,12 +120,17 @@ const RouletteDashboard = () => {
     getGameData(customLimit)
   }
 
+  // Function that is called at regular time intervals
   const callOnTimeIntervalFunc = () => {
+    // Check if the callOnTimeInterval flag is set to true in localStorage
     if (localStorage.getItem('callOnTimeInterval') === 'true') {
+      // Fetch game data if the flag is true
       getGameData(limit)
     }
   }
 
+
+  // calling on time interval
   useEffect(() => {
     const intervalId = setInterval(() => {
       callOnTimeIntervalFunc()
@@ -146,18 +152,30 @@ const RouletteDashboard = () => {
     return
   }
 
+  /**
+   * Fetches game data from the API based on the date range provided
+   * and processes it.
+   * @returns {Promise<void>}
+   */
   const getGameDataByDate = async () => {
-    //  console.log('fromDate ', fromDate, ' toDate ', toDate)
+    console.log('fromDate ', fromDate, ' toDate ', toDate)
+
     const res = await axiosClient.post(`/game/get/${game}/${game_type_id}/${table_limit_id}`, {
       from_date: fromDate,
       to_date: toDate,
     })
-    //  console.log('res.data.result: ', res.data.result)
+
     processData(res.data.result)
     setRenderKey(renderKey + 1)
+    // Disable the callOnTimeInterval after fetching the data
     localStorage.setItem('callOnTimeInterval', false)
   }
 
+  /**
+   * Fetches game data from the API and processes it.
+   * If the limit parameter is provided, it will be used instead of the default limit.
+   * @param {number} limitParam The number of records to fetch.
+   */
   const getGameData = async (limitParam) => {
     const limitToUse = limitParam || limit
 
@@ -165,58 +183,64 @@ const RouletteDashboard = () => {
       const res = await axiosClient.get(
         `/game/get/${game}/${game_type_id}/${table_limit_id}/${limit}`,
       )
+      // Process the data and update the state
       processData(res.data.result)
       let data = res.data.result
       console.log('response: ', data)
       if (data.length > 0) {
+        // If there is data, show the data view
         setDisplay('data')
       }
 
       if (data.length == 0) {
+        // If there is no data, show the no data view
         setDisplay('nodata')
       }
+      // Update the render key to trigger a re-render
       setRenderKey(renderKey + 1)
     } catch (err) {
       console.log('err: ', err)
+      // If there is an error, show the no data view
       setDisplay('nodata')
     }
 
+    // Set the callOnTimeInterval flag to true
     localStorage.setItem('callOnTimeInterval', true)
   }
 
   const processData = (resData) => {
-    //  console.log('res.data.result: ', resData)
-
-    //console.log('tempRoulleteData: ', tempRoulleteData)
-
+    // Initialize the live status to false
     let live = false
     const currentTime = new Date()
-    //  console.log('time: ', currentTime)
 
-    //checking if connection is live
-    // Check if resData[0].date_time exists and is exactly 1 minute before current time
+    // Check if there is data and if the first entry has a date_time
     if (resData.length > 0 && resData[0].date_time) {
       const resDataTime = new Date(resData[0].date_time)
       const diffInMs = currentTime - resDataTime
       const diffInMinutes = diffInMs / (1000 * 60)
 
+      // If the difference is 1 minute or less, set live to true
       if (diffInMinutes <= 1) {
-        live = true // Set live to true if difference is 1 minute or less
+        live = true
       }
     }
 
-    //  console.log('live status: ', live)
+    // Update the live status and live data
     setLive(live)
     if (live == true) {
       setLiveData(resData[0])
     }
 
+    // Reset the roulette data counts
     for (let i in tempRoulleteData) {
       tempRoulleteData[i].number = 0
     }
 
+    // Initialize counters for red and black numbers
     let red = 0
     let black = 0
+
+    // Iterate through the roulette data and update counts
     for (let j = 0; j < tempRoulleteData.length; j++) {
       for (let i = 0; i < resData.length; i++) {
         if (resData[i].winning_number == tempRoulleteData[j].name) {
@@ -231,26 +255,28 @@ const RouletteDashboard = () => {
       }
     }
 
+    // Extract the numbers from the roulette data for standard deviation calculation
     let extractedNumbers = []
     for (let i in tempRoulleteData) {
       extractedNumbers.push(tempRoulleteData[i].number)
     }
-    //console.log('Extracted Numbers: ', extractedNumbers)
 
+    // Calculate the mean of the extracted numbers
     const mean = extractedNumbers.reduce((sum, value) => sum + value, 0) / 37
 
+    // Calculate the variance
     const variance =
       extractedNumbers.reduce((sum, value) => {
         return sum + Math.pow(value - mean, 2)
       }, 0) /
       (37 - 1)
 
+    // Calculate the standard deviation
     const tempStandardDeviation = Math.sqrt(variance)
     setSDaviation(extractedNumbers)
     setStandardDeviation(variance.toFixed(2))
-    //console.log('tempStandardDeviation: ', variance)
-    //console.log('tempRoulleteData: ', tempRoulleteData)
 
+    // Update the state with the processed data
     setData(resData)
     setRouletteData(tempRoulleteData)
     setRedTotal(red)
@@ -276,16 +302,6 @@ const RouletteDashboard = () => {
     //if (data) console.log('data: ', data)
     //if (rouletteData) console.log('rouletteData: ', rouletteData)
   }, [data, rouletteData])
-
-  const tempData = [
-    { name: 'Page A', uv: 4000, pv: 2400, amt: 2400 },
-    { name: 'Page B', uv: 3000, pv: 1398, amt: 2210 },
-    { name: 'Page C', uv: 2000, pv: 9800, amt: 2290 },
-    { name: 'Page D', uv: 2780, pv: 3908, amt: 2000 },
-    { name: 'Page E', uv: 1890, pv: 4800, amt: 2181 },
-    { name: 'Page F', uv: 2390, pv: 3800, amt: 2500 },
-    { name: 'Page G', uv: 3490, pv: 4300, amt: 2100 },
-  ]
 
   const config = { threshold: 0.1 }
 

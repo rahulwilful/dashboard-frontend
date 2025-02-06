@@ -8,16 +8,27 @@ import roulleteWheel from 'src/assets/images/dashboard/roullete-wheel.png'
 import { useNavigate } from 'react-router-dom'
 
 import { GetCurrent } from '../../../getCurrent'
+import { useSelector } from 'react-redux'
+import NoDataFull from '../../NoData/NoDataFull'
 
 const UpdateLanguages = (props) => {
+  const theme = useSelector((state) => state.theme)
   const navigate = useNavigate()
   const [languages, setLanguages] = useState([])
+  const [originalLanguages, setOriginalLanguages] = useState([])
   const [form, setForm] = useState({ language_id: '', language: '' })
+  const [display, setDisplay] = useState('loading')
   const getLanguages = async () => {
     const { data } = await axiosClient.get(`/config/get/language`)
     console.log(data)
 
+    if (data) {
+      setDisplay('data')
+    } else {
+      setDisplay('nodata')
+    }
     setLanguages(data.languages)
+    setOriginalLanguages(data.languages)
   }
 
   const handleSetForm = (language) => {
@@ -57,6 +68,19 @@ const UpdateLanguages = (props) => {
     getLanguages()
     console.log('user ', user)
     return
+  }
+
+  const handleSearch = (e) => {
+    if (e.target.value === '') {
+      setLanguages(originalLanguages)
+    } else {
+      const value = e.target.value.toLowerCase()
+      const filtered = languages.filter((language) =>
+        language.language.toLowerCase().includes(value),
+      )
+      setLanguages(filtered)
+      setSearch(value)
+    }
   }
   return (
     <>
@@ -111,27 +135,35 @@ const UpdateLanguages = (props) => {
       </div>
 
       {/* ///////////////////////////////////////////////////////////////////////// */}
-      <div className=" table-main  py-2 container">
+      <div
+        className={`table-main  py-2 container ${theme === 'dark' ? 'text-light' : 'text-dark'}`}
+      >
         <h2 className="text-center my-2">Languages</h2>
-        <div className="row gap-0 w-100 px-3 ">
+        <div className={`mb-3  ${theme === 'dark' ? 'text-light' : 'text-dark'} fade-in`}>
+          <label htmlFor="search" className="form-label animate">
+            Search
+          </label>
+          <input type="text" className="form-control " id="search" onChange={handleSearch} />
+        </div>
+        <div className={`row gap-0 w-100 px-3 ${display == 'data' ? '' : 'd-none'}`}>
           {languages.map((language, i) => (
-            <div key={i} className="col-12 col-sm-3  mb-3 mb-sm-0 mt-2">
-              <div className="card card-hover shadow border-0  p-0  ">
-                <div className="card-body   m-0 d-flex  ">
-                  <div className=" ">
-                    <img src={roulleteWheel} className="" style={{ width: '100px' }} />
+            <div key={i} className={`col-12 col-sm-3 mb-3 mb-sm-0 mt-2`}>
+              <div className={`card card-hover shadow border-0 p-0`}>
+                <div className={`card-body m-0 d-flex`}>
+                  <div className={``}>
+                    <img src={roulleteWheel} className={``} style={{ width: '100px' }} />
                   </div>
-                  <div className=" w-100">
-                    <div className="">
-                      <h5 className="card-title  capitalize">{language.language}</h5>
-                      <p className="card-text capitalize "></p>
+                  <div className={`w-100`}>
+                    <div className={``}>
+                      <h5 className={`card-title capitalize`}>{language.language}</h5>
+                      <p className={`card-text capitalize`}></p>
                     </div>
-                    <div className=" d-flex justify-content-end ">
+                    <div className={`d-flex justify-content-end`}>
                       <i
                         onClick={() => handleSetForm(language)}
                         data-bs-toggle="modal"
                         data-bs-target="#exampleModal"
-                        class="bi bi-pen-fill icon-size font-size icon pointer text-shadow icon-hover"
+                        className={`bi bi-pen-fill icon-size font-size icon pointer text-shadow icon-hover`}
                       ></i>
                     </div>
                   </div>
@@ -139,6 +171,9 @@ const UpdateLanguages = (props) => {
               </div>
             </div>
           ))}
+        </div>
+        <div className={`${display == 'nodata' ? '' : 'd-none'}`}>
+          <NoDataFull />
         </div>
       </div>
     </>

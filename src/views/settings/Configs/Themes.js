@@ -9,6 +9,7 @@ import roulleteWheel from 'src/assets/images/dashboard/roullete-wheel.png'
 import { useNavigate } from 'react-router-dom'
 
 import { GetCurrent } from '../../../getCurrent'
+import NoDataFull from '../../NoData/NoDataFull'
 
 const UpdateThemes = (props) => {
   const theme = useSelector((state) => state.theme)
@@ -16,10 +17,16 @@ const UpdateThemes = (props) => {
   const [themes, setThemes] = useState([])
   const [originalThemes, setOriginalThemes] = useState([])
   const [form, setForm] = useState({ theme_id: '', theme: '' })
+  const [display, setDisplay] = useState('loading')
+
   const getThemes = async () => {
     const { data } = await axiosClient.get(`/config/get/theme`)
     console.log(data)
-
+    if (data) {
+      setDisplay('data')
+    } else {
+      setDisplay('nodata')
+    }
     setThemes(data.themes)
     setOriginalThemes(data.themes)
   }
@@ -51,8 +58,6 @@ const UpdateThemes = (props) => {
     console.log('form after setting', form)
   }, [themes, form])
 
-
-
   useEffect(() => {
     getCurrent()
   }, [])
@@ -62,23 +67,21 @@ const UpdateThemes = (props) => {
     await GetCurrent('settings')
     getThemes()
     console.log('user ', user)
-    return 
+    return
   }
 
   const handleSearch = (e) => {
-    console.log("handleSearch called")
+    console.log('handleSearch called')
     if (e.target.value === '') {
       setThemes(originalThemes)
     } else {
       const value = e.target.value.toLowerCase()
-      const filtered = themes.filter((theme) =>
-        theme.theme.toLowerCase().includes(value),
-      )
+      const filtered = themes.filter((theme) => theme.theme.toLowerCase().includes(value))
       setThemes(filtered)
       setSearch(value)
-    } 
+    }
   }
-  
+
   return (
     <>
       <div
@@ -132,7 +135,9 @@ const UpdateThemes = (props) => {
       </div>
 
       {/* ///////////////////////////////////////////////////////////////////////// */}
-      <div   className={`table-main  py-2 container ${theme === 'dark' ? 'text-light' : 'text-dark'}`}>
+      <div
+        className={`table-main  py-2 container ${theme === 'dark' ? 'text-light' : 'text-dark'}`}
+      >
         <h2 className="text-center my-2">Themes</h2>
         <div className={` `}>
           <div class="mb-3">
@@ -146,25 +151,25 @@ const UpdateThemes = (props) => {
             />
           </div>
         </div>
-        <div className="row gap-0 w-100 px-3 ">
+        <div className={`row gap-0 w-100 px-3 ${display == 'data' ? '' : 'd-none'}`}>
           {themes.map((theme, i) => (
-            <div key={i} className="col-12 col-sm-3  mb-3 mb-sm-0 mt-2">
-              <div className="card card-hover shadow border-0  p-0  ">
-                <div className="card-body   m-0 d-flex  ">
-                  <div className=" ">
+            <div key={i} className={`col-12 col-sm-3 mb-3 mb-sm-0 mt-2`}>
+              <div className={`card card-hover shadow border-0 p-0`}>
+                <div className={`card-body m-0 d-flex`}>
+                  <div>
                     <img src={roulleteWheel} className="" style={{ width: '100px' }} />
                   </div>
-                  <div className=" w-100">
-                    <div className="">
-                      <h5 className="card-title  capitalize">{theme.theme}</h5>
-                      <p className="card-text capitalize "></p>
+                  <div className={`w-100`}>
+                    <div>
+                      <h5 className={`card-title capitalize`}>{theme.theme}</h5>
+                      <p className={`card-text capitalize`}></p>
                     </div>
-                    <div className=" d-flex justify-content-end ">
+                    <div className={`d-flex justify-content-end`}>
                       <i
                         onClick={() => handleSetForm(theme)}
                         data-bs-toggle="modal"
                         data-bs-target="#exampleModal"
-                        class="bi bi-pen-fill icon-size font-size icon pointer text-shadow icon-hover"
+                        className={`bi bi-pen-fill icon-size font-size icon pointer text-shadow icon-hover`}
                       ></i>
                     </div>
                   </div>
@@ -172,6 +177,9 @@ const UpdateThemes = (props) => {
               </div>
             </div>
           ))}
+        </div>
+        <div className={`${display == 'nodata' ? '' : 'd-none'}`}>
+          <NoDataFull />
         </div>
       </div>
     </>

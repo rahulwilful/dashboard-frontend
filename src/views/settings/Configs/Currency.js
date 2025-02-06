@@ -12,6 +12,7 @@ import roulleteWheel from 'src/assets/images/dashboard/roullete-wheel.png'
 import { useNavigate } from 'react-router-dom'
 
 import { GetCurrent } from '../../../getCurrent'
+import NoDataFull from '../../NoData/NoDataFull'
 
 const Currency = () => {
   const [parent, animateParent] = useAutoAnimate()
@@ -25,10 +26,16 @@ const Currency = () => {
 
   const [form, setForm] = useState({ currency_id: '', currency: '' })
   const [search, setSearch] = useState('')
+  const [display, setDisplay] = useState('loading')
+
   const getCurrency = async () => {
     const { data } = await axiosClient.get(`/config/get/currency`)
-    console.log("Data: ",data)
-
+    // console.log('Data: ', data)
+    if (data) {
+      setDisplay('data')
+    } else {
+      setDisplay('nodata')
+    }
     setCurrencys(data.currencies)
     setOriginalCurrencys(data.currencies)
   }
@@ -38,11 +45,13 @@ const Currency = () => {
   }
 
   const updateCurrency = async () => {
-    
-    let tempForm = {currency:form.currency.toUpperCase()}
+    let tempForm = { currency: form.currency.toUpperCase() }
 
     try {
-      const { data } = await axiosClient.put(`/config/update/currency/${form.currency_id}`, tempForm)
+      const { data } = await axiosClient.put(
+        `/config/update/currency/${form.currency_id}`,
+        tempForm,
+      )
       console.log(data)
       showToast('Currency updated successfully!', 'success')
       const temp = currencys.map((currency) =>
@@ -144,7 +153,6 @@ const Currency = () => {
                     type="text"
                     class="form-control"
                     id="exampleInputEmail1"
-                   
                     value={form.currency}
                     onChange={(e) => setForm({ ...form, currency: e.target.value })}
                   />
@@ -175,9 +183,21 @@ const Currency = () => {
         </label>
         <input type="text" className="form-control " id="search" onChange={handleSearch} />
       </div>
-      <div className="table-responsive animate">
+      <div
+        className={`
+        table-responsive animate ${display == 'data' ? '' : 'd-none'}
+      `}
+      >
         <table
-          className={`table table-striped ${theme === 'dark' ? 'table-dark' : 'table-light'} table-hover table-bordered table-sm rounded`}
+          className={`
+            table 
+            table-striped 
+            ${theme === 'dark' ? 'table-dark' : 'table-light'} 
+            table-hover 
+            table-bordered 
+            table-sm 
+            rounded
+          `}
         >
           <thead>
             <tr>
@@ -197,13 +217,25 @@ const Currency = () => {
                       onClick={() => handleSetForm(currency)}
                       data-bs-toggle="modal"
                       data-bs-target="#exampleModal"
-                      class="bi bi-pen-fill icon-size font-size icon pointer text-shadow icon-hover "
+                      className={`
+                        bi 
+                        bi-pen-fill 
+                        icon-size 
+                        font-size 
+                        icon 
+                        pointer 
+                        text-shadow 
+                        icon-hover 
+                      `}
                     ></i>
                   </td>
                 </tr>
               ))}
           </tbody>
         </table>
+      </div>
+      <div className={`${display == 'nodata' ? '' : 'd-none'}`}>
+        <NoDataFull />
       </div>
     </>
   )

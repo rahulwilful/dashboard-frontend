@@ -9,6 +9,7 @@ import roulleteWheel from 'src/assets/images/dashboard/roullete-wheel.png'
 import { useNavigate } from 'react-router-dom'
 
 import { GetCurrent } from '../../../getCurrent'
+import NoDataFull from '../../NoData/NoDataFull'
 
 const ManageData = (props) => {
   const theme = useSelector((state) => state.theme)
@@ -18,10 +19,16 @@ const ManageData = (props) => {
   const [form, setForm] = useState({ deletDays: '' })
   const [inputDeletDays, setInputDeletDays] = useState([])
   const [deletDays, setDeleDays] = useState([])
+  const [display, setDisplay] = useState('loading')
 
   const getDeletDays = async () => {
     const res = await axiosClient.get(`/config/get/delete/days`)
-    console.log('res', res)
+    // console.log('res', res)
+    if (res) {
+      setDisplay('data')
+    } else {
+      setDisplay('nodata')
+    }
     setDeleDays(res.data.result)
     setInputDeletDays(res.data.result)
   }
@@ -125,27 +132,28 @@ const ManageData = (props) => {
       <div
         className={`table-main  py-2 container ${theme === 'dark' ? 'text-light' : 'text-dark'}`}
       >
-        <h2 className="text-center my-2 poppins-500">Manage Data</h2>
+        <h2 className={`text-center my-2 poppins-500`}>Manage Data</h2>
 
-        <div className={`row gap-0 w-100 px-3`}>
+        <div className={`row gap-0 w-100 px-3 ${display == 'data' ? '' : 'd-none'}`}>
           <div
             className={`card shadow-s bg-primary bg-gradient text-light p-3`}
             style={{ width: ' 18rem' }}
           >
             <div className={`card-body`}>
               <h5 className={`card-title poppins-500`}>Delet Data In</h5>
-              <div className={` d-flex justify-content-between align-items-center  py-1`}>
+              <div className={`d-flex justify-content-between align-items-center  py-1`}>
                 <h2 className={`card-subtitle mb-2 `}>{deletDays} Days</h2>
                 <i
                   data-bs-toggle="modal"
                   data-bs-target="#editModal"
-                  className={`bi bi-pen-fill icon-size font-size icon icon-hover pointer text-shadow icon-hover ${
-                    theme === 'light' ? 'text-light' : 'text-light'
-                  }`}
+                  className={`bi bi-pen-fill icon-size font-size icon icon-hover pointer text-shadow icon-hover ${theme === 'light' ? 'text-light' : 'text-light'}`}
                 ></i>
               </div>
             </div>
           </div>
+        </div>
+        <div className={`${display == 'nodata' ? '' : 'd-none'}`}>
+          <NoDataFull />
         </div>
       </div>
     </>

@@ -34,7 +34,6 @@ const AndarBaharDashboard = () => {
   const [renderKey, setRenderKey] = useState(0)
   const [display, setDisplay] = useState('loading')
 
-
   const [data, setData] = useState([])
   const [index, setIndex] = useState(0)
   const [andarCards, setAndarCards] = useState([])
@@ -101,7 +100,6 @@ const AndarBaharDashboard = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (localStorage.getItem('andarBaharCallOnTimeInterval') === 'true') {
-       
         checkLive(limit)
       }
     }, 10000)
@@ -116,9 +114,9 @@ const AndarBaharDashboard = () => {
       const res = await axiosClient.get(
         `/game/get/andar_bahar/${game_type_id}/${table_limit_id}/${limit}`,
       )
-     
+
       let data = res.data.result
-    
+
       console.log('response: ', data)
 
       let live = false
@@ -156,7 +154,6 @@ const AndarBaharDashboard = () => {
   const updateData = () => {
     window.location.reload()
     showToast('Data updated successfully', 'success')
-    
   }
 
   useEffect(() => {
@@ -256,12 +253,15 @@ const AndarBaharDashboard = () => {
   const getGameDataByDate = async () => {
     //  console.log('fromDate ', fromDate, ' toDate ', toDate)
     setData([])
-    console.log("first date: ", fromDate, 'second date: ', toDate)
+    console.log('first date: ', fromDate, 'second date: ', toDate)
     try {
-      const res = await axiosClient.post(`/game/get/andar_bahar/${game_type_id}/${table_limit_id}`, {
-        from_date: fromDate,
-        to_date: toDate,
-      })
+      const res = await axiosClient.post(
+        `/game/get/andar_bahar/${game_type_id}/${table_limit_id}`,
+        {
+          from_date: fromDate,
+          to_date: toDate,
+        },
+      )
       //  console.log('res.data.result: ', res.data.result)
       processData(res.data.result)
       let data = res.data.result
@@ -283,38 +283,39 @@ const AndarBaharDashboard = () => {
   }
 
   const processData = (resData) => {
-    //console.log('tempRoulleteData: ', tempRoulleteData)
-
+    // Initialize live status and get the current time
     let live = false
     const currentTime = new Date()
-    //  console.log('time: ', currentTime)
 
-    //checking if connection is live
-    // Check if resData[0].date_time exists and is exactly 1 minute before current time
+    // Check if the connection is live based on the date_time of the first entry
     if (resData.length > 0 && resData[0].date_time) {
       const resDataTime = new Date(resData[0].date_time)
       const diffInMs = currentTime - resDataTime
       const diffInMinutes = diffInMs / (1000 * 60)
 
+      // Set live to true if the difference is 1 minute or less
       if (diffInMinutes <= 1) {
-        live = true // Set live to true if difference is 1 minute or less
+        live = true
       }
     }
 
-    console.log('live status: ', live ," data.length: ",data.length)
-    if(data.length > 0 && live == false) {
+    if (data.length > 0 && live == false) {
       return
     }
     setLive(live)
+
+    // If live, update live data
     if (live == true) {
       setLiveData(resData[0])
     }
 
+    // Initialize counters for Andar and Bahar wins and shots
     let andarTotal = 0
     let baharTotal = 0
     let andarShot = 0
     let baharShot = 0
 
+    // Process each entry in resData to compute totals and split cards
     for (let i in resData) {
       const splittedAndar = resData[i].andar_cards.split(',')
       const splittedBahar = resData[i].bahar_cards.split(',')
@@ -322,17 +323,21 @@ const AndarBaharDashboard = () => {
       resData[i].splittedAndar = splittedAndar
       resData[i].splittedBahar = splittedBahar
 
+      // Update win and shot counts based on winners
       if (resData[i].winner == 'A') andarTotal++
       if (resData[i].winner == 'B') baharTotal++
       if (resData[i].side_win == 'A') andarShot++
       if (resData[i].side_win == 'B') baharShot++
     }
 
+    // Initialize streak tracking variables
     let streak = []
     let tempStreak = []
     let andarStreak = 0
     let baharStreak = 0
     let curWinner = resData[0].winner
+
+    // Determine streaks of winners
     for (let i = 1; i < resData.length; i++) {
       if (curWinner == resData[i].winner) {
         tempStreak.push(curWinner)
@@ -345,18 +350,22 @@ const AndarBaharDashboard = () => {
       }
     }
 
+    // Add remaining streak to the list if it exists
     if (tempStreak.length > 0) streak.push(tempStreak)
 
+    // Count andar and bahar streaks
     for (let i in streak) {
       if (streak[i][0] == 'A') andarStreak++
       else baharStreak++
     }
 
+    // Initialize temporary card arrays
     let tempAndarCards = resData[0].splittedAndar
     let tempAndarCards2 = []
     let tempBaharCards = resData[0].splittedBahar
     let tempBaharCards2 = []
 
+    // Map card names to card images and positions for Andar cards
     for (let i in tempAndarCards) {
       if (i == 0) {
         for (let j in CardImages) {
@@ -381,6 +390,7 @@ const AndarBaharDashboard = () => {
       }
     }
 
+    // Map card names to card images and positions for Bahar cards
     for (let i in tempBaharCards) {
       if (i == 0) {
         for (let j in CardImages) {
@@ -405,22 +415,21 @@ const AndarBaharDashboard = () => {
       }
     }
 
-    console.log('tempAndarCards: ', tempAndarCards2)
-    console.log('tempBaharCards2: ', tempBaharCards2)
-
-    //  console.log('res.data.result: ', resData)
+    // Show or hide the doughnut chart based on shot counts
     if (andarShot == 0 && baharShot == 0) {
       setShowDoughnutChart(false)
     } else {
       setShowDoughnutChart(true)
     }
 
+    // Set the joker card image
     for (let i in CardImages) {
       if (CardImages[i].name == resData[0].joker_cards) {
         setJokerCardImage(CardImages[i].card)
       }
     }
 
+    // Update state variables with processed data
     setIndex(0)
     setAndarCards(tempAndarCards2)
     setBaharCards(tempBaharCards2)
@@ -443,24 +452,27 @@ const AndarBaharDashboard = () => {
       { name: 'Andar Shot', value: andarShot, color: 'rgb(36, 141, 92)' },
       { name: 'Bahar Shot', value: baharShot, color: 'rgb(255, 43, 50)' },
     ])
-    //  console.log('andarTotal: ', andarTotal)
-    //  console.log('baharTotal: ', baharTotal)
-    //  console.log('streak: ', streak)
-    //  console.log('andarStreak: ', andarStreak)
-    //  console.log('baharStreak: ', baharStreak)
   }
-  
 
+  /**
+   * Handles the change of the index to display the previous or next set of cards.
+   *
+   * @param {string} event - The event triggering the index change, either '+' for next or '-' for previous.
+   */
   const handleIndexChange = (event) => {
     let tempAndarCards2 = []
     let tempBaharCards2 = []
-    if (event == '+') {
-      const tempIndex = index + 1
-      setIndex(index + 1)
-      let tempAndarCards = data[tempIndex].splittedAndar
 
+    // Determine the new index based on the event
+    if (event === '+') {
+      const tempIndex = index + 1
+      setIndex(tempIndex)
+
+      // Get the Andar and Bahar cards for the new index
+      let tempAndarCards = data[tempIndex].splittedAndar
       let tempBaharCards = data[tempIndex].splittedBahar
 
+      // Map Andar cards to include image and position
       for (let i in tempAndarCards) {
         if (i == 0) {
           for (let j in CardImages) {
@@ -485,6 +497,7 @@ const AndarBaharDashboard = () => {
         }
       }
 
+      // Map Bahar cards to include image and position
       for (let i in tempBaharCards) {
         if (i == 0) {
           for (let j in CardImages) {
@@ -509,22 +522,26 @@ const AndarBaharDashboard = () => {
         }
       }
 
+      // Set the joker card image for the new index
       for (let i in CardImages) {
         if (CardImages[i].name == data[tempIndex].joker_cards) {
           setJokerCardImage(CardImages[i].card)
         }
       }
 
+      // Update the winner and side win for the new index
       setWinner(data[tempIndex].winner)
       setJokerCard(data[tempIndex].joker_cards)
       setSideWin(data[tempIndex].side_win)
     } else {
       const tempIndex = index - 1
-      setIndex(index - 1)
-      let tempAndarCards = data[tempIndex].splittedAndar
+      setIndex(tempIndex)
 
+      // Get the Andar and Bahar cards for the new index
+      let tempAndarCards = data[tempIndex].splittedAndar
       let tempBaharCards = data[tempIndex].splittedBahar
 
+      // Map Andar cards to include image and position
       for (let i in tempAndarCards) {
         if (i == 0) {
           for (let j in CardImages) {
@@ -549,6 +566,7 @@ const AndarBaharDashboard = () => {
         }
       }
 
+      // Map Bahar cards to include image and position
       for (let i in tempBaharCards) {
         if (i == 0) {
           for (let j in CardImages) {
@@ -573,19 +591,22 @@ const AndarBaharDashboard = () => {
         }
       }
 
+      // Set the joker card image for the new index
       for (let i in CardImages) {
         if (CardImages[i].name == data[tempIndex].joker_cards) {
           setJokerCardImage(CardImages[i].card)
         }
       }
+
+      // Update the winner and side win for the new index
       setWinner(data[tempIndex].winner)
       setJokerCard(data[tempIndex].joker_cards)
       setSideWin(data[tempIndex].side_win)
     }
+
+    // Update the state with the new Andar and Bahar cards
     setAndarCards(tempAndarCards2)
     setBaharCards(tempBaharCards2)
-    //  console.log('tempAndarCards2 : ', tempAndarCards2)
-    //  console.log('tempBaharCards2 : ', tempBaharCards2)
   }
 
   useEffect(() => {
@@ -628,7 +649,7 @@ const AndarBaharDashboard = () => {
 
   const config = { threshold: 0.1 }
 
-    let observer = new IntersectionObserver(function (entries, self) {
+  let observer = new IntersectionObserver(function (entries, self) {
     let targets = entries.map((entry) => {
       if (entry.isIntersecting) {
         self.unobserve(entry.target)
@@ -644,7 +665,7 @@ const AndarBaharDashboard = () => {
     observer.observe(box)
   })
 
-    function fadeIn(targets) {
+  function fadeIn(targets) {
     gsap.to(targets, {
       opacity: 1,
       y: 0,
@@ -829,7 +850,7 @@ const AndarBaharDashboard = () => {
                         Andar
                       </span>
                     </div>
-                  </div>  
+                  </div>
                   <div className={``}>
                     <div
                       className={`  d-flex position-relative justify-content-start align-items-center overflow-x-auto `}
@@ -919,7 +940,6 @@ const AndarBaharDashboard = () => {
                   <div
                     className={` h-100 d-flex flex-column  justify-content-center align-items-center `}
                   >
-                    
                     <div
                       className={`d-flex justify-content-start justify-content-md-center align-items-center `}
                     >
@@ -1100,19 +1120,17 @@ const AndarBaharDashboard = () => {
                   <i className="bi bi-chevron-right "></i>
                 </button>
               </div>
-              <div className={`fontTextHeading  poppins-500  d-flex justify-content-center align-items-center gap-2 ${live ? 'text-ligt':'text-danger'}`}>
-              <div className={``}>
-                Active
-                </div>
+              <div
+                className={`fontTextHeading  poppins-500  d-flex justify-content-center align-items-center gap-2 ${live ? 'text-ligt' : 'text-danger'}`}
+              >
+                <div className={``}>Active</div>
                 <span
                   className={`rounded-circle d-flex justify-content-center    ${live ? 'bg-success' : 'bg-danger disabled'} text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25 pointer`}
                   disabled={!live}
                   onClick={live ? updateData : null}
-                  >
+                >
                   <i class="bi bi-arrow-clockwise"></i>
                 </span>
-             
-                
               </div>
             </div>
           </div>
