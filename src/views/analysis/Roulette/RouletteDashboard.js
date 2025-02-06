@@ -20,7 +20,6 @@ import WinStatistics from './rouletteDashboardComponents/WinStatistics.js'
 
 import roulleteWheel from 'src/assets/images/roulleteDashboard/roulleteWheel.png'
 
-
 import { GetCurrent } from '../../../getCurrent.js'
 
 import NoData from '../../NoData/NoData'
@@ -128,7 +127,6 @@ const RouletteDashboard = () => {
       getGameData(limit)
     }
   }
-
 
   // calling on time interval
   useEffect(() => {
