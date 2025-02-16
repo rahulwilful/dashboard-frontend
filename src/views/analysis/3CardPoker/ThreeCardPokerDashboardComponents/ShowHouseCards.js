@@ -13,7 +13,7 @@ import NoDataFull from '../../../NoData/NoDataFull'
 const ShowHouseCards = (props) => {
   const [index, setIndex] = useState(0)
 
-  const theme = useSelector((theme) => theme.theme)
+  const theme = useSelector((theme) => theme?.theme)
   const [cards, setCards] = useState([])
 
   const [themeClass, setThemeClass] = useState('bg-light text-dark border')
@@ -38,33 +38,33 @@ const ShowHouseCards = (props) => {
 
     let tempCards = []
 
-    for (let i in props.cards) {
+    for (let i in props?.cards) {
       let tempImage = null
       for (let j in CardImages) {
-        if (props.cards[i] == CardImages[j].name) {
-          tempImage = CardImages[j].card
+        if (props?.cards[i] == CardImages[j]?.name) {
+          tempImage = CardImages[j]?.card
         }
       }
 
       if (i == 0) {
         tempCards.push({
-          name: props.cards[i],
+          name: props?.cards[i],
           card: tempImage,
           position: 0,
         })
       } else {
         tempCards.push({
-          name: props.cards[i],
+          name: props?.cards[i],
           card: tempImage,
-          position: tempCards[tempCards.length - 1].position + 3,
+          position: tempCards[tempCards.length - 1]?.position + 3,
         })
       }
     }
 
-   // console.log('tempCards: ', tempCards)
+    // console.log('tempCards: ', tempCards)
 
     setCards(tempCards)
-  }, [props.cards])
+  }, [props?.cards])
 
   useEffect(() => {
     gsap.to('.animateCards', {
@@ -79,8 +79,8 @@ const ShowHouseCards = (props) => {
   return (
     <>
       <div
-        className={` shadow-s rounded  ${themeBorder} ${cards.length > 1 ? 'd-block' : 'd-none'} `}
-        key={props.cards}
+        className={` shadow-s rounded  ${themeBorder} ${cards?.length > 1 ? 'd-block' : 'd-none'} `}
+        key={props?.cards}
       >
         <div
           className={`border-bottom border-secondary  border-opacity-25  py-1 px-3 fontTextHeading`}
@@ -88,9 +88,9 @@ const ShowHouseCards = (props) => {
           <div className={``}>
             {' '}
             <span
-              className={`bg-gradient ${props.win == 'house' ? 'bg-primary' : props.win == "community" ? 'bg-info' : 'bg-danger'} text-light border-0 bg-gradient px-2 shadow-xs poppins-500 rounded-1 `}
+              className={`bg-gradient ${props?.win == 'house' ? 'bg-primary' : props?.win == 'community' ? 'bg-info' : 'bg-danger'} text-light border-0 bg-gradient px-2 shadow-xs poppins-500 rounded-1 `}
             >
-              {props.name}
+              {props?.name}
             </span>
           </div>
         </div>
@@ -100,20 +100,19 @@ const ShowHouseCards = (props) => {
             style={{ height: '240px', position: 'relative', width: '100%' }}
             key={index}
           >
-            {cards.length > 0 && cards[0].position !== undefined ? (
+            {cards?.length > 0 && cards[0]?.position !== undefined ? (
               cards.map((card, i) => (
                 <div
-                  key={card.name + 1}
+                  key={card?.name + 1}
                   className={`animateCards  ${s.cards}`}
                   style={{
                     position: 'absolute',
-                    left: `${card.position}rem`,
+                    left: `${card?.position}rem`,
                   }}
                 >
-                  
                   <div className={``}>
                     <img
-                      src={card.card}
+                      src={card?.card}
                       alt=""
                       className={`${theme == 'dark' ? 'card_drop_shadow_dark' : 'card_drop_shadow_light'}`}
                       style={{ height: '200px', transform: 'rotateY(15deg)' }}
@@ -129,7 +128,7 @@ const ShowHouseCards = (props) => {
       </div>
 
       <div
-        className={`${cards.length == 0 ? '' : 'd-none'} shadow-s px-2 pb-2 rounded  h-100  ${themeBorder} `}
+        className={`${cards?.length == 0 ? '' : 'd-none'} shadow-s px-2 pb-2 rounded  h-100  ${themeBorder} `}
       >
         <div
           className={`border-bottom border-secondary  border-opacity-25  py-1 px-3 fontTextHeading`}
@@ -137,16 +136,16 @@ const ShowHouseCards = (props) => {
           <div className={``}>
             {' '}
             <span
-              className={`bg-gradient ${props.win == 'house' ? 'bg-primary' : props.win == "community" ? 'bg-info' : 'bg-danger'} text-light border-0 bg-gradient px-2 shadow-xs poppins-500 rounded-1 `}
+              className={`bg-gradient ${props?.win == 'house' ? 'bg-primary' : props?.win == 'community' ? 'bg-info' : 'bg-danger'} text-light border-0 bg-gradient px-2 shadow-xs poppins-500 rounded-1 `}
             >
-              {props.name}
+              {props?.name}
             </span>
           </div>
         </div>
         <div className={``}>
           <div
             className={`  d-flex position-relative justify-content-start align-items-center overflow-x-auto `}
-            style={{width: '100%' }}
+            style={{ width: '100%' }}
             key={index}
           >
             <div className={` h-100  w-100`}>

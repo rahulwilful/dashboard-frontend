@@ -7,19 +7,12 @@ const CoreUiLineChart = (props) => {
   const random = () => Math.round(Math.random() * 100)
 
   useEffect(() => {
-    if (props.background !== undefined || props.background !== null || props.background !== '') {
-      setBackground(props.background)
-    }
-    if (props.data) {
-      setData(props.data)
-      tempData = props.data
-    } else {
-      setData(tempData)
-    }
+    setBackground(props?.background ?? 'bg-info')
+    setData(props?.data ?? tempData)
 
-    if (props.backgroundColor) {
-      tempData.datasets[0].backgroundColor = props.backgroundColor
-      tempData.datasets[0].borderColor = props.backgroundColor
+    if (props?.backgroundColor) {
+      tempData.datasets?.[0]?.backgroundColor = props?.backgroundColor
+      tempData.datasets?.[0]?.borderColor = props?.backgroundColor
       setData(tempData)
     }
   }, [props])
@@ -93,3 +86,4 @@ const CoreUiLineChart = (props) => {
 }
 
 export default CoreUiLineChart
+

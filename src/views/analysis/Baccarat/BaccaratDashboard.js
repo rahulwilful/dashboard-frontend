@@ -42,7 +42,7 @@ const BaccaratDashboard = () => {
   ])
 
   const [form, setForm] = useState({})
-  const theme = useSelector((state) => state.theme)
+  const theme = useSelector((state) => state?.theme)
   const [themeClass, setThemeClass] = useState('bg-light text-dark border')
   const [themeBorder, setThemeBorder] = useState('bg-light text-dark border')
   const [statistics, setStatistics] = useState('WheelPocketStatistics')
@@ -90,7 +90,6 @@ const BaccaratDashboard = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (localStorage.getItem('baccaratCallOnTimeInterval') === 'true') {
-        // getGameData(limit)
         checkLive(limit)
       }
     }, 10000)
@@ -101,7 +100,6 @@ const BaccaratDashboard = () => {
   useEffect(() => {
     getCurrent()
     axiosClient.delete(`/game/older-than`)
-    // Ensure the current limit is passed
   }, [])
 
   const getCurrent = async () => {
@@ -113,21 +111,19 @@ const BaccaratDashboard = () => {
   }
 
   const checkLive = async (limitParam) => {
-    //  console.log('getGameData: ', limitParam)
     const limitToUse = limitParam || limit
     try {
       const res = await axiosClient.get(`/baccarat/get/${game_type_id}/${table_limit_id}/${limit}`)
       setShoePlayerBankerComponent(false)
-      //processData(res.data.result)
-      let data = res.data.result
-      setUpdatedData(res.data.result)
+      let data = res?.data?.result
+      setUpdatedData(res?.data?.result)
       console.log('response: ', data)
 
       let live = false
       const currentTime = new Date()
 
-      if (data.length > 0 && data[0].date_time) {
-        const resDataTime = new Date(data[0].date_time)
+      if (data?.length > 0 && data[0]?.date_time) {
+        const resDataTime = new Date(data[0]?.date_time)
         const diffInMs = currentTime - resDataTime
         const diffInMinutes = diffInMs / (1000 * 60)
 
@@ -139,11 +135,11 @@ const BaccaratDashboard = () => {
       console.log('live status: ', live)
       setLive(live)
 
-      if (data.length > 0) {
+      if (data?.length > 0) {
         setDisplay('data')
       }
 
-      if (data.length == 0) {
+      if (data?.length == 0) {
         setDisplay('nodata')
       }
       setRenderKey(renderKey + 1)
@@ -167,15 +163,14 @@ const BaccaratDashboard = () => {
         from_date: fromDate,
         to_date: toDate,
       })
-      //  console.log('res.data.result: ', res.data.result)
-      processData(res.data.result)
-      let data = res.data.result
+      processData(res?.data?.result)
+      let data = res?.data?.result
       console.log('response: ', data)
-      if (data.length > 0) {
+      if (data?.length > 0) {
         setDisplay('data')
       }
 
-      if (data.length == 0) {
+      if (data?.length == 0) {
         setDisplay('nodata')
       }
       setRenderKey(renderKey + 1)
@@ -188,47 +183,43 @@ const BaccaratDashboard = () => {
   }
 
   const getGameDataByFromShoeToToShoe = async () => {
-    //  console.log('fromShoe: ', fromShoe, 'toShoe: ', toShoe)
-
     try {
       const res = await axiosClient.get(
         `/baccarat/get/from/to/${game_type_id}/${table_limit_id}/${fromShoe}/${toShoe}`,
       )
 
-      //  console.log('res: ', res)
       setShoePlayerBankerComponent(false)
-      processData(res.data.result)
-      let data = res.data.result
+      processData(res?.data?.result)
+      let data = res?.data?.result
       console.log('response: ', data)
-      if (data.length > 0) {
+      if (data?.length > 0) {
         setDisplay('data')
       }
 
-      if (data.length == 0) {
+      if (data?.length == 0) {
         setDisplay('nodata')
       }
 
       setRenderKey(renderKey + 1)
     } catch (err) {
-      //  console.log(err)
+      console.log(err)
     }
     localStorage.setItem('baccaratCallOnTimeInterval', false)
   }
 
   const getGameData = async (limitParam) => {
-    //  console.log('getGameData: ', limitParam)
     const limitToUse = limitParam || limit
     try {
       const res = await axiosClient.get(`/baccarat/get/${game_type_id}/${table_limit_id}/${limit}`)
       setShoePlayerBankerComponent(false)
-      processData(res.data.result)
-      let data = res.data.result
+      processData(res?.data?.result)
+      let data = res?.data?.result
       console.log('response: ', data)
-      if (data.length > 0) {
+      if (data?.length > 0) {
         setDisplay('data')
       }
 
-      if (data.length == 0) {
+      if (data?.length == 0) {
         setDisplay('nodata')
       }
       setRenderKey(renderKey + 1)
@@ -240,43 +231,32 @@ const BaccaratDashboard = () => {
     localStorage.setItem('baccaratCallOnTimeInterval', true)
   }
 
-  /**
-   * Processes the data obtained from the API and updates the state variables.
-   * @param {array} resData - The data obtained from the API.
-   */
   const processData = async (resData) => {
-    // Store the raw data in the state variable
     setRawData(resData)
 
-    // Get the list of shoes from the API
     const resShoes = await axiosClient.get(`/baccarat/get/shoes/${game_type_id}/${table_limit_id}`)
 
-    // Initialize the variables
     let live = false
     const currentTime = new Date()
 
-    // Check if the first entry has a date_time
-    if (resData.length > 0 && resData[0].date_time) {
-      const resDataTime = new Date(resData[0].date_time)
+    if (resData?.length > 0 && resData[0]?.date_time) {
+      const resDataTime = new Date(resData[0]?.date_time)
       const diffInMs = currentTime - resDataTime
       const diffInMinutes = diffInMs / (1000 * 60)
 
-      // If the difference is 1 minute or less, set live to true
       if (diffInMinutes <= 1) {
         live = true
       }
     }
 
-    // Update the live status
     console.log('live status: ', live)
     setLive(live)
     if (live == true) {
       setLiveData(resData[0])
     }
 
-    // Initialize the variables
     let shoes = []
-    let tempShoe = resData[0].shoe_no
+    let tempShoe = resData[0]?.shoe_no
     let tempData = []
     let data = []
     let playerStreak = 0
@@ -288,15 +268,13 @@ const BaccaratDashboard = () => {
     let flag = 0
     let tempCurrentWinner = ''
 
-    // Find the current winner
     for (let i in resData) {
-      if (resData[i].winner == 'B' || resData[i].winner == 'P') {
-        tempCurrentWinner = resData[i].winner
+      if (resData[i]?.winner == 'B' || resData[i]?.winner == 'P') {
+        tempCurrentWinner = resData[i]?.winner
         break
       }
     }
 
-    // Initialize the variables
     let bankerVsPlayer = [
       { name: 'Player', value: 0 },
       { name: 'Banker', value: 0 },
@@ -304,55 +282,50 @@ const BaccaratDashboard = () => {
     ]
     const sideWin = SideWin
 
-    // Loop through the data and find the streaks
-    for (let i = 0; i < resData.length; i++) {
-      if (i < resData.length - 2 && tempCurrentWinner == resData[i + 1].winner) {
+    for (let i = 0; i < resData?.length; i++) {
+      if (i < resData?.length - 2 && tempCurrentWinner == resData[i + 1]?.winner) {
         tempStreak.push(tempCurrentWinner)
       } else {
-        if (tempStreak.length > 0) {
+        if (tempStreak?.length > 0) {
           streak.push(tempStreak)
           tempStreak = []
         }
-        if (i < resData.length - 2) {
-          tempCurrentWinner = resData[i + 1].winner
+        if (i < resData?.length - 2) {
+          tempCurrentWinner = resData[i + 1]?.winner
         }
       }
     }
 
-    // Loop through the data and find the wins
-    for (let i = 0; i < resData.length; i++) {
-      if (resData[i].winner == 'P') bankerVsPlayer[0].value += 1
-      if (resData[i].winner == 'B') bankerVsPlayer[1].value += 1
-      if (resData[i].winner == 'T') bankerVsPlayer[2].value += 1
+    for (let i = 0; i < resData?.length; i++) {
+      if (resData[i]?.winner == 'P') bankerVsPlayer[0].value += 1
+      if (resData[i]?.winner == 'B') bankerVsPlayer[1].value += 1
+      if (resData[i]?.winner == 'T') bankerVsPlayer[2].value += 1
 
-      if (resData[i].side_win == 'PP') sideWin[2].value += 1
-      if (resData[i].side_win == 'BP') sideWin[3].value += 1
-      if (resData[i].side_win == 'TG') sideWin[4].value += 1
-      if (resData[i].side_win == 'S6') sideWin[5].value += 1
-      if (resData[i].side_win == 'TGR') sideWin[6].value += 1
-      if (resData[i].side_win == 'TP') sideWin[7].value += 1
-      if (resData[i].side_win == 'TW') sideWin[8].value += 1
-      if (resData[i].side_win == 'TT') sideWin[9].value += 1
-      if (resData[i].side_win == 'BT') sideWin[10].value += 1
-      if (resData[i].side_win == 'ST') sideWin[11].value += 1
-      if (resData[i].side_win == 'BD') sideWin[12].value += 1
-      if (resData[i].side_win == 'SD') sideWin[13].value += 1
-      if (resData[i].side_win == 'DT') sideWin[14].value += 1
+      if (resData[i]?.side_win == 'PP') sideWin[2].value += 1
+      if (resData[i]?.side_win == 'BP') sideWin[3].value += 1
+      if (resData[i]?.side_win == 'TG') sideWin[4].value += 1
+      if (resData[i]?.side_win == 'S6') sideWin[5].value += 1
+      if (resData[i]?.side_win == 'TGR') sideWin[6].value += 1
+      if (resData[i]?.side_win == 'TP') sideWin[7].value += 1
+      if (resData[i]?.side_win == 'TW') sideWin[8].value += 1
+      if (resData[i]?.side_win == 'TT') sideWin[9].value += 1
+      if (resData[i]?.side_win == 'BT') sideWin[10].value += 1
+      if (resData[i]?.side_win == 'ST') sideWin[11].value += 1
+      if (resData[i]?.side_win == 'BD') sideWin[12].value += 1
+      if (resData[i]?.side_win == 'SD') sideWin[13].value += 1
+      if (resData[i]?.side_win == 'DT') sideWin[14].value += 1
 
-      //checking if shoe number is different
-      if (tempShoe != resData[i].shoe_no) {
+      if (tempShoe != resData[i]?.shoe_no) {
         shoes.push(tempShoe)
 
         data.push({ shoe: tempShoe, data: tempData })
-        tempShoe = resData[i].shoe_no
+        tempShoe = resData[i]?.shoe_no
         tempData = []
       }
 
-      //spliting cards to easy access and computations
-      const tempPlayerSplit = resData[i].player_cards.split(',')
-      const tempBankerSplit = resData[i].banker_cards.split(',')
+      const tempPlayerSplit = resData[i]?.player_cards?.split(',')
+      const tempBankerSplit = resData[i]?.banker_cards?.split(',')
 
-      //spliting cards to easy access and computations
       resData[i].playerCard1 = tempPlayerSplit[0]
       resData[i].playerCard2 = tempPlayerSplit[1]
       if (tempPlayerSplit[2]) resData[i].playerCard3 = tempPlayerSplit[2]
@@ -361,20 +334,19 @@ const BaccaratDashboard = () => {
       resData[i].bankerCard2 = tempBankerSplit[1]
       if (tempBankerSplit[2]) resData[i].bankerCard3 = tempBankerSplit[2]
 
-      //finding player and banker pair
-      if (resData[i].playerCard1 == resData[i].playerCard2) playerPair += 1
-      if (resData[i].bankerCard1 == resData[i].bankerCard2) bankerPair += 1
+      if (resData[i]?.playerCard1 == resData[i]?.playerCard2) playerPair += 1
+      if (resData[i]?.bankerCard1 == resData[i]?.bankerCard2) bankerPair += 1
       if (
-        resData[i].playerCard3 &&
-        resData[i].playerCard1 != resData[i].playerCard2 &&
-        resData[i].playerCard2 == resData[i].playerCard3
+        resData[i]?.playerCard3 &&
+        resData[i]?.playerCard1 != resData[i]?.playerCard2 &&
+        resData[i]?.playerCard2 == resData[i]?.playerCard3
       ) {
         playerPair += 1
       }
       if (
-        resData[i].bankerCard3 &&
-        resData[i].bankerCard1 != resData[i].bankerCard2 &&
-        resData[i].bankerCard2 == resData[i].bankerCard3
+        resData[i]?.bankerCard3 &&
+        resData[i]?.bankerCard1 != resData[i]?.bankerCard2 &&
+        resData[i]?.bankerCard2 == resData[i]?.bankerCard3
       ) {
         bankerPair += 1
       }
@@ -401,18 +373,13 @@ const BaccaratDashboard = () => {
       { name: 'Banker Pair', value: bankerPair },
     ]
 
-    // console.log('bankerVsPlayer : ', bankerVsPlayer)
-
-    // console.log('doughnutData : ', doughnutData)
-    // console.log('sideWin : ', sideWin)
     sideWin[0].value = playerStreak
     sideWin[1].value = bankerStreak
 
-    // Update the state variables
     setBankerVsPlayer(bankerVsPlayer)
-    setShoes(resShoes.data.result)
+    setShoes(resShoes?.data?.result)
     setData(data)
-    setDataSize(data.length)
+    setDataSize(data?.length)
     setDoughnutData(doughnutData)
     setSideWin(sideWin)
     setShoePlayerBankerComponent(true)
@@ -420,12 +387,10 @@ const BaccaratDashboard = () => {
   }
 
   const getDataByShoe = async (data) => {
-    //  console.log('data: ', data)
     let tempRawData = rawData
     for (let i in data) {
       tempRawData.push(data[i])
     }
-    //  console.log('tempRawData: ', tempRawData)
     processData(tempRawData)
   }
 
@@ -444,8 +409,8 @@ const BaccaratDashboard = () => {
   }, [theme])
 
   useEffect(() => {
-    //if (data) console.log('data: ', data)
-    //if (rouletteData) console.log('rouletteData: ', rouletteData)
+    if (data) console.log('data: ', data)
+    if (rawData) console.log('rawData: ', rawData)
   }, [data])
 
   const config = { threshold: 0.1 }
@@ -458,11 +423,10 @@ const BaccaratDashboard = () => {
       }
     })
 
-    // Call our animation function
     fadeIn(targets)
   }, config)
 
-  document.querySelectorAll('.box').forEach((box) => {
+  document.querySelectorAll('.box')?.forEach((box) => {
     observer.observe(box)
   })
 
@@ -507,7 +471,7 @@ const BaccaratDashboard = () => {
                       className={` d-flex gap-2 w-100 justify-content-between   justify-content-sm-evenly align-items-center`}
                     >
                       <div className={`d-flex gap-2`}>
-                        <lable> 10</lable>
+                        <label> 10</label>
                         <input
                           className="pointer text-dark "
                           type="radio"
@@ -518,7 +482,7 @@ const BaccaratDashboard = () => {
                         />
                       </div>
                       <div className={`d-flex gap-2`}>
-                        <lable> 20</lable>
+                        <label> 20</label>
                         <input
                           className="pointer text-dark "
                           type="radio"
@@ -529,7 +493,7 @@ const BaccaratDashboard = () => {
                         />
                       </div>
                       <div className={`d-flex gap-2`}>
-                        <lable> 50</lable>
+                        <label> 50</label>
                         <input
                           className="pointer text-dark "
                           type="radio"

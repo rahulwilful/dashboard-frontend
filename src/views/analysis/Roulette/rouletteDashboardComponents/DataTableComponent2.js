@@ -9,23 +9,23 @@ import { useSelector } from 'react-redux'
 
 const DataTableComponent2 = (props) => {
   const [data, setData] = useState([])
-  const theme = useSelector((state) => state.theme)
+  const theme = useSelector((state) => state?.theme)
   const [rowsPerPage, setRowsPerPage] = useState(15)
 
   useEffect(() => {}, [theme])
 
   useEffect(() => {
-    if (props.data) {
-      setData(props.data)
+    if (props?.data) {
+      setData(props?.data)
     } else {
       setData(tempData)
     }
-  }, [theme, props.data])
+  }, [theme, props?.data])
 
   const columns = [
     {
       name: 'Date',
-      selector: (row) => row.date_time,
+      selector: (row) => row?.date_time,
       sortable: true,
     },
     {
@@ -36,7 +36,7 @@ const DataTableComponent2 = (props) => {
             <span
               className={`rounded-1 bg-gradient bg-success px-3 text-light border-0 bg-gradient px-1 shadow-xs `}
             >
-              {row.winning_number}
+              {row?.winning_number}
             </span>
           </div>
         </div>
@@ -49,9 +49,9 @@ const DataTableComponent2 = (props) => {
         <div className={``}>
           <div className="">
             <span
-              className={`rounded-1 bg-gradient ${row.wheel_direction == 0 ? 'bg-primary' : 'bg-danger'}  px-3 text-light border-0 bg-gradient px-1 shadow-xs `}
+              className={`rounded-1 bg-gradient ${row?.wheel_direction == 0 ? 'bg-primary' : 'bg-danger'}  px-3 text-light border-0 bg-gradient px-1 shadow-xs `}
             >
-              {row.wheel_direction}
+              {row?.wheel_direction}
             </span>
           </div>
         </div>
@@ -65,7 +65,7 @@ const DataTableComponent2 = (props) => {
             <span
               className={`rounded-1 bg-gradient bg-primary text-light border-0 bg-gradient px-1 shadow-xs `}
             >
-              {row.wheel_speed}
+              {row?.wheel_speed}
             </span>
           </div>
         </div>
@@ -76,17 +76,17 @@ const DataTableComponent2 = (props) => {
       cell: (row) => (
         <div className={s.percentage}>
           <div className="">
-            {row.warning_flags == 0 ? (
+            {row?.warning_flags == 0 ? (
               <span
                 className={`rounded-1 bg-gradient bg-dark  px-2 text-light border-0 bg-gradient px-1 shadow-xs `}
               >
-                {row.warning_flags}
+                {row?.warning_flags}
               </span>
             ) : (
               <span
                 className={`rounded-1 bg-gradient bg-warning  px-2 text-light border-0 bg-gradient px-1 shadow-xs `}
               >
-                {row.warning_flags}
+                {row?.warning_flags}
               </span>
             )}
           </div>
@@ -184,3 +184,4 @@ const DataTableComponent2 = (props) => {
 }
 
 export default DataTableComponent2
+

@@ -59,16 +59,16 @@ const AreaChartComponent = () => {
 }
 
 const customedTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
+  if (active && payload?.length) {
     return (
       <div className="custom-tooltip">
         <p className="label">
           <p className="font-weight-bold">{label}</p>
           <p>
-            <span className="font-weight-bold">{payload[0].value.toLocaleString()}</span>
+            <span className="font-weight-bold">{payload?.[0]?.value?.toLocaleString()}</span>
           </p>
           <p>
-            <span className="font-weight-bold">{payload[1].value.toLocaleString()}</span>
+            <span className="font-weight-bold">{payload?.[1]?.value?.toLocaleString()}</span>
           </p>
         </p>
       </div>

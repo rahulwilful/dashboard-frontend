@@ -13,19 +13,19 @@ import {
 } from 'recharts'
 
 const CustomTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
+  if (active && payload?.length) {
     return (
       <div className="custom-tooltip border d-flex justify-content-center align-items-end  bg-light rounded text-dark text-center p-3">
-        {`Number ${label} Hit ${payload[0].value} times`}
+        {`Number ${label} Hit ${payload[0]?.value} times`}
       </div>
-    );
+    )
   }
 
-  return null;
-};
+  return null
+}
 
 const BarChartComponent = (props) => {
-  const theme = useSelector((state) => state.theme)
+  const theme = useSelector((state) => state?.theme)
   const [data, setData] = useState([])
   const [textColor, setTextColor] = useState('rgb(11, 94, 215)')
   const [stroke, setStroke] = useState('rgb(11, 94, 215)')
@@ -78,10 +78,10 @@ const BarChartComponent = (props) => {
       setStroke('#e2e2e2')
     }
 
-    if (props.data) {
+    if (props?.data) {
       for (let i = 0; i < props.data.length; i++) {
-        tempData[i].name = props.data[i].name
-        tempData[i].number = props.data[i].number
+        tempData[i].name = props.data[i]?.name
+        tempData[i].number = props.data[i]?.number
       }
       setData(tempData)
     } else {
@@ -109,7 +109,7 @@ const BarChartComponent = (props) => {
                 fontSize={10}
                 textAnchor="middle"
               >
-                {payload.value}
+                {payload?.value}
               </text>
             )
           }}
@@ -117,9 +117,9 @@ const BarChartComponent = (props) => {
           className="text-shadow fw-bold poppins-300"
         />
         <CartesianGrid strokeDasharray="0 0 " stroke={stroke} vertical={false} />
-        
+
         <Tooltip content={<CustomTooltip />} />
-       {/*  <Tooltip /> */}
+        {/*  <Tooltip /> */}
 
         {/*  <Legend /> */}
 
@@ -133,7 +133,7 @@ const BarChartComponent = (props) => {
           barSize={7}
         >
           {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={data[index].color} stroke={data[index].color} />
+            <Cell key={`cell-${index}`} fill={data[index]?.color} stroke={data[index]?.color} />
           ))}
         </Bar>
       </BarChart>
@@ -156,7 +156,7 @@ export default BarChartComponent
                 fontSize={10}
                 textAnchor="middle"
               >
-                {payload.value}
+                {payload?.value}
               </text>
             )
           }}

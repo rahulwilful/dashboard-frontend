@@ -8,19 +8,23 @@ const MainChart = () => {
 
   useEffect(() => {
     document.documentElement.addEventListener('ColorSchemeChange', () => {
-      if (chartRef.current) {
+      if (chartRef?.current) {
         setTimeout(() => {
-          chartRef.current.options.scales.x.grid.borderColor = getStyle(
+          chartRef.current?.options?.scales?.x?.grid?.borderColor = getStyle(
             '--cui-border-color-translucent',
           )
-          chartRef.current.options.scales.x.grid.color = getStyle('--cui-border-color-translucent')
-          chartRef.current.options.scales.x.ticks.color = getStyle('--cui-body-color')
-          chartRef.current.options.scales.y.grid.borderColor = getStyle(
+          chartRef.current?.options?.scales?.x?.grid?.color = getStyle(
             '--cui-border-color-translucent',
           )
-          chartRef.current.options.scales.y.grid.color = getStyle('--cui-border-color-translucent')
-          chartRef.current.options.scales.y.ticks.color = getStyle('--cui-body-color')
-          chartRef.current.update()
+          chartRef.current?.options?.scales?.x?.ticks?.color = getStyle('--cui-body-color')
+          chartRef.current?.options?.scales?.y?.grid?.borderColor = getStyle(
+            '--cui-border-color-translucent',
+          )
+          chartRef.current?.options?.scales?.y?.grid?.color = getStyle(
+            '--cui-border-color-translucent',
+          )
+          chartRef.current?.options?.scales?.y?.ticks?.color = getStyle('--cui-body-color')
+          chartRef.current?.update()
         })
       }
     })
@@ -38,7 +42,7 @@ const MainChart = () => {
           datasets: [
             {
               label: 'My First dataset',
-              backgroundColor: `rgba(${getStyle('--cui-info-rgb')}, .1)`,
+              backgroundColor: `rgba(${getStyle('--cui-info-rgb')?.split(',')?.[0]}, ${getStyle('--cui-info-rgb')?.split(',')?.[1]}, ${getStyle('--cui-info-rgb')?.split(',')?.[2]}, .1)`,
               borderColor: getStyle('--cui-info'),
               pointHoverBackgroundColor: getStyle('--cui-info'),
               borderWidth: 2,

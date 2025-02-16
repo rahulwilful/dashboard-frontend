@@ -4,7 +4,7 @@ import { rouletteDataForChi, rouletteDataForSelectOption } from './RouletteData'
 
 const WheelPocketStatistics = (props) => {
   const [data, setData] = useState([])
-  const theme = useSelector((state) => state.theme)
+  const theme = useSelector((state) => state?.theme)
   const [expectedValue, setExpectedValue] = useState(0)
   const [selectedNumber, setSelectedNumber] = useState('0')
   const [gameCount, setGameCount] = useState(0)
@@ -17,42 +17,42 @@ const WheelPocketStatistics = (props) => {
   let tempChiRouletteData = rouletteDataForChi
 
   useEffect(() => {
-    console.log("props.rouletteData: ",props.rouletteData)
-    console.log("props.data: ",props.data)
+    console?.log('props.rouletteData: ', props?.rouletteData)
+    console?.log('props.data: ', props?.data)
 
-    if (props.rouletteData) {
-      setGameCount(props.data.length)
-      const gameCount = props.data.length
-      setExpectedValue((props.data.length / 37).toFixed(2))
+    if (props?.rouletteData) {
+      setGameCount(props?.data?.length)
+      const gameCount = props?.data?.length
+      setExpectedValue((props?.data?.length / 37)?.toFixed(2))
 
-      let expected = (props.data.length / 37).toFixed(2)
+      let expected = (props?.data?.length / 37)?.toFixed(2)
 
-      for (let i = 0; i < props.rouletteData.length; i++) {
-        if (props.rouletteData[i].name == tempChiRouletteData[i].name) {
-          tempChiRouletteData[i].observed = props.rouletteData[i].number
+      for (let i = 0; i < props?.rouletteData?.length; i++) {
+        if (props?.rouletteData[i]?.name == tempChiRouletteData[i]?.name) {
+          tempChiRouletteData[i].observed = props?.rouletteData[i]?.number
         }
       }
 
       let chi = 0
 
-      for (let i = 0; i < tempChiRouletteData.length; i++) {
-        if (tempChiRouletteData[i].name == selectedNumber) {
-          setSelectedObservedFrequency(tempChiRouletteData[i].observed)
+      for (let i = 0; i < tempChiRouletteData?.length; i++) {
+        if (tempChiRouletteData[i]?.name == selectedNumber) {
+          setSelectedObservedFrequency(tempChiRouletteData[i]?.observed)
         }
 
         tempChiRouletteData[i].chi =
-          ((tempChiRouletteData[i].observed - expected) *
-            (tempChiRouletteData[i].observed - expected)) /
+          ((tempChiRouletteData[i]?.observed - expected) *
+            (tempChiRouletteData[i]?.observed - expected)) /
           expected
 
-        chi += tempChiRouletteData[i].chi
+        chi += tempChiRouletteData[i]?.chi
       }
       //console.log('chi', chi.toFixed(2))
       let mean = 0
       let temp = 0
       let temp2 = 0
       let s = 0
-      let tempExpected = props.data.length / 37
+      let tempExpected = props?.data?.length / 37
 
       for (let i = 0; i < 37; i++) {
         temp = temp + tempExpected
@@ -69,7 +69,7 @@ const WheelPocketStatistics = (props) => {
       s = temp2 / (37 - 1)
       //console.log('s ', s)
 
-      setChiSquare(chi.toFixed(2))
+      setChiSquare(chi?.toFixed(2))
     }
 
     //console.log('roullete', tempChiRouletteData)
@@ -77,12 +77,12 @@ const WheelPocketStatistics = (props) => {
   }, [props])
 
   const selectNumber = (event) => {
-    const selected = parseInt(event.target.value, 10)
+    const selected = parseInt(event?.target?.value, 10)
     setSelectedNumber(selected)
 
-    for (let i = 0; i < tempChiRouletteData.length; i++) {
-      if (tempChiRouletteData[i].name == selected) {
-        setSelectedObservedFrequency(tempChiRouletteData[i].observed)
+    for (let i = 0; i < tempChiRouletteData?.length; i++) {
+      if (tempChiRouletteData[i]?.name == selected) {
+        setSelectedObservedFrequency(tempChiRouletteData[i]?.observed)
       }
     }
   }
@@ -117,7 +117,7 @@ const WheelPocketStatistics = (props) => {
                       <span
                         className={`rounded-1 bg-primary text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
                       >
-                        {props.data.length}
+                        {props?.data?.length}
                       </span>
                     </td>
                   </tr>
@@ -128,7 +128,7 @@ const WheelPocketStatistics = (props) => {
                       <span
                         className={`rounded-1 bg-primary text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
                       >
-                        {props.standardDeviation}
+                        {props?.standardDeviation}
                       </span>
                     </td>
                   </tr>
@@ -168,9 +168,9 @@ const WheelPocketStatistics = (props) => {
                           value={selectedNumber}
                           onChange={selectNumber} // Event handler for selection
                         >
-                          {rouletteDataForSelectOption.map((item) => (
-                            <option key={item.name} value={item.name}>
-                              {item.name}
+                          {rouletteDataForSelectOption?.map((item) => (
+                            <option key={item?.name} value={item?.name}>
+                              {item?.name}
                             </option>
                           ))}
                         </select>
@@ -205,7 +205,7 @@ const WheelPocketStatistics = (props) => {
                         <span
                           className={`rounded-1 bg-primary text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
                         >
-                          {((selectedObservedFrequency / props.data.length) * 100).toFixed(2)}
+                          {((selectedObservedFrequency / props?.data?.length) * 100)?.toFixed(2)}
                         </span>
                       </td>
                     </tr>
@@ -216,8 +216,10 @@ const WheelPocketStatistics = (props) => {
                         <span
                           className={`rounded-1 bg-danger text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
                         >
-                         
-                            {(((selectedObservedFrequency - expectedValue) / props.data.length) * 100).toFixed(2)}
+                          {(
+                            ((selectedObservedFrequency - expectedValue) / props?.data?.length) *
+                            100
+                          )?.toFixed(2)}
                         </span>
                       </td>
                     </tr>
@@ -253,8 +255,10 @@ const WheelPocketStatistics = (props) => {
                         <span
                           className={`rounded-1 bg-danger text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
                         >
-                         
-                           {(((selectedObservedFrequency - expectedValue) / props.data.length) * 100).toFixed(2)}
+                          {(
+                            ((selectedObservedFrequency - expectedValue) / props?.data?.length) *
+                            100
+                          )?.toFixed(2)}
                         </span>
                       </td>
                     </tr>

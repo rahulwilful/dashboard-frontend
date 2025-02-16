@@ -28,7 +28,7 @@ const renderCustomizedLabel = ({
 
   return (
     <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-      {`${(percent * 100).toFixed(0)}%`}
+      {`${(percent * 100)?.toFixed(0)}%`}
     </text>
   )
 }
@@ -38,8 +38,8 @@ const PieChartComponent = (props) => {
   const [pieData, setPieData] = useState([])
 
   useEffect(() => {
-    setPieData(props.pieData)
-  })
+    setPieData(props?.pieData ?? [])
+  }, [props?.pieData])
 
   return (
     <ResponsiveContainer width="100%" height={300} className={'text-shadow '}>
@@ -69,3 +69,4 @@ const PieChartComponent = (props) => {
 }
 
 export default PieChartComponent
+

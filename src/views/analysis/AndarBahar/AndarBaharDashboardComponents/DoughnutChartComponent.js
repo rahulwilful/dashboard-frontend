@@ -35,7 +35,7 @@ const renderCustomizedLabel = ({
 
 // Custom Tooltip Component
 const CustomTooltip = ({ active, payload }) => {
-  if (active && payload && payload.length) {
+  if (active && payload?.length) {
     const { name, value, percentage } = payload[0].payload;
     return (
       <div className='bg-light rounded p-2 text-dark'>
@@ -54,17 +54,21 @@ const DoughnutChartComponent = (props) => {
   useEffect(() => {
     let data = []
     let total = 0
-    for(let i in props.doughnutData){
-     total = total + props.doughnutData[i].value
+    for (let i in props.doughnutData ?? []) {
+      total += props.doughnutData[i].value ?? 0
     }
 
-    console.log('total: ',total)
+    console.log('total: ', total)
 
-    for(let i in props.doughnutData){
-      data.push({name: props.doughnutData[i].name, value: props.doughnutData[i].value, percentage: (props.doughnutData[i].value/total*100).toFixed(0)})
-     }
+    for (let i in props.doughnutData ?? []) {
+      data.push({
+        name: props.doughnutData[i].name ?? '',
+        value: props.doughnutData[i].value ?? 0,
+        percentage: (props.doughnutData[i].value / total * 100).toFixed(0)
+      })
+    }
 
-     console.log("data: ",data)
+    console.log("data: ", data)
 
     setData(data)
   }, [props.doughnutData]) // Update when props change
@@ -103,3 +107,4 @@ const DoughnutChartComponent = (props) => {
 }
 
 export default DoughnutChartComponent
+

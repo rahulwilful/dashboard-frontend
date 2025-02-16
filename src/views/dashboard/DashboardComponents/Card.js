@@ -39,13 +39,13 @@ export const Card = (props) => {
     <div>
         <CWidgetStatsA
                   className="mb-4 shadow-s border-0 bg-gradient text-shadow"
-                  color={props.color}
+                  color={props?.color}
                   value={
                     <span className=''>
-                      {props.value}
+                      {props?.value}
                     </span>
                   }
-                  title={props.title}
+                  title={props?.title}
                   options={{
                     tooltips: {
                       enabled: false,
@@ -67,10 +67,10 @@ export const Card = (props) => {
                           {
                          
                             backgroundColor: 'transparent',
-                            borderColor:props.lineColor,
-                            pointBorderColor: props.dot ? props.lineColor : 'transparent', 
+                            borderColor: props?.lineColor,
+                            pointBorderColor: props?.dot ? props?.lineColor : 'transparent', 
                            
-                            data: props.data,
+                            data: props?.data,
                           },
                         ],
                       }}
@@ -124,5 +124,4 @@ export const Card = (props) => {
     </div>
   )
 }
-
 

@@ -18,7 +18,7 @@ import { ScrollTrigger } from 'gsap/all'
 import { useGSAP } from '@gsap/react'
 
 const ThreeCardPokerDashboard = () => {
-  const theme = useSelector((theme) => theme.theme)
+  const theme = useSelector((theme) => theme?.theme)
 
   const navigate = useNavigate()
   const { game, table_limit_name, game_type_id, table_limit_id } = useParams()
@@ -107,15 +107,15 @@ const ThreeCardPokerDashboard = () => {
       )
       //setShoePlayerBankerComponent(false)
       //processData(res.data.result)
-      let data = res.data.result
+      let data = res?.data?.result
       // setUpdatedData(res.data.result)
-      console.log('response: ', data)
+      //console.log('response: ', data)
 
       let live = false
       const currentTime = new Date()
 
-      if (data.length > 0 && data[0].date_time) {
-        const resDataTime = new Date(data[0].date_time)
+      if (data?.length > 0 && data[0]?.date_time) {
+        const resDataTime = new Date(data[0]?.date_time)
         const diffInMs = currentTime - resDataTime
         const diffInMinutes = diffInMs / (1000 * 60)
 
@@ -127,11 +127,11 @@ const ThreeCardPokerDashboard = () => {
       console.log('live status: ', live)
       setLive(live)
 
-      if (data.length > 0) {
+      if (data?.length > 0) {
         setDisplay('data')
       }
 
-      if (data.length == 0) {
+      if (data?.length == 0) {
         setDisplay('nodata')
       }
       setRenderKey(renderKey + 1)
@@ -155,13 +155,13 @@ const ThreeCardPokerDashboard = () => {
         `/game/get/3_card_poker/${game_type_id}/${table_limit_id}/${limit}`,
       )
       console.log('response: ', res.data.result)
-      let data = res.data.result
+      let data = res?.data?.result
       console.log('response: ', data)
-      if (data.length > 0) {
+      if (data?.length > 0) {
         setDisplay('data')
       }
 
-      if (data.length == 0) {
+      if (data?.length == 0) {
         setDisplay('nodata')
       }
       processData(res.data.result)
@@ -187,11 +187,11 @@ const ThreeCardPokerDashboard = () => {
       setLimit(limitParam)
       let data = res.data.result
       console.log('response: ', data)
-      if (data.length > 0) {
+      if (data?.length > 0) {
         setDisplay('data')
       }
 
-      if (data.length == 0) {
+      if (data?.length == 0) {
         setDisplay('nodata')
       }
     } catch (err) {
@@ -214,8 +214,8 @@ const ThreeCardPokerDashboard = () => {
     const currentTime = new Date()
 
     // Check if the connection is live based on the date_time of the first entry
-    if (resData.length > 0 && resData[0].date_time) {
-      const resDataTime = new Date(resData[0].date_time)
+    if (resData?.length > 0 && resData[0]?.date_time) {
+      const resDataTime = new Date(resData[0]?.date_time)
       const diffInMs = currentTime - resDataTime
       const diffInMinutes = diffInMs / (1000 * 60)
 
@@ -225,10 +225,10 @@ const ThreeCardPokerDashboard = () => {
       }
     }
 
-    console.log('live status: ', live, ' data.length: ', data.length)
+    console.log('live status: ', live, ' data.length: ', data?.length)
 
     // If data is already loaded and the connection is not live, return early
-    if (data.length > 0 && !live) {
+    if (data?.length > 0 && !live) {
       return
     }
 
@@ -240,7 +240,7 @@ const ThreeCardPokerDashboard = () => {
     }
 
     // Set the current winners based on the first entry
-    setCurrentWinners(resData[0].winner.split(','))
+    setCurrentWinners(resData[0]?.winner?.split(','))
 
     let player1wins = 0
     let player2wins = 0
@@ -252,8 +252,8 @@ const ThreeCardPokerDashboard = () => {
 
     // Count player wins and split cards
     for (let i in resData) {
-      if (resData[i].community_cards.length > 0) setShowCommunityCards(true)
-      const splittedWinners = resData[i].winner.split(',')
+      if (resData[i]?.community_cards?.length > 0) setShowCommunityCards(true)
+      const splittedWinners = resData[i]?.winner?.split(',')
 
       if (splittedWinners[0] && splittedWinners[0] == '1') player1wins++
       if (splittedWinners[1] && splittedWinners[1] == '1') player2wins++
@@ -296,37 +296,37 @@ const ThreeCardPokerDashboard = () => {
     let player7cards = []
 
     // Split the cards for house, community, and players
-    let splittedHouseCards = data.house_cards.split(',')
-    let splittedExtraHouseCards = data.community_cards.split(',')
-    let splittedPlayer1Cards = data.player1_cards.split(',')
-    let splittedPlayer2Cards = data.player2_cards.split(',')
-    let splittedPlayer3Cards = data.player3_cards.split(',')
-    let splittedPlayer4Cards = data.player4_cards.split(',')
-    let splittedPlayer5Cards = data.player5_cards.split(',')
-    let splittedPlayer6Cards = data.player6_cards.split(',')
-    let splittedPlayer7Cards = data.player7_cards.split(',')
+    let splittedHouseCards = data?.house_cards?.split(',')
+    let splittedExtraHouseCards = data?.community_cards?.split(',')
+    let splittedPlayer1Cards = data?.player1_cards?.split(',')
+    let splittedPlayer2Cards = data?.player2_cards?.split(',')
+    let splittedPlayer3Cards = data?.player3_cards?.split(',')
+    let splittedPlayer4Cards = data?.player4_cards?.split(',')
+    let splittedPlayer5Cards = data?.player5_cards?.split(',')
+    let splittedPlayer6Cards = data?.player6_cards?.split(',')
+    let splittedPlayer7Cards = data?.player7_cards?.split(',')
 
     // Remove any empty strings from the arrays
-    splittedHouseCards = splittedHouseCards.filter((card) => card != '')
-    splittedExtraHouseCards = splittedExtraHouseCards.filter((card) => card != '')
-    splittedPlayer1Cards = splittedPlayer1Cards.filter((card) => card != '')
-    splittedPlayer2Cards = splittedPlayer2Cards.filter((card) => card != '')
-    splittedPlayer3Cards = splittedPlayer3Cards.filter((card) => card != '')
-    splittedPlayer4Cards = splittedPlayer4Cards.filter((card) => card != '')
-    splittedPlayer5Cards = splittedPlayer5Cards.filter((card) => card != '')
-    splittedPlayer6Cards = splittedPlayer6Cards.filter((card) => card != '')
-    splittedPlayer7Cards = splittedPlayer7Cards.filter((card) => card != '')
+    splittedHouseCards = splittedHouseCards?.filter((card) => card != '')
+    splittedExtraHouseCards = splittedExtraHouseCards?.filter((card) => card != '')
+    splittedPlayer1Cards = splittedPlayer1Cards?.filter((card) => card != '')
+    splittedPlayer2Cards = splittedPlayer2Cards?.filter((card) => card != '')
+    splittedPlayer3Cards = splittedPlayer3Cards?.filter((card) => card != '')
+    splittedPlayer4Cards = splittedPlayer4Cards?.filter((card) => card != '')
+    splittedPlayer5Cards = splittedPlayer5Cards?.filter((card) => card != '')
+    splittedPlayer6Cards = splittedPlayer6Cards?.filter((card) => card != '')
+    splittedPlayer7Cards = splittedPlayer7Cards?.filter((card) => card != '')
 
     // Update the state variables with the split cards
-    if (splittedHouseCards.length > 0) houseCards = splittedHouseCards
-    if (splittedExtraHouseCards.length > 0) extraHouseCards = splittedExtraHouseCards
-    if (splittedPlayer1Cards.length > 0) player1cards = splittedPlayer1Cards
-    if (splittedPlayer2Cards.length > 0) player2cards = splittedPlayer2Cards
-    if (splittedPlayer3Cards.length > 0) player3cards = splittedPlayer3Cards
-    if (splittedPlayer4Cards.length > 0) player4cards = splittedPlayer4Cards
-    if (splittedPlayer5Cards.length > 0) player5cards = splittedPlayer5Cards
-    if (splittedPlayer6Cards.length > 0) player6cards = splittedPlayer6Cards
-    if (splittedPlayer7Cards.length > 0) player7cards = splittedPlayer7Cards
+    if (splittedHouseCards?.length > 0) houseCards = splittedHouseCards
+    if (splittedExtraHouseCards?.length > 0) extraHouseCards = splittedExtraHouseCards
+    if (splittedPlayer1Cards?.length > 0) player1cards = splittedPlayer1Cards
+    if (splittedPlayer2Cards?.length > 0) player2cards = splittedPlayer2Cards
+    if (splittedPlayer3Cards?.length > 0) player3cards = splittedPlayer3Cards
+    if (splittedPlayer4Cards?.length > 0) player4cards = splittedPlayer4Cards
+    if (splittedPlayer5Cards?.length > 0) player5cards = splittedPlayer5Cards
+    if (splittedPlayer6Cards?.length > 0) player6cards = splittedPlayer6Cards
+    if (splittedPlayer7Cards?.length > 0) player7cards = splittedPlayer7Cards
 
     console.log('extraHouseCards: ', extraHouseCards)
 
@@ -352,11 +352,11 @@ const ThreeCardPokerDashboard = () => {
       processData(res.data.result)
       let data = res.data.result
       console.log('response: ', data)
-      if (data.length > 0) {
+      if (data?.length > 0) {
         setDisplay('data')
       }
 
-      if (data.length == 0) {
+      if (data?.length == 0) {
         setDisplay('nodata')
       }
       setRenderKey(renderKey + 1)
@@ -385,11 +385,11 @@ const ThreeCardPokerDashboard = () => {
       processData(res.data.result)
       let data = res.data.result
       console.log('response: ', data)
-      if (data.length > 0) {
+      if (data?.length > 0) {
         setDisplay('data')
       }
 
-      if (data.length == 0) {
+      if (data?.length == 0) {
         setDisplay('nodata')
       }
       setRenderKey(renderKey + 1)
@@ -407,16 +407,16 @@ const ThreeCardPokerDashboard = () => {
     // Check if the event is '+' for incrementing the index
     if (event === '+') {
       // Prevent incrementing if the index is already at the last element
-      if (index === originalData.length - 1) return
+      if (index === originalData?.length - 1) return
       // Increment index
       const tempIndex = index + 1
-      setIndex(tempIndex) 
+      setIndex(tempIndex)
       // Update the current winners state with the new index
-      setCurrentWinners(originalData[tempIndex].winner.split(','))
+      setCurrentWinners(originalData[tempIndex]?.winner?.split(','))
       // Split cards for the new index
       handleSpliteCards(originalData[tempIndex])
       // Log current data for debugging
-      console.log('currentData', originalData[tempIndex].winner.split(','))
+      console.log('currentData', originalData[tempIndex]?.winner?.split(','))
     } else {
       // Prevent decrementing if the index is already at the first element
       if (index === 0) return
@@ -424,7 +424,7 @@ const ThreeCardPokerDashboard = () => {
       const tempIndex = index - 1
       setIndex(tempIndex)
       // Update the current winners state with the new index
-      setCurrentWinners(originalData[tempIndex].winner.split(','))
+      setCurrentWinners(originalData[tempIndex]?.winner?.split(','))
       // Split cards for the new index
       handleSpliteCards(originalData[tempIndex])
     }
@@ -434,7 +434,7 @@ const ThreeCardPokerDashboard = () => {
 
   useEffect(() => {
     console.log('currentWinners : ', currentWinners)
-    if (currentWinners.length > 0) {
+    if (currentWinners?.length > 0) {
       if (currentWinners[0] == '1') setPlayer1Win(true)
       if (currentWinners[2] == '1') setPlayer2Win(true)
       if (currentWinners[3] == '1') setPlayer3Win(true)
@@ -459,7 +459,7 @@ const ThreeCardPokerDashboard = () => {
     fadeIn(targets)
   }, config)
 
-  document.querySelectorAll('.box').forEach((box) => {
+  document.querySelectorAll('.box')?.forEach((box) => {
     observer.observe(box)
   })
 
@@ -639,20 +639,20 @@ const ThreeCardPokerDashboard = () => {
               </div>
 
               <div className={`fs-4 ${theme === 'light' ? 'text-dark' : 'text-light'}`}>
-                {originalData.length}/{index + 1}
+                {originalData?.length}/{index + 1}
               </div>
               <div className={``}>
                 <button
                   onClick={() => handleIndexChange('+')}
                   type="button"
-                  className={`btn btn-primary btn-sm ${index < originalData.length - 1 ? '' : 'd-none'}`}
+                  className={`btn btn-primary btn-sm ${index < originalData?.length - 1 ? '' : 'd-none'}`}
                 >
                   <i className="bi bi-chevron-right  "></i>
                 </button>
                 <button
                   disabled
                   type="button"
-                  className={`btn btn-primary btn-sm ${index >= originalData.length - 1 ? '' : 'd-none'}`}
+                  className={`btn btn-primary btn-sm ${index >= originalData?.length - 1 ? '' : 'd-none'}`}
                 >
                   <i className="bi bi-chevron-right "></i>
                 </button>
@@ -684,37 +684,37 @@ const ThreeCardPokerDashboard = () => {
                 <ShowHouseCards cards={communityCards} name="Community Cards" win={'community'} />
               </div>
               <div
-                className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player1cards.length == 0 ? 'd-none' : ''} `}
+                className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player1cards?.length == 0 ? 'd-none' : ''} `}
               >
                 <ShowPlayerCards cards={player1cards} name="Player 1" win={currentWinners[0]} />
               </div>
               <div
-                className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player2cards.length == 0 ? 'd-none' : ''} `}
+                className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player2cards?.length == 0 ? 'd-none' : ''} `}
               >
                 <ShowPlayerCards cards={player2cards} name="Player 2" win={currentWinners[1]} />
               </div>
               <div
-                className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player3cards.length == 0 ? 'd-none' : ''} `}
+                className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player3cards?.length == 0 ? 'd-none' : ''} `}
               >
                 <ShowPlayerCards cards={player3cards} name="Player 3" win={currentWinners[2]} />
               </div>
               <div
-                className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player4cards.length == 0 ? 'd-none' : ''} `}
+                className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player4cards?.length == 0 ? 'd-none' : ''} `}
               >
                 <ShowPlayerCards cards={player4cards} name="Player 4" win={currentWinners[3]} />
               </div>
               <div
-                className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player5cards.length == 0 ? 'd-none' : ''} `}
+                className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player5cards?.length == 0 ? 'd-none' : ''} `}
               >
                 <ShowPlayerCards cards={player5cards} name="Player 5" win={currentWinners[4]} />
               </div>
               <div
-                className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player6cards.length == 0 ? 'd-none' : ''} `}
+                className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player6cards?.length == 0 ? 'd-none' : ''} `}
               >
                 <ShowPlayerCards cards={player6cards} name="Player 6" win={currentWinners[5]} />
               </div>
               <div
-                className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player7cards.length == 0 ? 'd-none' : ''} `}
+                className={`col-12 col-sm-6 col-md-4 box ${s.opacity}  ${player7cards?.length == 0 ? 'd-none' : ''} `}
               >
                 <ShowPlayerCards cards={player7cards} name="Player 7 " win={currentWinners[6]} />
               </div>

@@ -28,7 +28,7 @@ const renderCustomizedLabel = ({
       dominantBaseline="central"
       fontSize="12px"
     >
-      {`${(percent * 100).toFixed(0)}%`}
+      {`${(percent * 100)?.toFixed(0)}%`}
     </text>
   )
 }
@@ -38,7 +38,7 @@ const DoughnutChartComponent = (props) => {
   const [isdataLoaded, setIsdataLoaded] = useState(false)
   const COLORS = ['rgb(55, 64, 239)', 'rgb(255, 43, 50)', 'rgb(38, 175, 255)', 'rgb(255, 100, 22)']
   useEffect(() => {
-    setData(props.doughnutData)
+    setData(props?.doughnutData)
   })
   return (
     <div>
@@ -62,7 +62,7 @@ const DoughnutChartComponent = (props) => {
               label={renderCustomizedLabel}
               stroke={false}
             >
-              {data.map((entry, index) => (
+              {data?.map((entry, index) => (
                 <Cell key={index} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
@@ -75,3 +75,4 @@ const DoughnutChartComponent = (props) => {
 }
 
 export default DoughnutChartComponent
+

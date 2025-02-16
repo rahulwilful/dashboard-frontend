@@ -14,10 +14,10 @@ const UpdateAccount = () => {
   const [themeBorder, setThemeBorder] = useState('bg-light text-dark border')
   const [user, setUser] = useState({})
   const [userForm, setUserForm] = useState({})
-  const [passwordForm,setPasswordForm] = useState({
-    current_password:"",
-    new_password:"",
-    confirm_password:""
+  const [passwordForm, setPasswordForm] = useState({
+    current_password: '',
+    new_password: '',
+    confirm_password: '',
   })
 
   useEffect(() => {
@@ -26,9 +26,9 @@ const UpdateAccount = () => {
 
   const getCurrent = async () => {
     const user = await GetCurrent()
-    console.log('user ', user)
-    setUser(user)
-    setUserForm(user)
+    //console.log('user ', user)
+    user && setUser(user)
+    user && setUserForm(user)
 
     /* user = {
        active: 1,
@@ -51,6 +51,10 @@ const UpdateAccount = () => {
     try {
       const { data } = await axiosClient.put(`/user/update/${user.user_id}`, userForm)
       console.log(data)
+      if (!data) {
+        showToast('Error while updating details', 'error')
+        return
+      }
       showToast('Details updated successfully!', 'success')
       setRenderKey(renderKey + 1)
       getCurrent()
@@ -63,17 +67,21 @@ const UpdateAccount = () => {
   const handlePasswordUpdate = async () => {
     console.log('passwordForm: ', passwordForm)
     try {
-      const { data } = await axiosClient.put(`/user/update/password/${user.user_id}`, passwordForm)
+      const { data } = await axiosClient.put(`/user/update/password/${user?.user_id}`, passwordForm)
       console.log(data)
+
+      if (!data) {
+        showToast('Error while updating password', 'error')
+        return
+      }
       showToast('Password updated successfully!', 'success')
       setRenderKey(renderKey + 1)
       getCurrent()
     } catch (error) {
       console.error(error)
-      if(error.status === 401){
+      if (error.status === 401) {
         showToast('Current password is incorrect', 'error')
-      }else{
-
+      } else {
         showToast('Error while updating password', 'error')
       }
     }
@@ -124,10 +132,10 @@ const UpdateAccount = () => {
                       className={`form-control `}
                       placeholder="Current Password"
                       required=""
-                      onChange={(e) => setPasswordForm({ ...passwordForm, current_password: e.target.value })}
+                      onChange={(e) =>
+                        setPasswordForm({ ...passwordForm, current_password: e.target.value })
+                      }
                     />
-                 
-                  
                   </div>
                 </div>
                 <div className="mb-3 ">
@@ -137,10 +145,10 @@ const UpdateAccount = () => {
                       className={`form-control `}
                       placeholder="New Password"
                       required=""
-                      onChange={(e) => setPasswordForm({ ...passwordForm, new_password: e.target.value })}
+                      onChange={(e) =>
+                        setPasswordForm({ ...passwordForm, new_password: e.target.value })
+                      }
                     />
-                    
-                    
                   </div>
                 </div>
                 <div className="mb-3 ">
@@ -150,10 +158,10 @@ const UpdateAccount = () => {
                       className={`form-control `}
                       placeholder="Confirm Password"
                       required=""
-                      onChange={(e) => setPasswordForm({ ...passwordForm, confirm_password: e.target.value })}
+                      onChange={(e) =>
+                        setPasswordForm({ ...passwordForm, confirm_password: e.target.value })
+                      }
                     />
-                    
-                   
                   </div>
                 </div>
               </div>
@@ -166,7 +174,7 @@ const UpdateAccount = () => {
                   className="btn btn-primary"
                   data-bs-toggle="modal"
                   data-bs-target="#changePasswordModal"
-                  onClick ={handlePasswordUpdate}
+                  onClick={handlePasswordUpdate}
                 >
                   Save changes
                 </button>
@@ -207,7 +215,7 @@ const UpdateAccount = () => {
                             className={`form-control ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
                             id="name"
                             type="text"
-                            value={userForm.name}
+                            value={userForm?.name}
                             onChange={(e) => setUserForm({ ...userForm, name: e.target.value })}
                           />
                         </div>
@@ -215,7 +223,7 @@ const UpdateAccount = () => {
                       <div className={`col-12 col-md-6 col-xl-4`}>
                         <div className={`opacity-75`}>
                           <label className={`small mb-1`} htmlFor="Role">
-                          User Name
+                            User Name
                           </label>
                           <input
                             disabled
@@ -223,7 +231,7 @@ const UpdateAccount = () => {
                             id="Role"
                             type="text"
                             name=""
-                            value={userForm.user_name}
+                            value={userForm?.user_name}
                           />
                         </div>
                       </div>
@@ -236,7 +244,7 @@ const UpdateAccount = () => {
                             className={`form-control ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
                             id="mobile_no"
                             type="text"
-                            value={userForm.phone_no}
+                            value={userForm?.phone_no}
                             onChange={(e) => setUserForm({ ...userForm, phone_no: e.target.value })}
                           />
                         </div>
@@ -252,7 +260,7 @@ const UpdateAccount = () => {
                             id="Role"
                             type="text"
                             name=""
-                            value={userForm.roleType}
+                            value={userForm?.roleType}
                           />
                         </div>
                       </div>
@@ -269,7 +277,7 @@ const UpdateAccount = () => {
                                 onClick={() =>
                                   setUserForm({ ...userForm, limits: !userForm.limits })
                                 }
-                                checked={userForm.limits ? true : false}
+                                checked={userForm?.limits ? true : false}
                                 id="flexCheckDefault"
                               />
                               <label className="form-check-label" htmlFor="flexCheckDefault">
@@ -286,7 +294,7 @@ const UpdateAccount = () => {
                                 onClick={() =>
                                   setUserForm({ ...userForm, analysis: !userForm.analysis })
                                 }
-                                checked={userForm.analysis ? true : false}
+                                checked={userForm?.analysis ? true : false}
                                 value=""
                                 id="flexCheckDefault1"
                               />
@@ -304,7 +312,7 @@ const UpdateAccount = () => {
                                 onClick={() =>
                                   setUserForm({ ...userForm, config: !userForm.config })
                                 }
-                                checked={userForm.config ? true : false}
+                                checked={userForm?.config ? true : false}
                                 value=""
                                 id="flexCheckDefault2"
                               />
@@ -322,7 +330,7 @@ const UpdateAccount = () => {
                                 onClick={() =>
                                   setUserForm({ ...userForm, settings: !userForm.settings })
                                 }
-                                checked={userForm.settings ? true : false}
+                                checked={userForm?.settings ? true : false}
                                 value=""
                                 id="flexCheckDefault3"
                               />
@@ -348,7 +356,7 @@ const UpdateAccount = () => {
                 <button
                   type="button"
                   data-bs-toggle="modal"
-                data-bs-target="#changePasswordModal"
+                  data-bs-target="#changePasswordModal"
                   className={`btn ${theme === 'dark' ? 'btn-primary' : 'btn-dark'} btn-sm px-3 bg-gradient capitalize`}
                 >
                   Change Password

@@ -5,7 +5,7 @@ import { Zone1RouletteData, Zone2RouletteData, Zone3RouletteData } from './Roule
 
 const DropZoneStatistics = (props) => {
   const [data, setData] = useState([])
-  const theme = useSelector((state) => state.theme)
+  const theme = useSelector((state) => state?.theme)
   const [Zone1, setZone1] = useState(0)
   const [Zone2, setZone2] = useState(0)
   const [Zone3, setZone3] = useState(0)
@@ -25,18 +25,18 @@ const DropZoneStatistics = (props) => {
     let z2 = 0
     let z3 = 0
 
-    if (props.rouletteData) {
-      expectedValue = props.data.length / 3
+    if (props?.rouletteData) {
+      expectedValue = props.data?.length / 3
       //console.log('props.rouletteData: ', props.rouletteData)
-      for (let i = 0; i < props.rouletteData.length; i++) {
+      for (let i = 0; i < props?.rouletteData?.length; i++) {
         if (i <= 12) {
-          z1 += props.rouletteData[i].number
+          z1 += props?.rouletteData[i]?.number || 0
         }
         if (i >= 13 && i <= 24) {
-          z2 += props.rouletteData[i].number
+          z2 += props?.rouletteData[i]?.number || 0
         }
         if (i > 24) {
-          z3 += props.rouletteData[i].number
+          z3 += props?.rouletteData[i]?.number || 0
         }
       }
 
@@ -84,7 +84,7 @@ const DropZoneStatistics = (props) => {
                       <span
                         className={`rounded-1 bg-primary text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
                       >
-                        {props.data.length}
+                        {props.data?.length || 0}
                       </span>
                     </td>
                   </tr>
@@ -95,7 +95,7 @@ const DropZoneStatistics = (props) => {
                       <span
                         className={`rounded-1 bg-primary text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
                       >
-                        {props.standardDeviation}
+                        {props.standardDeviation || 0}
                       </span>
                     </td>
                   </tr>
@@ -106,7 +106,7 @@ const DropZoneStatistics = (props) => {
                       <span
                         className={`rounded-1 bg-primary text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
                       >
-                        {chiSquare}
+                        {chiSquare || 0}
                       </span>
                     </td>
                   </tr>
@@ -135,7 +135,7 @@ const DropZoneStatistics = (props) => {
                         <span
                           className={`rounded-1 bg-primary text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
                         >
-                          {Zone1Total}
+                          {Zone1Total || 0}
                         </span>
                       </td>
                       <td className={`text-end`}>
@@ -143,7 +143,7 @@ const DropZoneStatistics = (props) => {
                         <span
                           className={`rounded-1 bg-primary text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
                         >
-                          {((Zone1Total / props.data.length) * 100).toFixed(0)}%
+                          {((Zone1Total / props.data?.length) * 100).toFixed(0)}%
                         </span>
                       </td>
                     </tr>
@@ -154,7 +154,7 @@ const DropZoneStatistics = (props) => {
                         <span
                           className={`rounded-1 bg-primary text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
                         >
-                          {Zone2Total}
+                          {Zone2Total || 0}
                         </span>
                       </td>
                       <td className={`text-end`}>
@@ -162,7 +162,7 @@ const DropZoneStatistics = (props) => {
                         <span
                           className={`rounded-1 bg-primary text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
                         >
-                          {((Zone2Total / props.data.length) * 100).toFixed(0)}%
+                          {((Zone2Total / props.data?.length) * 100).toFixed(0)}%
                         </span>
                       </td>
                     </tr>
@@ -173,7 +173,7 @@ const DropZoneStatistics = (props) => {
                         <span
                           className={`rounded-1 bg-primary text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
                         >
-                          {Zone3Total}
+                          {Zone3Total || 0}
                         </span>
                       </td>
                       <td className={`text-end`}>
@@ -181,7 +181,7 @@ const DropZoneStatistics = (props) => {
                         <span
                           className={`rounded-1 bg-primary text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
                         >
-                          {((Zone3Total / props.data.length) * 100).toFixed(0)}%
+                          {((Zone3Total / props.data?.length) * 100).toFixed(0)}%
                         </span>
                       </td>
                     </tr>
@@ -205,3 +205,4 @@ const DropZoneStatistics = (props) => {
 }
 
 export default DropZoneStatistics
+

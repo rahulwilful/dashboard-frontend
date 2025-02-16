@@ -19,9 +19,7 @@ const MyAccount = () => {
   const getCurrent = async () => {
     const user = await GetCurrent()
     console.log('user ', user)
-    setUser(user)
-
-  
+    user && setUser(user)
   }
 
   useEffect(() => {
@@ -56,7 +54,9 @@ const MyAccount = () => {
                 <div className={``}>Account Details</div>
                 <div className={``}>
                   <Link to="/update/account">
-                    <i className={`bi bi-pen-fill icon icon-hover pointer text-shadow icon-hover text-shadow ${theme == 'dark' ? 'text-light' : 'text-dark'}`}></i>
+                    <i
+                      className={`bi bi-pen-fill icon icon-hover pointer text-shadow icon-hover text-shadow ${theme == 'dark' ? 'text-light' : 'text-dark'}`}
+                    ></i>
                   </Link>
                 </div>
               </div>
@@ -76,7 +76,7 @@ const MyAccount = () => {
                           className={`form-control ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
                           id="name"
                           type="text"
-                          value={user.name}
+                          value={user?.name}
                         />
                       </div>
                     </div>
@@ -91,7 +91,7 @@ const MyAccount = () => {
                           id="Role"
                           type="text"
                           name=""
-                          value={user.user_name}
+                          value={user?.user_name}
                         />
                       </div>
                     </div>
@@ -105,7 +105,7 @@ const MyAccount = () => {
                           className={`form-control ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
                           id="mobile_no"
                           type="text"
-                          value={user.phone_no}
+                          value={user?.phone_no}
                         />
                       </div>
                     </div>
@@ -120,7 +120,7 @@ const MyAccount = () => {
                           id="Role"
                           type="text"
                           name=""
-                          value={user.roleType}
+                          value={user?.roleType}
                         />
                       </div>
                     </div>
@@ -137,7 +137,7 @@ const MyAccount = () => {
                               className="form-check-input"
                               type="checkbox"
                               value=""
-                              checked={user.limits ? true : false}
+                              checked={user?.limits ? true : false}
                               id="flexCheckDefault"
                             />
                             <label className="form-check-label" htmlFor="flexCheckDefault">
@@ -150,7 +150,7 @@ const MyAccount = () => {
                             <input
                               className="form-check-input"
                               type="checkbox"
-                              checked={user.analysis ? true : false}
+                              checked={user?.analysis ? true : false}
                               value=""
                               id="flexCheckDefault1"
                             />
@@ -164,7 +164,7 @@ const MyAccount = () => {
                             <input
                               className="form-check-input"
                               type="checkbox"
-                              checked={user.config ? true : false}
+                              checked={user?.config ? true : false}
                               value=""
                               id="flexCheckDefault2"
                             />
@@ -178,7 +178,7 @@ const MyAccount = () => {
                             <input
                               className="form-check-input"
                               type="checkbox"
-                              checked={user.settings ? true : false}
+                              checked={user?.settings ? true : false}
                               value=""
                               id="flexCheckDefault3"
                             />

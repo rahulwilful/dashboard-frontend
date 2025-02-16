@@ -17,16 +17,16 @@ const StackedBarComponent = () => {
         <div className="border border-danger h-100">
           <ResponsiveContainer width="100%" minWidth={600} height={200} className={``}>
             <BarChart
-              width={'100%'}
-              height={'100%'}
-              data={data}
+              width={data?.length ? '100%' : undefined}
+              height={data?.length ? '100%' : undefined}
+              data={data ?? []}
               layout="vertical" // Changed to vertical layout
             >
               <YAxis type="category" />
               <XAxis type="number" />
-              <Bar barSize={16} dataKey="uv" stackId="a" fill="#8884d8" />
-              <Bar barSize={16} dataKey="pv" stackId="a" fill="#ffc658" />
-              <Bar barSize={16} dataKey="amt" stackId="a" fill="#82ca9d" />
+              <Bar barSize={16} dataKey="uv" stackId="a" fill={data?.[0]?.uv ? '#8884d8' : undefined} />
+              <Bar barSize={16} dataKey="pv" stackId="a" fill={data?.[0]?.pv ? '#ffc658' : undefined} />
+              <Bar barSize={16} dataKey="amt" stackId="a" fill={data?.[0]?.amt ? '#82ca9d' : undefined} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -36,3 +36,4 @@ const StackedBarComponent = () => {
 }
 
 export default StackedBarComponent
+

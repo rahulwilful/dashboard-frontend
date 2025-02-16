@@ -21,7 +21,7 @@ import {
   cilSpeedometer,
   cilSync,
   cilOptions,
-  cilArrowTop, // Add this line
+  cilArrowTop,
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { CCard, CCardBody, CCardHeader } from '@coreui/react'
@@ -48,7 +48,7 @@ import { ScrollTrigger } from 'gsap/all'
 import gsap from 'gsap'
 
 const Dashboard = () => {
-  const theme = useSelector((state) => state.theme)
+  const theme = useSelector((state) => state?.theme)
   const [rouletteData, setRouletteData] = useState([])
   const [baccaratData, setBaccaratData] = useState([])
   const [andarBaharData, setAndarBaharData] = useState([])
@@ -69,60 +69,50 @@ const Dashboard = () => {
   const getData = async () => {
     try {
       const rouletteRes = await axiosClient.post(`/game/get/latest/data/of/roulette`)
-
-      //console.log('rouletteRes : ', rouletteRes)
-      setRouletteData(rouletteRes.data.result)
+      setRouletteData(rouletteRes?.data?.result)
     } catch (e) {
-      //console.log(e)
+      console.log(e)
     }
 
     try {
-      const andar_baharRes = await axiosClient.post(`/game/get/latest/data/of/andar_bahar`)
-
-      //console.log('andar_baharRes : ', andar_baharRes)
-      setAndarBaharData(andar_baharRes.data.result)
+      const andarBaharRes = await axiosClient.post(`/game/get/latest/data/of/andar_bahar`)
+      setAndarBaharData(andarBaharRes?.data?.result)
     } catch (e) {
-      //console.log(e)
+      console.log(e)
     }
 
     try {
       const baccaratRes = await axiosClient.post(`/game/get/latest/data/of/baccarat`)
-
-      //console.log('baccaratRes : ', baccaratRes)
-      setBaccaratData(baccaratRes.data.result)
+      setBaccaratData(baccaratRes?.data?.result)
     } catch (e) {
-      //console.log(e)
+      console.log(e)
     }
 
     try {
       const tableRes = await axiosClient.get(`/table/limits/get/all/tables`)
-
-      //console.log('tableRes : ', tableRes)
-      setAllTables(tableRes.data.result)
+      setAllTables(tableRes?.data?.result)
     } catch (e) {
-      //console.log(e)
+      console.log(e)
     }
 
     try {
       const gameRes = await axiosClient.get(`/game/get/all/games`)
-
-      //console.log('gameRes : ', gameRes)
-      setAllGames(gameRes.data.result)
-      let temp = gameRes.data.result
+      setAllGames(gameRes?.data?.result)
+      let temp = gameRes?.data?.result
       let temp2 = []
       for (let i in temp) {
-        if (temp[i].active == 1) {
+        if (temp[i]?.active === 1) {
           temp2.push(temp[i])
         }
       }
       setActiveGames(temp2)
     } catch (e) {
-      //console.log(e)
+      console.log(e)
     }
 
     try {
       const response = await axiosClient.get('config/get/configs')
-      const { languages, themes, backgrounds, currencys } = response.data
+      const { languages, themes, backgrounds, currencys } = response?.data
       setLanguages(languages)
       setThemes(themes)
       setBackgrounds(backgrounds)
@@ -137,10 +127,6 @@ const Dashboard = () => {
       //getData()
     }, 1000)
   }, [])
-
-  useEffect(() => {
-    //console.log('allGames : ', allGames)
-  }, [allGames])
 
   useEffect(() => {
     getData()
@@ -172,16 +158,16 @@ const Dashboard = () => {
 
   return (
     <div
-      className={` ${theme === 'dark' ? 'text-light' : 'text-dark'} pb-4 `}
+      className={`${theme === 'dark' ? 'text-light' : 'text-dark'} pb-4`}
       style={{ border: 'red' }}
       key={theme}
     >
-      <div className={``}>
-        <h1 className="text-center text-shadow"> Dashboard</h1>
-        <div className={``}>
-          <div className={` my-2 py-2`}>
+      <div>
+        <h1 className="text-center text-shadow">Dashboard</h1>
+        <div>
+          <div className="my-2 py-2">
             <div className="row">
-              <div className={`col-12 col-sm-6 col-lg-4 animate`}>
+              <div className="col-12 col-sm-6 col-lg-4 animate">
                 <Card
                   color="primary"
                   lineColor="white"
@@ -190,10 +176,10 @@ const Dashboard = () => {
                   textColor="white"
                   dot={true}
                   title="Total Games"
-                  value={allGames.length}
+                  value={allGames?.length}
                 />
               </div>
-              <div className={`col-12 col-sm-6 col-lg-4 animate`}>
+              <div className="col-12 col-sm-6 col-lg-4 animate">
                 <Card
                   color="success"
                   lineColor="white"
@@ -202,10 +188,10 @@ const Dashboard = () => {
                   textColor="white"
                   dot={false}
                   title="Active Games"
-                  value={activeGames.length}
+                  value={activeGames?.length}
                 />
               </div>
-              <div className={`col-12 col-sm-6 col-lg-4 animate`}>
+              <div className="col-12 col-sm-6 col-lg-4 animate">
                 <Card
                   color="warning"
                   lineColor="white"
@@ -214,10 +200,10 @@ const Dashboard = () => {
                   textColor="white"
                   dot={true}
                   title="Inactive Games"
-                  value={allGames.length - activeGames.length}
+                  value={allGames?.length - activeGames?.length}
                 />
               </div>
-              <div className={`col-12 col-sm-6 col-lg-4 animate`}>
+              <div className="col-12 col-sm-6 col-lg-4 animate">
                 <Card
                   color="primary"
                   lineColor="white"
@@ -226,10 +212,10 @@ const Dashboard = () => {
                   textColor="white"
                   dot={true}
                   title="Total Tables"
-                  value={allTables.length}
+                  value={allTables?.length}
                 />
               </div>
-              <div className={`col-12 col-sm-6 col-lg-4 animate`}>
+              <div className="col-12 col-sm-6 col-lg-4 animate">
                 <Card
                   color="secondary"
                   lineColor="white"
@@ -238,10 +224,10 @@ const Dashboard = () => {
                   textColor="white"
                   dot={false}
                   title="Languages"
-                  value={languages.length}
+                  value={languages?.length}
                 />
               </div>
-              <div className={`col-12 col-sm-6 col-lg-4 animate`}>
+              <div className="col-12 col-sm-6 col-lg-4 animate">
                 <Card
                   color="danger"
                   lineColor="white"
@@ -250,10 +236,10 @@ const Dashboard = () => {
                   textColor="white"
                   dot={true}
                   title="Themes"
-                  value={themes.length}
+                  value={themes?.length}
                 />
               </div>
-              <div className={`col-12 col-sm-6 col-lg-4 animate`}>
+              <div className="col-12 col-sm-6 col-lg-4 animate">
                 <Card
                   color="info"
                   lineColor="white"
@@ -262,10 +248,10 @@ const Dashboard = () => {
                   textColor="white"
                   dot={true}
                   title="Backgrounds"
-                  value={backgrounds.length}
+                  value={backgrounds?.length}
                 />
               </div>
-              <div className={`col-12 col-sm-6 col-lg-4 animate`}>
+              <div className="col-12 col-sm-6 col-lg-4 animate">
                 <Card
                   color="success"
                   lineColor="white"
@@ -274,40 +260,40 @@ const Dashboard = () => {
                   textColor="white"
                   dot={false}
                   title="Currencys"
-                  value={currencys.length}
+                  value={currencys?.length}
                 />
               </div>
             </div>
           </div>
-          <div className={`row g-3`} ref={scrollRef}>
-            <div className={`col-12 col-sm-6 col-lg-4  on_scroll`}>
+          <div className="row g-3" ref={scrollRef}>
+            <div className="col-12 col-sm-6 col-lg-4 on_scroll">
               <GameCard
-                game={rouletteData[0]?.game_type_name}
+                game={rouletteData?.[0]?.game_type_name}
                 data={rouletteData}
-                lastNumber={rouletteData[0]?.winning_number}
+                lastNumber={rouletteData?.[0]?.winning_number}
               />
             </div>
-            <div className={`col-12 col-sm-6 col-lg-4  on_scroll`}>
+            <div className="col-12 col-sm-6 col-lg-4 on_scroll">
               <GameCard
-                game={baccaratData[0]?.game_type_name}
+                game={baccaratData?.[0]?.game_type_name}
                 data={baccaratData}
                 winner={
-                  baccaratData[0]?.winner == 'P'
+                  baccaratData?.[0]?.winner === 'P'
                     ? 'Player'
-                    : baccaratData[0]?.winner == 'B'
+                    : baccaratData?.[0]?.winner === 'B'
                       ? 'Banker'
                       : ''
                 }
               />
             </div>
-            <div className={`col-12 col-sm-6 col-lg-4  on_scroll`}>
+            <div className="col-12 col-sm-6 col-lg-4 on_scroll">
               <GameCard
-                game={andarBaharData[0]?.game_type_name}
+                game={andarBaharData?.[0]?.game_type_name}
                 data={andarBaharData}
                 winner={
-                  andarBaharData[0]?.winner == 'A'
+                  andarBaharData?.[0]?.winner === 'A'
                     ? 'Andar'
-                    : andarBaharData[0]?.winner == 'B'
+                    : andarBaharData?.[0]?.winner === 'B'
                       ? 'Bahar'
                       : ''
                 }

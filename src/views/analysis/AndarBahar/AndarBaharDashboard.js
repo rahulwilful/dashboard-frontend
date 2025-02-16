@@ -29,7 +29,7 @@ gsap.registerPlugin(CustomEase)
 
 const AndarBaharDashboard = () => {
   const navigate = useNavigate()
-  const theme = useSelector((state) => state.theme)
+  const theme = useSelector((state) => state?.theme)
   const { game, table_limit_name, game_type_id, table_limit_id } = useParams()
   const [renderKey, setRenderKey] = useState(0)
   const [display, setDisplay] = useState('loading')
@@ -108,22 +108,20 @@ const AndarBaharDashboard = () => {
   }, [limit])
 
   const checkLive = async (limitParam) => {
-    //  console.log('getGameData: ', limitParam)
     const limitToUse = limitParam || limit
     try {
       const res = await axiosClient.get(
         `/game/get/andar_bahar/${game_type_id}/${table_limit_id}/${limit}`,
       )
 
-      let data = res.data.result
-
+      let data = res?.data?.result
       console.log('response: ', data)
 
       let live = false
       const currentTime = new Date()
 
-      if (data.length > 0 && data[0].date_time) {
-        const resDataTime = new Date(data[0].date_time)
+      if (data?.length > 0 && data[0]?.date_time) {
+        const resDataTime = new Date(data[0]?.date_time)
         const diffInMs = currentTime - resDataTime
         const diffInMinutes = diffInMs / (1000 * 60)
 
@@ -135,11 +133,11 @@ const AndarBaharDashboard = () => {
       console.log('live status: ', live)
       setLive(live)
 
-      if (data.length > 0) {
+      if (data?.length > 0) {
         setDisplay('data')
       }
 
-      if (data.length == 0) {
+      if (data?.length == 0) {
         setDisplay('nodata')
       }
       setRenderKey(renderKey + 1)
@@ -175,15 +173,14 @@ const AndarBaharDashboard = () => {
       const res = await axiosClient.get(
         `/game/get/andar_bahar/${game_type_id}/${table_limit_id}/${limit}`,
       )
-      //console.log('response: ', res.data.result)
-      processData(res.data.result)
-      let data = res.data.result
+      processData(res?.data?.result)
+      let data = res?.data?.result
       console.log('response: ', data)
-      if (data.length > 0) {
+      if (data?.length > 0) {
         setDisplay('data')
       }
 
-      if (data.length == 0) {
+      if (data?.length == 0) {
         setDisplay('nodata')
       }
 
@@ -203,17 +200,17 @@ const AndarBaharDashboard = () => {
       const res = await axiosClient.get(
         `/game/get/andar_bahar/${game_type_id}/${table_limit_id}/${limitParam}`,
       )
-      console.log('getCustomeGameDataByRadio response: ', res.data.result)
-      processData(res.data.result)
+      console.log('getCustomeGameDataByRadio response: ', res?.data?.result)
+      processData(res?.data?.result)
       setRenderKey(renderKey + 1)
       setLimit(limitParam)
-      let data = res.data.result
+      let data = res?.data?.result
       console.log('response: ', data)
-      if (data.length > 0) {
+      if (data?.length > 0) {
         setDisplay('data')
       }
 
-      if (data.length == 0) {
+      if (data?.length == 0) {
         setDisplay('nodata')
       }
     } catch (err) {
@@ -229,15 +226,15 @@ const AndarBaharDashboard = () => {
       const res = await axiosClient.get(
         `/game/get/andar_bahar/${game_type_id}/${table_limit_id}/${customLimit}`,
       )
-      console.log('getCustomeGameDataByRadio response: ', res.data.result)
-      processData(res.data.result)
-      let data = res.data.result
+      console.log('getCustomeGameDataByRadio response: ', res?.data?.result)
+      processData(res?.data?.result)
+      let data = res?.data?.result
       console.log('response: ', data)
-      if (data.length > 0) {
+      if (data?.length > 0) {
         setDisplay('data')
       }
 
-      if (data.length == 0) {
+      if (data?.length == 0) {
         setDisplay('nodata')
       }
       setRenderKey(renderKey + 1)
@@ -251,7 +248,6 @@ const AndarBaharDashboard = () => {
   }
 
   const getGameDataByDate = async () => {
-    //  console.log('fromDate ', fromDate, ' toDate ', toDate)
     setData([])
     console.log('first date: ', fromDate, 'second date: ', toDate)
     try {
@@ -262,15 +258,14 @@ const AndarBaharDashboard = () => {
           to_date: toDate,
         },
       )
-      //  console.log('res.data.result: ', res.data.result)
-      processData(res.data.result)
-      let data = res.data.result
+      processData(res?.data?.result)
+      let data = res?.data?.result
       console.log('response: ', data)
-      if (data.length > 0) {
+      if (data?.length > 0) {
         setDisplay('data')
       }
 
-      if (data.length == 0) {
+      if (data?.length == 0) {
         setDisplay('nodata')
       }
       setRenderKey(renderKey + 1)
@@ -283,159 +278,142 @@ const AndarBaharDashboard = () => {
   }
 
   const processData = (resData) => {
-    // Initialize live status and get the current time
     let live = false
     const currentTime = new Date()
 
-    // Check if the connection is live based on the date_time of the first entry
-    if (resData.length > 0 && resData[0].date_time) {
-      const resDataTime = new Date(resData[0].date_time)
+    if (resData?.length > 0 && resData[0]?.date_time) {
+      const resDataTime = new Date(resData[0]?.date_time)
       const diffInMs = currentTime - resDataTime
       const diffInMinutes = diffInMs / (1000 * 60)
 
-      // Set live to true if the difference is 1 minute or less
       if (diffInMinutes <= 1) {
         live = true
       }
     }
 
-    if (data.length > 0 && live == false) {
+    if (data?.length > 0 && live == false) {
       return
     }
     setLive(live)
 
-    // If live, update live data
     if (live == true) {
       setLiveData(resData[0])
     }
 
-    // Initialize counters for Andar and Bahar wins and shots
     let andarTotal = 0
     let baharTotal = 0
     let andarShot = 0
     let baharShot = 0
 
-    // Process each entry in resData to compute totals and split cards
     for (let i in resData) {
-      const splittedAndar = resData[i].andar_cards.split(',')
-      const splittedBahar = resData[i].bahar_cards.split(',')
+      const splittedAndar = resData[i]?.andar_cards?.split(',')
+      const splittedBahar = resData[i]?.bahar_cards?.split(',')
 
       resData[i].splittedAndar = splittedAndar
       resData[i].splittedBahar = splittedBahar
 
-      // Update win and shot counts based on winners
-      if (resData[i].winner == 'A') andarTotal++
-      if (resData[i].winner == 'B') baharTotal++
-      if (resData[i].side_win == 'A') andarShot++
-      if (resData[i].side_win == 'B') baharShot++
+      if (resData[i]?.winner == 'A') andarTotal++
+      if (resData[i]?.winner == 'B') baharTotal++
+      if (resData[i]?.side_win == 'A') andarShot++
+      if (resData[i]?.side_win == 'B') baharShot++
     }
 
-    // Initialize streak tracking variables
     let streak = []
     let tempStreak = []
     let andarStreak = 0
     let baharStreak = 0
-    let curWinner = resData[0].winner
+    let curWinner = resData[0]?.winner
 
-    // Determine streaks of winners
     for (let i = 1; i < resData.length; i++) {
-      if (curWinner == resData[i].winner) {
+      if (curWinner == resData[i]?.winner) {
         tempStreak.push(curWinner)
       } else {
         if (tempStreak.length > 0) {
           streak.push(tempStreak)
           tempStreak = []
         }
-        curWinner = resData[i].winner
+        curWinner = resData[i]?.winner
       }
     }
 
-    // Add remaining streak to the list if it exists
     if (tempStreak.length > 0) streak.push(tempStreak)
 
-    // Count andar and bahar streaks
     for (let i in streak) {
       if (streak[i][0] == 'A') andarStreak++
       else baharStreak++
     }
 
-    // Initialize temporary card arrays
-    let tempAndarCards = resData[0].splittedAndar
+    let tempAndarCards = resData[0]?.splittedAndar
     let tempAndarCards2 = []
-    let tempBaharCards = resData[0].splittedBahar
+    let tempBaharCards = resData[0]?.splittedBahar
     let tempBaharCards2 = []
 
-    // Map card names to card images and positions for Andar cards
     for (let i in tempAndarCards) {
       if (i == 0) {
         for (let j in CardImages) {
-          if (tempAndarCards[i] == CardImages[j].name) {
+          if (tempAndarCards[i] == CardImages[j]?.name) {
             tempAndarCards2.push({
               name: tempAndarCards[i],
-              image: CardImages[j].card,
+              image: CardImages[j]?.card,
               position: 0,
             })
           }
         }
       } else {
         for (let j in CardImages) {
-          if (tempAndarCards[i] == CardImages[j].name) {
+          if (tempAndarCards[i] == CardImages[j]?.name) {
             tempAndarCards2.push({
               name: tempAndarCards[i],
-              image: CardImages[j].card,
-              position: tempAndarCards2[tempAndarCards2.length - 1].position + 3,
+              image: CardImages[j]?.card,
+              position: tempAndarCards2[tempAndarCards2.length - 1]?.position + 3,
             })
           }
         }
       }
     }
 
-    // Map card names to card images and positions for Bahar cards
     for (let i in tempBaharCards) {
       if (i == 0) {
         for (let j in CardImages) {
-          if (tempBaharCards[i] == CardImages[j].name) {
+          if (tempBaharCards[i] == CardImages[j]?.name) {
             tempBaharCards2.push({
               name: tempBaharCards[i],
-              image: CardImages[j].card,
+              image: CardImages[j]?.card,
               position: 0,
             })
           }
         }
       } else {
         for (let j in CardImages) {
-          if (tempBaharCards[i] == CardImages[j].name) {
+          if (tempBaharCards[i] == CardImages[j]?.name) {
             tempBaharCards2.push({
               name: tempBaharCards[i],
-              image: CardImages[j].card,
-              position: tempBaharCards2[tempBaharCards2.length - 1].position + 3,
+              image: CardImages[j]?.card,
+              position: tempBaharCards2[tempBaharCards2.length - 1]?.position + 3,
             })
           }
         }
       }
     }
 
-    // Show or hide the doughnut chart based on shot counts
     if (andarShot == 0 && baharShot == 0) {
       setShowDoughnutChart(false)
     } else {
       setShowDoughnutChart(true)
     }
 
-    // Set the joker card image
     for (let i in CardImages) {
-      if (CardImages[i].name == resData[0].joker_cards) {
-        setJokerCardImage(CardImages[i].card)
+      if (CardImages[i]?.name == resData[0]?.joker_cards) {
+        setJokerCardImage(CardImages[i]?.card)
       }
     }
 
-    // Update state variables with processed data
     setIndex(0)
     setAndarCards(tempAndarCards2)
     setBaharCards(tempBaharCards2)
-    setJokerCard(resData[0].joker_cards)
-    setWinner(resData[0].winner)
-    setSideWin(resData[0].side_win)
+    setJokerCard(resData[0]?.joker_cards)
+    setWinner(resData[0]?.winner)
+    setSideWin(resData[0]?.side_win)
     setData(resData)
     localStorage.setItem('andarBaharDataLength', resData.length)
     setAndarWinVsBaharWin([
@@ -454,165 +432,143 @@ const AndarBaharDashboard = () => {
     ])
   }
 
-  /**
-   * Handles the change of the index to display the previous or next set of cards.
-   *
-   * @param {string} event - The event triggering the index change, either '+' for next or '-' for previous.
-   */
   const handleIndexChange = (event) => {
     let tempAndarCards2 = []
     let tempBaharCards2 = []
 
-    // Determine the new index based on the event
     if (event === '+') {
       const tempIndex = index + 1
       setIndex(tempIndex)
 
-      // Get the Andar and Bahar cards for the new index
-      let tempAndarCards = data[tempIndex].splittedAndar
-      let tempBaharCards = data[tempIndex].splittedBahar
+      let tempAndarCards = data[tempIndex]?.splittedAndar
+      let tempBaharCards = data[tempIndex]?.splittedBahar
 
-      // Map Andar cards to include image and position
       for (let i in tempAndarCards) {
         if (i == 0) {
           for (let j in CardImages) {
-            if (tempAndarCards[i] == CardImages[j].name) {
+            if (tempAndarCards[i] == CardImages[j]?.name) {
               tempAndarCards2.push({
                 name: tempAndarCards[i],
-                image: CardImages[j].card,
+                image: CardImages[j]?.card,
                 position: 0,
               })
             }
           }
         } else {
           for (let j in CardImages) {
-            if (tempAndarCards[i] == CardImages[j].name) {
+            if (tempAndarCards[i] == CardImages[j]?.name) {
               tempAndarCards2.push({
                 name: tempAndarCards[i],
-                image: CardImages[j].card,
-                position: tempAndarCards2[tempAndarCards2.length - 1].position + 3,
+                image: CardImages[j]?.card,
+                position: tempAndarCards2[tempAndarCards2.length - 1]?.position + 3,
               })
             }
           }
         }
       }
 
-      // Map Bahar cards to include image and position
       for (let i in tempBaharCards) {
         if (i == 0) {
           for (let j in CardImages) {
-            if (tempBaharCards[i] == CardImages[j].name) {
+            if (tempBaharCards[i] == CardImages[j]?.name) {
               tempBaharCards2.push({
                 name: tempBaharCards[i],
-                image: CardImages[j].card,
+                image: CardImages[j]?.card,
                 position: 0,
               })
             }
           }
         } else {
           for (let j in CardImages) {
-            if (tempBaharCards[i] == CardImages[j].name) {
+            if (tempBaharCards[i] == CardImages[j]?.name) {
               tempBaharCards2.push({
                 name: tempBaharCards[i],
-                image: CardImages[j].card,
-                position: tempBaharCards2[tempBaharCards2.length - 1].position + 3,
+                image: CardImages[j]?.card,
+                position: tempBaharCards2[tempBaharCards2.length - 1]?.position + 3,
               })
             }
           }
         }
       }
 
-      // Set the joker card image for the new index
       for (let i in CardImages) {
-        if (CardImages[i].name == data[tempIndex].joker_cards) {
-          setJokerCardImage(CardImages[i].card)
+        if (CardImages[i]?.name == data[tempIndex]?.joker_cards) {
+          setJokerCardImage(CardImages[i]?.card)
         }
       }
 
-      // Update the winner and side win for the new index
-      setWinner(data[tempIndex].winner)
-      setJokerCard(data[tempIndex].joker_cards)
-      setSideWin(data[tempIndex].side_win)
+      setWinner(data[tempIndex]?.winner)
+      setJokerCard(data[tempIndex]?.joker_cards)
+      setSideWin(data[tempIndex]?.side_win)
     } else {
       const tempIndex = index - 1
       setIndex(tempIndex)
 
-      // Get the Andar and Bahar cards for the new index
-      let tempAndarCards = data[tempIndex].splittedAndar
-      let tempBaharCards = data[tempIndex].splittedBahar
+      let tempAndarCards = data[tempIndex]?.splittedAndar
+      let tempBaharCards = data[tempIndex]?.splittedBahar
 
-      // Map Andar cards to include image and position
       for (let i in tempAndarCards) {
         if (i == 0) {
           for (let j in CardImages) {
-            if (tempAndarCards[i] == CardImages[j].name) {
+            if (tempAndarCards[i] == CardImages[j]?.name) {
               tempAndarCards2.push({
                 name: tempAndarCards[i],
-                image: CardImages[j].card,
+                image: CardImages[j]?.card,
                 position: 0,
               })
             }
           }
         } else {
           for (let j in CardImages) {
-            if (tempAndarCards[i] == CardImages[j].name) {
+            if (tempAndarCards[i] == CardImages[j]?.name) {
               tempAndarCards2.push({
                 name: tempAndarCards[i],
-                image: CardImages[j].card,
-                position: tempAndarCards2[tempAndarCards2.length - 1].position + 3,
+                image: CardImages[j]?.card,
+                position: tempAndarCards2[tempAndarCards2.length - 1]?.position + 3,
               })
             }
           }
         }
       }
 
-      // Map Bahar cards to include image and position
       for (let i in tempBaharCards) {
         if (i == 0) {
           for (let j in CardImages) {
-            if (tempBaharCards[i] == CardImages[j].name) {
+            if (tempBaharCards[i] == CardImages[j]?.name) {
               tempBaharCards2.push({
                 name: tempBaharCards[i],
-                image: CardImages[j].card,
+                image: CardImages[j]?.card,
                 position: 0,
               })
             }
           }
         } else {
           for (let j in CardImages) {
-            if (tempBaharCards[i] == CardImages[j].name) {
+            if (tempBaharCards[i] == CardImages[j]?.name) {
               tempBaharCards2.push({
                 name: tempBaharCards[i],
-                image: CardImages[j].card,
-                position: tempBaharCards2[tempBaharCards2.length - 1].position + 3,
+                image: CardImages[j]?.card,
+                position: tempBaharCards2[tempBaharCards2.length - 1]?.position + 3,
               })
             }
           }
         }
       }
 
-      // Set the joker card image for the new index
       for (let i in CardImages) {
-        if (CardImages[i].name == data[tempIndex].joker_cards) {
-          setJokerCardImage(CardImages[i].card)
+        if (CardImages[i]?.name == data[tempIndex]?.joker_cards) {
+          setJokerCardImage(CardImages[i]?.card)
         }
       }
 
-      // Update the winner and side win for the new index
-      setWinner(data[tempIndex].winner)
-      setJokerCard(data[tempIndex].joker_cards)
-      setSideWin(data[tempIndex].side_win)
+      setWinner(data[tempIndex]?.winner)
+      setJokerCard(data[tempIndex]?.joker_cards)
+      setSideWin(data[tempIndex]?.side_win)
     }
 
-    // Update the state with the new Andar and Bahar cards
     setAndarCards(tempAndarCards2)
     setBaharCards(tempBaharCards2)
   }
-
-  useEffect(() => {
-    //  console.log('andarCards: ', andarCards)
-    //  console.log('baharCards: ', baharCards)
-  }, [andarCards, baharCards])
 
   useEffect(() => {
     setThemeClass(
@@ -657,11 +613,10 @@ const AndarBaharDashboard = () => {
       }
     })
 
-    // Call our animation function
     fadeIn(targets)
   }, config)
 
-  document.querySelectorAll('.box').forEach((box) => {
+  document.querySelectorAll('.box')?.forEach((box) => {
     observer.observe(box)
   })
 
@@ -738,14 +693,6 @@ const AndarBaharDashboard = () => {
                     className={` w-100  d-flex justify-content-evenly w-100 d-flex gap-1  border-end-0  border-end-xxl-1 border-secondary border-opacity-25 `}
                   >
                     <div className="gap-2 fontText w-100 px-0 px-xxl-3  poppins-500 d-flex justify-content-evenly gap-3 align-items-center ">
-                      {/*   <div className={`w-100 `}>
-                          <input
-                            className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}  `}
-                            type="number"
-                            placeholder="From Shoe"
-                        
-                          />
-                        </div> */}
                       <div className={`w-100  `}>
                         <input
                           className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}  `}
@@ -835,9 +782,8 @@ const AndarBaharDashboard = () => {
           <div className={`mt-3`}>
             <div className={`row g-3   align-items-stretch`}>
               <div className={`col-12 col-md-5 box ${s.opacity}`}>
-                {/* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
                 <div
-                  className={`${andarCards.length > 0 ? '' : 'd-none'} shadow-s px-2 pb-2 rounded  ${themeBorder} `}
+                  className={`${andarCards?.length > 0 ? '' : 'd-none'} shadow-s px-2 pb-2 rounded  ${themeBorder} `}
                 >
                   <div
                     className={`border-bottom border-secondary  border-opacity-25  py-1 px-3 fontTextHeading`}
@@ -857,14 +803,14 @@ const AndarBaharDashboard = () => {
                       style={{ height: '240px', position: 'relative', width: '100%' }}
                       key={index}
                     >
-                      {andarCards.length > 0 && andarCards[0].position !== undefined ? (
+                      {andarCards?.length > 0 && andarCards[0]?.position !== undefined ? (
                         andarCards.map((card, i) => (
                           <div
                             key={i}
                             className={`animateAndar `}
                             style={{
                               position: 'absolute',
-                              left: `${card.position}rem`,
+                              left: `${card?.position}rem`,
                             }}
                           >
                             <div className={`px-2`}>
@@ -872,7 +818,7 @@ const AndarBaharDashboard = () => {
                             </div>
                             <div className={``}>
                               <img
-                                src={card.image}
+                                src={card?.image}
                                 alt=""
                                 className={`${theme == 'dark' ? 'card_drop_shadow_dark' : 'card_drop_shadow_light'}`}
                                 style={{ height: '200px', transform: 'rotateY(15deg)' }}
@@ -887,7 +833,7 @@ const AndarBaharDashboard = () => {
                   </div>
                 </div>
                 <div
-                  className={`${andarCards.length == 0 ? '' : 'd-none'} shadow-s px-2 pb-2 rounded  ${themeBorder} `}
+                  className={`${andarCards?.length == 0 ? '' : 'd-none'} shadow-s px-2 pb-2 rounded  ${themeBorder} `}
                 >
                   <div
                     className={`border-bottom border-secondary  border-opacity-25  py-1 px-3 fontTextHeading`}
@@ -919,8 +865,6 @@ const AndarBaharDashboard = () => {
                   </div>
                 </div>
               </div>
-              {/* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
-
               <div className={`col-12 col-md-2  align-items-stretch box ${s.opacity}`}>
                 <div
                   className={` shadow-s px-2 pb-2 rounded  h-100 d-flex flex-column  justify-content-center align-items-center  ${themeBorder}`}
@@ -963,11 +907,9 @@ const AndarBaharDashboard = () => {
                   </div>
                 </div>
               </div>
-              {/* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
-
               <div className={`col-12 col-md-5 box ${s.opacity}`}>
                 <div
-                  className={`${baharCards.length > 0 ? '' : 'd-none'} shadow-s px-2 pb-2 rounded    ${themeBorder} `}
+                  className={`${baharCards?.length > 0 ? '' : 'd-none'} shadow-s px-2 pb-2 rounded    ${themeBorder} `}
                 >
                   <div className={``}>
                     <div
@@ -986,21 +928,21 @@ const AndarBaharDashboard = () => {
                     style={{ height: '240px', position: 'relative', width: '100%' }}
                     key={index}
                   >
-                    {baharCards.length > 0 && baharCards[0].position !== undefined ? (
+                    {baharCards?.length > 0 && baharCards[0]?.position !== undefined ? (
                       baharCards.map((card, i) => (
                         <div
                           key={i}
                           className={`animateBahar `}
                           style={{
                             position: 'absolute',
-                            left: `${card.position}rem`,
+                            left: `${card?.position}rem`,
                           }}
                         >
                           <div className={`px-2`}>
                             <div className={``}>{}</div>
                           </div>
                           <img
-                            src={card.image}
+                            src={card?.image}
                             alt=""
                             className={`${theme == 'dark' ? 'card_drop_shadow_dark' : 'card_drop_shadow_light'}`}
                             style={{ height: '200px', transform: 'rotateY(15deg)' }}
@@ -1013,7 +955,7 @@ const AndarBaharDashboard = () => {
                   </div>
                 </div>
                 <div
-                  className={`${baharCards.length == 0 ? '' : 'd-none'} shadow-s px-2 pb-2 rounded  ${themeBorder} `}
+                  className={`${baharCards?.length == 0 ? '' : 'd-none'} shadow-s px-2 pb-2 rounded  ${themeBorder} `}
                 >
                   <div
                     className={`border-bottom border-secondary  border-opacity-25  py-1 px-3 fontTextHeading`}
@@ -1045,7 +987,6 @@ const AndarBaharDashboard = () => {
                   </div>
                 </div>
               </div>
-              {/* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
             </div>
           </div>
 
@@ -1102,20 +1043,20 @@ const AndarBaharDashboard = () => {
               </div>
 
               <div className={`fs-4 ${theme === 'light' ? 'text-dark' : 'text-light'}`}>
-                {data.length}/{index + 1}
+                {data?.length}/{index + 1}
               </div>
               <div className={``}>
                 <button
                   onClick={() => handleIndexChange('+')}
                   type="button"
-                  className={`btn btn-primary btn-sm ${index < data.length - 1 ? '' : 'd-none'}`}
+                  className={`btn btn-primary btn-sm ${index < data?.length - 1 ? '' : 'd-none'}`}
                 >
                   <i className="bi bi-chevron-right  "></i>
                 </button>
                 <button
                   disabled
                   type="button"
-                  className={`btn btn-primary btn-sm ${index >= data.length - 1 ? '' : 'd-none'}`}
+                  className={`btn btn-primary btn-sm ${index >= data?.length - 1 ? '' : 'd-none'}`}
                 >
                   <i className="bi bi-chevron-right "></i>
                 </button>

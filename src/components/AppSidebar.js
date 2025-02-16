@@ -32,43 +32,54 @@ const AppSidebar = () => {
   let tempNav = nav
   let user = ''
 
+  /**
+   * Function to get game types from the database
+   * and update the navigation items dynamically
+   * @param {void} no params
+   * @returns {Promise<void>}
+   */
   const getLimits = async () => {
     try {
+      // Get the game types from the database
       const { data } = await axiosClient.get('/config/get/table/type')
       console.log('side bar data: ', data)
 
+      // Filter only the active game types
       let analysisData = []
-      let tableLimitData = data.game_types
+      let tableLimitData = data?.game_types
 
-      for (let i in data.game_types) {
-        if (data.game_types[i].active == true) {
-          analysisData.push(data.game_types[i])
+      for (let i in data?.game_types) {
+        if (data?.game_types[i]?.active == true) {
+          analysisData.push(data?.game_types[i])
         }
       }
 
+      // Update the navigation items based on the user's permissions
       const tempNavigation = tempNav.map((navItem) => {
-        if (user.limits == true && navItem.name === 'Table Limits') {
+        if (user?.limits == true && navItem?.name === 'Table Limits') {
+          // Add the game types to the navigation items Table Limits
           return {
             ...navItem,
             items: [
-              ...navItem.items,
-              ...tableLimitData.map((tableType) => ({
+              ...navItem?.items,
+              ...tableLimitData?.map((tableType) => ({
                 component: 'CNavItem',
-                name: tableType.game_type_name,
-                to: `/limits/${tableType.game_type_name}/${tableType.game_type_id}`,
+                name: tableType?.game_type_name,
+                to: `/limits/${tableType?.game_type_name}/${tableType?.game_type_id}`,
               })),
             ],
           }
         }
-        if (user.analysis == true && navItem.name === 'Table Analysis') {
+        if (user?.analysis == true && navItem?.name === 'Table Analysis') {
+          // Add the game types to the navigation items ,Table Analysis'
           return {
             ...navItem,
             items: [
-              ...navItem.items,
-              ...analysisData.map((tableType) => ({
+              ...navItem?.items,
+              ...analysisData?.map((tableType) => ({
                 component: 'CNavItem',
-                name: tableType.game_type_name,
-                to: `/table/analysis/${tableType.game_type_name}/${tableType.game_type_id}`,
+                name: tableType?.game_type_name,
+                to: `/table/analysis/${tableType?.game_type_name}/${tableType?.game_type_id}`,
               })),
             ],
           }
@@ -76,42 +87,33 @@ const AppSidebar = () => {
         return navItem
       })
 
-      if (user.roleType == 'super_admin') {
-        console.log('newNavigation: ', tempNavigation, user.roleType)
+      // Add the manage data item to the settings item if the user is a super admin
+      if (user?.roleType == 'super_admin') {
+        tempNavigation[4]?.items.push({
+          component: 'CNavItem',
+          name: 'Manage Data',
+
+          to: '/settings/update/manage/data',
+        })
       }
-      tempNavigation[4].items.push({
-        component: 'CNavItem',
-        name: 'Manage Data',
 
-        to: '/settings/update/manage/data',
-      })
-
+      // Filter the navigation items based on the user's permissions
       let newNavigation = []
       newNavigation.push(tempNavigation[0])
-      if (user.limits == true || user.roleType == 'super_admin')
+      if (user?.limits == true || user?.roleType == 'super_admin')
         newNavigation.push(tempNavigation[1])
-      if (user.analysis == true || user.roleType == 'super_admin')
+      if (user?.analysis == true || user?.roleType == 'super_admin')
         newNavigation.push(tempNavigation[2])
-      if (user.config == true || user.roleType == 'super_admin')
+      if (user?.config == true || user?.roleType == 'super_admin')
         newNavigation.push(tempNavigation[3])
-      if (user.settings == true || user.roleType == 'super_admin') {
-        /* if (user.roleType === 'super_admin') {
-          tempNavigation[4].push({
-            component: 'CNavItem',
-            name: 'Manage Data',
-
-            to: '/settings/update/manage/data',
-          })
-          newNavigation.push(tempNavigation[4])
-        } else {
-          newNavigation.push(tempNavigation[4])
-        } */
+      if (user?.settings == true || user?.roleType == 'super_admin') {
         newNavigation.push(tempNavigation[4])
         console.log('Settings', tempNavigation[4])
       }
-      if (user.users == true || user.roleType == 'super_admin')
+      if (user?.users == true || user?.roleType == 'super_admin')
         newNavigation.push(tempNavigation[5])
 
+      // Update the navigation state
       setNavigation(newNavigation)
       setKey((prevKey) => prevKey + 1)
     } catch (error) {
@@ -119,20 +121,32 @@ const AppSidebar = () => {
     }
   }
 
+  /**
+   * Function to check if the navigation items have changed
+   * and update the key if they have
+   */
   useEffect(() => {
     //console.log('nav', navigation)
   }, [navigation])
 
-  useEffect(() => {
-    getCurrent()
-  }, [])
-
+  /**
+   * Function to get the current user's data
+   * and call the getLimits function
+   */
   const getCurrent = async () => {
     const tempUser = await GetCurrent()
     user = tempUser
     console.log('tempUser: ', user)
     await getLimits()
   }
+
+  /**
+   * Function to call the getCurrent function
+   * when the component mounts
+   */
+  useEffect(() => {
+    getCurrent()
+  }, [])
 
   return (
     <CSidebar

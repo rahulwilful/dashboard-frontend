@@ -9,29 +9,27 @@ import { useSelector } from 'react-redux'
 
 const DataTableComponent = (props) => {
   const [data, setData] = useState([])
-  const theme = useSelector((state) => state.theme)
+  const theme = useSelector((state) => state?.theme)
   const [rowsPerPage, setRowsPerPage] = useState(7)
 
   useEffect(() => {
-    if (props.data) {
-      //console.log('props.data', props.data)
-      //setData(tempData)
-      setData(props.data)
+    if (props?.data) {
+      setData(props?.data)
     } else {
       setData(tempData)
     }
-  }, [theme, props.data])
+  }, [theme, props?.data])
 
   const columns = [
     /*  {
       name: 'Table',
-      selector: (row) => row.table_Name,
+      selector: (row) => row?.table_Name,
       sortable: true,
       minWidth: '100px',
     }, */
     {
       name: 'Date',
-      selector: (row) => row.date_time,
+      selector: (row) => row?.date_time,
       sortable: true,
     },
     {
@@ -42,7 +40,7 @@ const DataTableComponent = (props) => {
             <span
               className={`rounded-1 bg-gradient bg-success px-3 text-light border-0 bg-gradient px-1 shadow-xs `}
             >
-              {row.winning_number}
+              {row?.winning_number}
             </span>
           </div>
         </div>
@@ -50,7 +48,7 @@ const DataTableComponent = (props) => {
     },
     {
       name: ' Direction',
-      selector: (row) => row.wheel_direction,
+      selector: (row) => row?.wheel_direction,
     },
     {
       name: ' Speed',
@@ -60,7 +58,7 @@ const DataTableComponent = (props) => {
             <span
               className={`rounded-1 bg-gradient bg-primary text-light border-0 bg-gradient px-1 shadow-xs `}
             >
-              {row.wheel_speed}
+              {row?.wheel_speed}
             </span>
           </div>
         </div>
@@ -156,3 +154,4 @@ const DataTableComponent = (props) => {
 }
 
 export default DataTableComponent
+

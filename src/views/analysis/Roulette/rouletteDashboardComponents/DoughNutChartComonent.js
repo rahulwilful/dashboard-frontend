@@ -22,7 +22,7 @@ const DoughNutChartComonent = (props) => {
   ]
 
   useEffect(() => {
-    if (props.pieData) {
+    if (props?.pieData) {
       setData(props.pieData)
     } else {
       setData(tempData)
@@ -51,7 +51,7 @@ const DoughNutChartComonent = (props) => {
         textAnchor={x > cx ? 'start' : 'end'}
         dominantBaseline="central"
       >
-        {`${(percent * 100).toFixed(0)}%`}
+        {`${(percent * 100)?.toFixed(0)}%`}
       </text>
     )
   }
@@ -70,7 +70,7 @@ const DoughNutChartComonent = (props) => {
           labelLine={false}
           lable={renderCustomizedLabel}
         >
-          {data.map((entry, index) => (
+          {data?.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
@@ -80,16 +80,16 @@ const DoughNutChartComonent = (props) => {
 }
 
 const customedTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
+  if (active && payload && payload?.length) {
     return (
       <div className="custom-tooltip">
         <p className="label">
           <p className="font-weight-bold">{label}</p>
           <p>
-            <span className="font-weight-bold">{payload[0].value.toLocaleString()}</span>
+            <span className="font-weight-bold">{payload[0]?.value?.toLocaleString()}</span>
           </p>
           <p>
-            <span className="font-weight-bold">{payload[1].value.toLocaleString()}</span>
+            <span className="font-weight-bold">{payload[1]?.value?.toLocaleString()}</span>
           </p>
         </p>
       </div>
@@ -98,3 +98,4 @@ const customedTooltip = ({ active, payload, label }) => {
 }
 
 export default DoughNutChartComonent
+

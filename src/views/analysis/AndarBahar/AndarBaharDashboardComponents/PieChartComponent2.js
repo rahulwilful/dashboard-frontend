@@ -27,7 +27,7 @@ const renderCustomizedLabel = ({
 
   return (
     <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-      {`${(percent * 100).toFixed(0)}%`}
+      {`${(percent * 100)?.toFixed(0)}%`}
     </text>
   )
 }
@@ -37,7 +37,7 @@ const PieChartComponent2 = (props) => {
   const [pieData, setPieData] = useState([])
   const COLORS = ['rgb(36, 141, 92)', 'rgb(255, 43, 50)', 'rgb(36, 141, 92)', 'rgb(36, 141, 92)']
   useEffect(() => {
-    setPieData(props.pieData)
+    setPieData(props?.pieData)
   })
 
   return (

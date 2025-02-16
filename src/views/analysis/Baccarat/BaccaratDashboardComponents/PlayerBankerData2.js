@@ -9,23 +9,23 @@ const PlayerBankerData2 = (props) => {
   const [shoeData, setShoeData] = useState([{}])
 
   useEffect(() => {
-    setCurrentShoe(props.shoes[0])
+    setCurrentShoe(props.shoes?.[0])
 
-    console.log('props.shoeData[0].data[0].playerSplit[0].j', props.shoeData)
+    console.log('props.shoeData[0]?.data[0]?.playerSplit[0]?.j', props.shoeData)
 
-    /*  for (let i = 0; i < props.shoeData.length; i++) {
-        for (let j = 0; j < props.shoeData[i].data.length; j++) {
-          const tempPlayerSplit = props.shoeData[i].data[j].player_cards.split(',')
-          const tempBankerSplit = props.shoeData[i].data[j].banker_cards.split(',')
+    /*  for (let i = 0; i < props.shoeData?.length; i++) {
+        for (let j = 0; j < props.shoeData[i]?.data?.length; j++) {
+          const tempPlayerSplit = props.shoeData[i]?.data[j]?.player_cards?.split(',')
+          const tempBankerSplit = props.shoeData[i]?.data[j]?.banker_cards?.split(',')
   
           let PlayerSplit = []
           let BankerSplit = []
   
-          for (let k = 0; k < tempPlayerSplit.length; k++) {
+          for (let k = 0; k < tempPlayerSplit?.length; k++) {
             PlayerSplit.push(tempPlayerSplit[k])
           }
   
-          for (let k = 0; k < tempBankerSplit.length; k++) {
+          for (let k = 0; k < tempBankerSplit?.length; k++) {
             BankerSplit.push(tempBankerSplit[k])
           }
   
@@ -60,8 +60,8 @@ const PlayerBankerData2 = (props) => {
               <div
                 className={`w-100  border ${s.cards}  d-flex justify-content-center align-items-center`}
               >
-                {shoeData.length > 0 && shoeData[0].data.length > 0
-                  ? shoeData[0].data[0].playerCard1
+                {shoeData?.length > 0 && shoeData[0]?.data?.length > 0
+                  ? shoeData[0]?.data[0]?.playerCard1
                   : 'Loading...'}
               </div>
               <div
@@ -85,7 +85,7 @@ const PlayerBankerData2 = (props) => {
                       value={currentShoe}
                       onChange={handleShoeChange} // Event handler for selection
                     >
-                      {props.shoes.map((item, i) => (
+                      {props.shoes?.map((item, i) => (
                         <option key={i} value={item}>
                           {item}
                         </option>

@@ -29,16 +29,16 @@ const LineChartComponent = () => {
 
   return (
     <ResponsiveContainer width="100%" height={200}>
-      <LineChart data={data}>
+      <LineChart data={data?.length ? data : []}>
         {/* Update axis text color */}
-        <YAxis tick={{ fill: 'blue', fontSize: 10 }} stroke={color} />
-        <XAxis dataKey="name" tick={{ fill: 'blue', fontSize: 10 }} stroke={color} />
+        <YAxis tick={{ fill: color, fontSize: 10 }} stroke={color} />
+        <XAxis dataKey="name" tick={{ fill: color, fontSize: 10 }} stroke={color} />
         <CartesianGrid strokeDasharray="5 5" stroke={color} />
         {/* Custom tooltip */}
         <Tooltip content={customedTooltip} />
 
         {/* Update legend text color */}
-        <Legend wrapperStyle={{ color: 'blue' }} />
+        <Legend wrapperStyle={{ color }} />
 
         <Line
           stackId={1}
@@ -62,16 +62,16 @@ const LineChartComponent = () => {
 }
 
 const customedTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
+  if (active && payload?.length) {
     return (
       <div className="custom-tooltip" style={{ color: 'white' }}>
         <p className="label">
           <p className="font-weight-bold">{label}</p>
           <p>
-            <span className="font-weight-bold">{payload[0].value.toLocaleString()}</span>
+            <span className="font-weight-bold">{payload?.[0]?.value?.toLocaleString()}</span>
           </p>
           <p>
-            <span className="font-weight-bold">{payload[1].value.toLocaleString()}</span>
+            <span className="font-weight-bold">{payload?.[1]?.value?.toLocaleString()}</span>
           </p>
         </p>
       </div>
@@ -80,3 +80,4 @@ const customedTooltip = ({ active, payload, label }) => {
 }
 
 export default LineChartComponent
+

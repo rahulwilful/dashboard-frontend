@@ -12,7 +12,7 @@ import {
 import { useSelector } from 'react-redux'
 
 const BarChartComponent = (props) => {
-  const theme = useSelector((state) => state.theme)
+  const theme = useSelector((state) => state?.theme)
 
   const [textColor, setTextColor] = useState('rgb(11, 94, 215)')
   const [stroke, setStroke] = useState('rgb(11, 94, 215)')
@@ -45,19 +45,19 @@ const BarChartComponent = (props) => {
   }, [theme])
 
   useEffect(() => {
-    if (props.data && Array.isArray(props.data)) {
-      setData(props.data)
+    if (props?.data && Array.isArray(props?.data)) {
+      setData(props?.data)
     } else {
       setData([]) // Ensure fallback
     }
-  }, [props.data])
+  }, [props?.data])
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
         <div className="custom-tooltip border p-2 rounded bg-light shadow-s  text-dark">
           <div>
-            <span>{label}</span> won <span>{payload[0].value}</span> times
+            <span>{label}</span> won <span>{payload[0]?.value}</span> times
           </div>
         </div>
       )
@@ -88,9 +88,9 @@ const BarChartComponent = (props) => {
           tick={({ x, y, payload }) => {
             const maxLabelWidth = 100
             const truncatedText =
-              payload.value.length > maxLabelWidth / 7
-                ? `${payload.value.slice(0, maxLabelWidth / 7)}...`
-                : payload.value
+              payload?.value?.length > maxLabelWidth / 7
+                ? `${payload?.value?.slice(0, maxLabelWidth / 7)}...`
+                : payload?.value
 
             return (
               <text
@@ -127,4 +127,3 @@ const BarChartComponent = (props) => {
 }
 
 export default BarChartComponent
-

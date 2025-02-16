@@ -18,7 +18,7 @@ const WinStatistics = (props) => {
   const [voisins, setVoisins] = useState(0)
   const [jeuOfZero, setJeuOfZero] = useState(0)
   const [tiers, setTiers] = useState(0)
-  const theme = useSelector((state) => state.theme)
+  const theme = useSelector((state) => state?.theme)
 
   let tempData = [
     { name: '0', number: 0, color: 'green' },
@@ -115,7 +115,7 @@ const WinStatistics = (props) => {
   tiersNumbers.set(33, true)
 
   useEffect(() => {
-    if (props.data) {
+    if (props?.data) {
       let evenNumber = 0
       let oddNumber = 0
       let number1_18 = 0
@@ -129,46 +129,46 @@ const WinStatistics = (props) => {
       let tier = 0
       //console.log('props.data ', props.data)
 
-      for (let i in props.data) {
-        if (props.data[i].winning_number % 2 == 0) {
+      for (let i in props?.data) {
+        if (props?.data[i]?.winning_number % 2 == 0) {
           evenNumber++
         } else {
           oddNumber++
         }
 
-        if (props.data[i].winning_number >= 1 && props.data[i].winning_number <= 18) {
+        if (props?.data[i]?.winning_number >= 1 && props?.data[i]?.winning_number <= 18) {
           number1_18++
         }
 
-        if (props.data[i].winning_number >= 19 && props.data[i].winning_number <= 36) {
+        if (props?.data[i]?.winning_number >= 19 && props?.data[i]?.winning_number <= 36) {
           numbers19_36++
         }
 
-        if (props.data[i].winning_number >= 1 && props.data[i].winning_number <= 12) {
+        if (props?.data[i]?.winning_number >= 1 && props?.data[i]?.winning_number <= 12) {
           fisrt12++
         }
 
-        if (props.data[i].winning_number >= 13 && props.data[i].winning_number <= 24) {
+        if (props?.data[i]?.winning_number >= 13 && props?.data[i]?.winning_number <= 24) {
           second12++
         }
 
-        if (props.data[i].winning_number >= 25 && props.data[i].winning_number <= 36) {
+        if (props?.data[i]?.winning_number >= 25 && props?.data[i]?.winning_number <= 36) {
           third12++
         }
 
-        if (orphenLinesNumbers.get(String(props.data[i].winning_number)) == true) {
+        if (orphenLinesNumbers.get(String(props?.data[i]?.winning_number)) == true) {
           orphan++
         }
 
-        if (jeuOfZeroNumbers.get(props.data[i].winning_number) == true) {
+        if (jeuOfZeroNumbers.get(props?.data[i]?.winning_number) == true) {
           jeu++
         }
 
-        if (voisinsNumbers.get(props.data[i].winning_number) == true) {
+        if (voisinsNumbers.get(props?.data[i]?.winning_number) == true) {
           voisin++
         }
 
-        if (tiersNumbers.get(props.data[i].winning_number) == true) {
+        if (tiersNumbers.get(props?.data[i]?.winning_number) == true) {
           tier++
         }
       }
@@ -189,10 +189,10 @@ const WinStatistics = (props) => {
       setVoisins(voisin)
       setTiers(tier)
     }
-    setRedTotal(props.red)
-    setBlackTotal(props.black)
-    setRedBlackTotal(props.redBlackTotal)
-  }, [props.data])
+    setRedTotal(props?.red)
+    setBlackTotal(props?.black)
+    setRedBlackTotal(props?.redBlackTotal)
+  }, [props?.data])
 
   useEffect(() => {
     //console.log('even ', even, ' odd ', odd)
@@ -283,7 +283,7 @@ const WinStatistics = (props) => {
                       <span
                         className={`rounded-1 bg-primary text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
                       >
-                        {Math.floor((jeuOfZero / props.data.length) * 100)}%
+                        {Math.floor((jeuOfZero / props?.data?.length) * 100)}%
                       </span>
                     </td>
                   </tr>
@@ -293,7 +293,7 @@ const WinStatistics = (props) => {
                       <span
                         className={`rounded-1 bg-primary text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
                       >
-                        {Math.floor((orphanLines / props.data.length) * 100)}%
+                        {Math.floor((orphanLines / props?.data?.length) * 100)}%
                       </span>
                     </td>
                   </tr>
@@ -311,7 +311,7 @@ const WinStatistics = (props) => {
                       <span
                         className={`rounded-1 bg-primary text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
                       >
-                        {Math.floor((voisins / props.data.length) * 100)}%
+                        {Math.floor((voisins / props?.data?.length) * 100)}%
                       </span>
                     </td>
                   </tr>
@@ -321,7 +321,7 @@ const WinStatistics = (props) => {
                       <span
                         className={`rounded-1 bg-primary text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
                       >
-                        {Math.floor((tiers / props.data.length) * 100)}%
+                        {Math.floor((tiers / props?.data?.length) * 100)}%
                       </span>
                     </td>
                   </tr>
@@ -375,7 +375,7 @@ const WinStatistics = (props) => {
                         <span
                           className={`rounded-1 bg-success text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}
                         >
-                          {props.data.length}
+                          {props?.data?.length}
                         </span>
                       </td>
                     </tr>

@@ -35,11 +35,11 @@ const renderCustomizedLabel = ({
 }
 
 const PieChartComponent = (props) => {
-  const [bankerVsPlayer, setBankerVsPlayer] = useState([])
+  const [bankerVsPlayer, setBankerVsPlayer] = useState(props?.bankerVsPlayer ?? [])
 
   useEffect(() => {
-    setBankerVsPlayer(props.bankerVsPlayer)
-  })
+    setBankerVsPlayer(props?.bankerVsPlayer ?? [])
+  }, [props?.bankerVsPlayer])
 
   return (
     <ResponsiveContainer width="100%" height={300} className={'text-shadow '}>
@@ -60,7 +60,7 @@ const PieChartComponent = (props) => {
           stroke={false}
         >
           {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            <Cell key={`cell-${index}`} fill={COLORS?.[index % COLORS?.length]} />
           ))}
         </Pie>
       </PieChart>

@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom'
 import { GetCurrent } from '../../getCurrent.js'
 
 const Config = () => {
-  const theme = useSelector((state) => state.theme)
+  const theme = useSelector((state) => state?.theme)
   const [themeClass, setThemeClass] = useState('bg-light text-dark border')
   const [themeBorder, setThemeBorder] = useState('bg-light text-dark border')
   const navigate = useNavigate()
@@ -62,7 +62,7 @@ const Config = () => {
   }
 
   const handleAddtheme = async () => {
-    if (formData.theme == '') {
+    if (formData.theme === '') {
       showToast('Enter Theme', 'info')
       return
     }
@@ -72,7 +72,7 @@ const Config = () => {
       console.log(response)
       showToast('Theme added successfully!', 'success')
     } catch (error) {
-      if (error.status == 409) {
+      if (error?.response?.status === 409) {
         showToast(`${formData.theme} already exists`, 'error')
       } else {
         showToast('Error while adding theme', 'error')
@@ -90,7 +90,7 @@ const Config = () => {
   }
 
   const handleAddTableType = async () => {
-    if (formData.game_type_name == '') {
+    if (formData.game_type_name === '') {
       showToast('Enter Table Type', 'info')
       return
     }
@@ -101,7 +101,7 @@ const Config = () => {
       showToast('Table Type added successfully!', 'success')
     } catch (error) {
       console.error(error)
-      if (error.status == 409) {
+      if (error?.response?.status === 409) {
         showToast(`${formData.game_type_name} already exists`, 'error')
       } else {
         showToast('Error while adding Table Type', 'error')
@@ -118,7 +118,7 @@ const Config = () => {
   }
 
   const handleAddBackground = async () => {
-    if (formData.background == '') {
+    if (formData.background === '') {
       showToast('Enter Background', 'info')
       return
     }
@@ -128,7 +128,7 @@ const Config = () => {
       console.log(response)
       showToast('Background added successfully!', 'success')
     } catch (error) {
-      if (error.status == 409) {
+      if (error?.response?.status === 409) {
         showToast(`${formData.background} already exists`, 'error')
       } else {
         showToast('Error while adding Background', 'error')
@@ -146,7 +146,7 @@ const Config = () => {
   }
 
   const handleAddLanguage = async () => {
-    if (formData.language == '') {
+    if (formData.language === '') {
       showToast('Enter Language', 'info')
       return
     }
@@ -156,7 +156,7 @@ const Config = () => {
       console.log(response)
       showToast('Language added successfully!', 'success')
     } catch (error) {
-      if (error.status == 409) {
+      if (error?.response?.status === 409) {
         showToast(`${formData.language} already exists`, 'error')
       } else {
         showToast('Error while adding Language', 'error')
@@ -174,7 +174,7 @@ const Config = () => {
   }
 
   const handleAddCurrency = async () => {
-    if (formData.currency == '') {
+    if (formData.currency === '') {
       showToast('Enter Currency', 'info')
       return
     }
@@ -184,7 +184,7 @@ const Config = () => {
       console.log(response)
       showToast('Currency added successfully!', 'success')
     } catch (error) {
-      if (error.status == 409) {
+      if (error?.response?.status === 409) {
         showToast(`${formData.currency} already exists`, 'error')
       } else {
         showToast('Error while adding Currency', 'error')
@@ -231,7 +231,7 @@ const Config = () => {
       <div
         className="modal fade"
         id="addTableModal"
-        tabindex="-1"
+        tabIndex="-1"
         aria-labelledby="addTableModalLabel"
         aria-hidden="true"
       >
@@ -250,7 +250,7 @@ const Config = () => {
             </div>
 
             <div className="modal-footer border-0">
-              <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">
+              <button type="button" className="btn btn-sm btn-secondary" data-bs-dismiss="modal">
                 Close
               </button>
               <button
@@ -258,7 +258,7 @@ const Config = () => {
                 type="button"
                 data-bs-toggle="modal"
                 data-bs-target="#addTableModal"
-                class="btn btn-primary btn-sm"
+                className="btn btn-primary btn-sm"
               >
                 Add table
               </button>
@@ -270,7 +270,7 @@ const Config = () => {
       <div
         className="modal fade"
         id="addThemeModal"
-        tabindex="-1"
+        tabIndex="-1"
         aria-labelledby="addThemeModalLabel"
         aria-hidden="true"
       >
@@ -289,14 +289,14 @@ const Config = () => {
             </div>
 
             <div className="modal-footer border-0">
-              <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">
+              <button type="button" className="btn btn-sm btn-secondary" data-bs-dismiss="modal">
                 Close
               </button>
               <button
                 onClick={handleAddtheme}
                 type="button"
                 data-bs-dismiss="modal"
-                class="btn btn-primary btn-sm"
+                className="btn btn-primary btn-sm"
               >
                 Add Theme
               </button>
@@ -308,7 +308,7 @@ const Config = () => {
       <div
         className="modal fade"
         id="addBackgroundModal"
-        tabindex="-1"
+        tabIndex="-1"
         aria-labelledby="addBackgroundModalLabel"
         aria-hidden="true"
       >
@@ -327,14 +327,14 @@ const Config = () => {
             </div>
 
             <div className="modal-footer border-0">
-              <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">
+              <button type="button" className="btn btn-sm btn-secondary" data-bs-dismiss="modal">
                 Close
               </button>
               <button
                 onClick={handleAddBackground}
                 type="button"
                 data-bs-dismiss="modal"
-                class="btn btn-primary btn-sm"
+                className="btn btn-primary btn-sm"
               >
                 Add Background
               </button>
@@ -346,7 +346,7 @@ const Config = () => {
       <div
         className="modal fade"
         id="addLanguageModal"
-        tabindex="-1"
+        tabIndex="-1"
         aria-labelledby="addLanguageModalLabel"
         aria-hidden="true"
       >
@@ -365,14 +365,14 @@ const Config = () => {
             </div>
 
             <div className="modal-footer border-0">
-              <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">
+              <button type="button" className="btn btn-sm btn-secondary" data-bs-dismiss="modal">
                 Close
               </button>
               <button
                 onClick={handleAddLanguage}
                 type="button"
                 data-bs-dismiss="modal"
-                class="btn btn-primary btn-sm"
+                className="btn btn-primary btn-sm"
               >
                 Add Language
               </button>
@@ -384,7 +384,7 @@ const Config = () => {
       <div
         className="modal fade"
         id="addCurrencyModal"
-        tabindex="-1"
+        tabIndex="-1"
         aria-labelledby="addCurrencyModalLabel"
         aria-hidden="true"
       >
@@ -403,14 +403,14 @@ const Config = () => {
             </div>
 
             <div className="modal-footer border-0">
-              <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">
+              <button type="button" className="btn btn-sm btn-secondary" data-bs-dismiss="modal">
                 Close
               </button>
               <button
                 onClick={handleAddCurrency}
                 type="button"
                 data-bs-dismiss="modal"
-                class="btn btn-primary btn-sm"
+                className="btn btn-primary btn-sm"
               >
                 Add Currency
               </button>
@@ -419,45 +419,38 @@ const Config = () => {
         </div>
       </div>
 
-      {/* ///////////////////////////////////////////////////////////////////////////////////// */}
-
-      {/* ///////////////////////////////////////////////////////////////////////////////////////////////////////// */}
       <div className={`container-xl px-4 mt-4 ${theme === 'dark' ? 'text-light' : 'text-dark'}`}>
-        <div className={`row `}></div>
-        <div className={`col-xl-12  `}>
-          {/* Account details card */}
+        <div className="row"></div>
+        <div className="col-xl-12">
           <div
             className={`card mb-4 border border-secondary border-opacity-50 shadow-xs  text-bg-${theme}`}
           >
             <div
               className={`card-header border-bottom border-secondary border-opacity-25 d-flex justify-content-between`}
             >
-              <div className={``}>Add User</div>
+              <div>Add User</div>
             </div>
-            <div className={`card-body`}>
+            <div className="card-body">
               <div>
-                {/* Form Group (username) */}
-
-                {/* Form Row */}
-                <div className={`row gx-3 mb3`}>
-                  <div className={`col-12 col-md-6 col-xl-4`}>
-                    <div className="mb-2  ">
+                <div className="row gx-3 mb3">
+                  <div className="col-12 col-md-6 col-xl-4">
+                    <div className="mb-2">
                       <label className="animate form-label">Game Type</label>
-                      <div className="d-flex   align-items-center gap-2 flex-md-row">
+                      <div className="d-flex align-items-center gap-2 flex-md-row">
                         <input
                           type="text"
-                          className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder} `}
+                          className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
                           placeholder="Enter"
                           name="game_type_name"
                           value={formData.game_type_name}
                           onChange={handleChange}
                         />
-                        <div className="my-1 px-1 ">
+                        <div className="my-1 px-1">
                           <button
                             data-bs-toggle="modal"
                             data-bs-target="#addTableModal"
                             type="button"
-                            className={`btn animate ${theme === 'dark' ? 'btn-primary' : 'btn-dark '} btn-sm  px-3 ${formData.game_type_name == '' ? 'disabled' : 'opacity-100'}`}
+                            className={`btn animate ${theme === 'dark' ? 'btn-primary' : 'btn-dark'} btn-sm px-3 ${formData.game_type_name === '' ? 'disabled' : 'opacity-100'}`}
                           >
                             Add
                           </button>
@@ -466,28 +459,28 @@ const Config = () => {
                     </div>
                   </div>
 
-                  <div className={`col-12 col-md-6 col-xl-4`}>
-                    <div className="mb-2  ">
+                  <div className="col-12 col-md-6 col-xl-4">
+                    <div className="mb-2">
                       <label
                         className={`animate form-label ${s.placeholder_grey} ${theme === 'dark' ? 'text-light' : 'text-dark'}`}
                       >
                         Theme
                       </label>
-                      <div className={`d-flex   align-items-center gap-2 flex-md-row `}>
+                      <div className="d-flex align-items-center gap-2 flex-md-row">
                         <input
                           type="text"
-                          className={`form-control animate ${s.placeholder_grey} ${theme === 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'} ${themeBorder} `}
+                          className={`form-control animate ${s.placeholder_grey} ${theme === 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'} ${themeBorder}`}
                           placeholder="Enter"
                           name="theme"
                           value={formData.theme}
                           onChange={handleChange}
                         />
-                        <div className="my-1 px-1 ">
+                        <div className="my-1 px-1">
                           <button
                             data-bs-toggle="modal"
                             data-bs-target="#addThemeModal"
                             type="button"
-                            className={`btn animate ${theme === 'dark' ? 'btn-primary' : 'btn-dark '} btn-sm  px-3 ${formData.theme == '' ? 'disabled' : 'opacity-100'}`}
+                            className={`btn animate ${theme === 'dark' ? 'btn-primary' : 'btn-dark'} btn-sm px-3 ${formData.theme === '' ? 'disabled' : 'opacity-100'}`}
                           >
                             Add
                           </button>
@@ -496,28 +489,28 @@ const Config = () => {
                     </div>
                   </div>
 
-                  <div className={`col-12 col-md-6 col-xl-4`}>
-                    <div className="mb-2  ">
+                  <div className="col-12 col-md-6 col-xl-4">
+                    <div className="mb-2">
                       <label
                         className={`animate form-label ${s.placeholder_grey} ${theme === 'dark' ? 'text-light' : 'text-dark'}`}
                       >
                         Background
                       </label>
-                      <div className={`d-flex   align-items-center gap-2 flex-md-row `}>
+                      <div className="d-flex align-items-center gap-2 flex-md-row">
                         <input
                           type="text"
-                          className={`form-control animate ${s.placeholder_grey} ${theme === 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'} ${themeBorder} `}
+                          className={`form-control animate ${s.placeholder_grey} ${theme === 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'} ${themeBorder}`}
                           placeholder="Enter"
                           name="background"
                           value={formData.background}
                           onChange={handleChange}
                         />
-                        <div className="my-1 px-1 ">
+                        <div className="my-1 px-1">
                           <button
                             data-bs-toggle="modal"
                             data-bs-target="#addBackgroundModal"
                             type="button"
-                            className={`btn animate ${theme === 'dark' ? 'btn-primary' : 'btn-dark '} btn-sm  px-3 ${formData.background == '' ? 'disabled' : 'opacity-100'}`}
+                            className={`btn animate ${theme === 'dark' ? 'btn-primary' : 'btn-dark'} btn-sm px-3 ${formData.background === '' ? 'disabled' : 'opacity-100'}`}
                           >
                             Add
                           </button>
@@ -526,28 +519,28 @@ const Config = () => {
                     </div>
                   </div>
 
-                  <div className={`col-12 col-md-6 col-xl-4`}>
-                    <div className="mb-2  ">
+                  <div className="col-12 col-md-6 col-xl-4">
+                    <div className="mb-2">
                       <label
                         className={`animate form-label ${s.placeholder_grey} ${theme === 'dark' ? 'text-light' : 'text-dark'}`}
                       >
                         Currency
                       </label>
-                      <div className={`d-flex   align-items-center gap-2 flex-md-row `}>
+                      <div className="d-flex align-items-center gap-2 flex-md-row">
                         <input
                           type="text"
-                          className={`form-control animate ${s.placeholder_grey} ${theme === 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'} ${themeBorder} `}
+                          className={`form-control animate ${s.placeholder_grey} ${theme === 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'} ${themeBorder}`}
                           placeholder="Enter"
                           name="currency"
                           value={formData.currency}
                           onChange={handleChange}
                         />
-                        <div className="my-1 px-1 ">
+                        <div className="my-1 px-1">
                           <button
                             data-bs-toggle="modal"
                             data-bs-target="#addCurrencyModal"
                             type="button"
-                            className={`btn animate ${theme === 'dark' ? 'btn-primary' : 'btn-dark '} btn-sm  px-3 ${formData.currency == '' ? 'disabled' : 'opacity-100'}`}
+                            className={`btn animate ${theme === 'dark' ? 'btn-primary' : 'btn-dark'} btn-sm px-3 ${formData.currency === '' ? 'disabled' : 'opacity-100'}`}
                           >
                             Add
                           </button>
@@ -555,14 +548,14 @@ const Config = () => {
                       </div>
                     </div>
                   </div>
-                  <div className={`col-12 col-md-6 col-xl-4`}>
+                  <div className="col-12 col-md-6 col-xl-4">
                     <div className="mb-2">
                       <label
                         className={`animate form-label ${s.placeholder_grey} ${theme === 'dark' ? 'text-light' : 'text-dark'}`}
                       >
                         Language
                       </label>
-                      <div className={`d-flex align-items-center gap-2 flex-md-row`}>
+                      <div className="d-flex align-items-center gap-2 flex-md-row">
                         <input
                           type="text"
                           className={`form-control animate ${s.placeholder_grey} ${theme === 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'} ${themeBorder}`}

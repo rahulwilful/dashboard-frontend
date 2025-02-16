@@ -12,7 +12,7 @@ import {
 import { useSelector } from 'react-redux'
 
 const BarChartComponent = (props) => {
-  const theme = useSelector((state) => state.theme)
+  const theme = useSelector((state) => state?.theme)
 
   const [textColor, setTextColor] = useState('rgb(11, 94, 215)')
   const [stroke, setStroke] = useState('rgb(11, 94, 215)')
@@ -45,12 +45,12 @@ const BarChartComponent = (props) => {
   }, [theme])
 
   useEffect(() => {
-    if (props.graphData && Array.isArray(props.graphData)) {
-      setData(props.graphData)
+    if (props?.graphData && Array.isArray(props?.graphData)) {
+      setData(props?.graphData)
     } else {
       setData([]) // Ensure fallback
     }
-  }, [props.graphData])
+  }, [props?.graphData])
 
   return (
     <ResponsiveContainer width="100%" height={250} className={' '}>
@@ -73,9 +73,9 @@ const BarChartComponent = (props) => {
           tick={({ x, y, payload }) => {
             const maxLabelWidth = 100
             const truncatedText =
-              payload.value.length > maxLabelWidth / 7
-                ? `${payload.value.slice(0, maxLabelWidth / 7)}...`
-                : payload.value
+              payload?.value?.length > maxLabelWidth / 7
+                ? `${payload?.value?.slice(0, maxLabelWidth / 7)}...`
+                : payload?.value
 
             return (
               <text
@@ -102,7 +102,7 @@ const BarChartComponent = (props) => {
         />
         <Tooltip />
         <Bar dataKey="value" radius={[0, 9, 9, 0]} barSize={30} className="drop_shadow">
-          {data.map((entry, index) => (
+          {data?.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Bar>

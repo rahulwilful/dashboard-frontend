@@ -49,11 +49,11 @@ const renderCustomizedLabel = ({
 }
 
 const TooltipContent = ({ payload }) => {
-  console.log("payload: ",payload)
+  console.log('payload: ', payload)
   return (
-    <div className='border p-2 rounded bg-light shadow-s  text-dark' >
-      {payload.map((entry, index) => (
-        <div key={index}>{`${entry.name} won ${entry.value} times`}</div>
+    <div className="border p-2 rounded bg-light shadow-s  text-dark">
+      {payload?.map((entry, index) => (
+        <div key={index}>{`${entry?.name} won ${entry?.value} times`}</div>
       ))}
     </div>
   )
@@ -64,9 +64,9 @@ const PieChartComponent = (props) => {
   const [data, setData] = useState([])
 
   useEffect(() => {
-    setBankerVsPlayer(props.bankerVsPlayer)
-    setData(props.data)
-  })
+    setBankerVsPlayer(props?.bankerVsPlayer)
+    setData(props?.data)
+  }, [props?.bankerVsPlayer, props?.data])
 
   return (
     <ResponsiveContainer width="100%" height={300} className={'text-shadow '}>
@@ -83,10 +83,9 @@ const PieChartComponent = (props) => {
           paddingAngle={5}
           dataKey="wins"
           labelLine={false}
-         
           stroke={false}
         >
-          {data.map((entry, index) => (
+          {data?.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
@@ -96,4 +95,3 @@ const PieChartComponent = (props) => {
 }
 
 export default PieChartComponent
-

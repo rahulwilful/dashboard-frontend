@@ -53,13 +53,13 @@ const RadarChartComponent = (props) => {
 
   useEffect(() => {
     //console.log('props.data: ', props.data)
-    if (props.data) {
+    if (props.data?.length) {
       setData(props.data)
       // console.log('props.data: ', props.data)
     } else {
       setData(tempData)
     }
-  }, [props.data])
+  }, [props.data?.length])
 
   return (
     <ResponsiveContainer width="100%" height={'100%'} className="">
@@ -84,16 +84,16 @@ const RadarChartComponent = (props) => {
 }
 
 const customedTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
+  if (active && payload?.length) {
     return (
       <div className="custom-tooltip">
         <p className="label">
           <p className="font-weight-bold">{label}</p>
           <p>
-            <span className="font-weight-bold">{payload[0].value.toLocaleString()}</span>
+            <span className="font-weight-bold">{payload[0]?.value?.toLocaleString()}</span>
           </p>
           <p>
-            <span className="font-weight-bold">{payload[1].value.toLocaleString()}</span>
+            <span className="font-weight-bold">{payload[1]?.value?.toLocaleString()}</span>
           </p>
         </p>
       </div>
@@ -102,3 +102,4 @@ const customedTooltip = ({ active, payload, label }) => {
 }
 
 export default RadarChartComponent
+
