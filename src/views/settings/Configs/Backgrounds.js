@@ -16,7 +16,7 @@ import NoDataFull from '../../NoData/NoDataFull'
 
 const UpdateBackgrounds = (props) => {
   const [parent, animateParent] = useAutoAnimate()
-  const theme = useSelector((state) => state.theme)
+  const theme = useSelector((state) => state?.theme)
 
   const navigate = useNavigate()
   const [originalBackgrounds, setOriginalBackgrounds] = useState([])
@@ -28,33 +28,35 @@ const UpdateBackgrounds = (props) => {
 
   const getBackgrounds = async () => {
     const { data } = await axiosClient.get(`/config/get/background`)
-    //  console.log(data)
-    if (data) {
+    if (data?.backgrounds) {
       setDisplay('data')
     } else {
       setDisplay('nodata')
     }
-    setBackgrounds(data.backgrounds)
-    setOriginalBackgrounds(data.backgrounds)
+    setBackgrounds(data?.backgrounds ?? [])
+    setOriginalBackgrounds(data?.backgrounds ?? [])
   }
 
   const handleSetForm = (background) => {
-    setForm({ background_id: background.background_id, background: background.background })
+    setForm({
+      background_id: background?.background_id ?? '',
+      background: background?.background ?? '',
+    })
   }
 
   const updateBackground = async () => {
-    let tempForm = { background: form.background.toLowerCase() }
+    let tempForm = { background: form?.background?.toLowerCase() ?? '' }
 
     try {
       const { data } = await axiosClient.put(
-        `/config/update/background/${form.background_id}`,
+        `/config/update/background/${form?.background_id ?? ''}`,
         tempForm,
       )
       console.log(data)
       showToast('Background updated successfully!', 'success')
       const temp = backgrounds.map((background) =>
-        background.background_id === form.background_id
-          ? { ...background, background: tempForm.background }
+        background?.background_id === form?.background_id
+          ? { ...background, background: tempForm?.background ?? '' }
           : background,
       )
       setBackgrounds(temp)
@@ -83,14 +85,14 @@ const UpdateBackgrounds = (props) => {
   }
 
   const handleSearch = (e) => {
-    if (e.target.value === '') {
+    if (e?.target?.value === '') {
       setBackgrounds(originalBackgrounds)
     } else {
-      const value = e.target.value.toLowerCase()
-      const filtered = backgrounds.filter((background) =>
-        background.background.toLowerCase().includes(value),
+      const value = e?.target?.value?.toLowerCase() ?? ''
+      const filtered = backgrounds?.filter((background) =>
+        background?.background?.toLowerCase()?.includes(value),
       )
-      setBackgrounds(filtered)
+      setBackgrounds(filtered ?? [])
       setSearch(value)
     }
   }
@@ -144,14 +146,14 @@ const UpdateBackgrounds = (props) => {
             </div>
             <div className="modal-body">
               <div className="mb-3 ">
-                <div class="mb-3">
+                <div className="mb-3">
                   <input
                     type="text"
-                    class="form-control"
+                    className="form-control"
                     id="exampleInputEmail1"
                     aria-describedby="emailHelp"
-                    value={form.background}
-                    onChange={(e) => setForm({ ...form, background: e.target.value })}
+                    value={form?.background ?? ''}
+                    onChange={(e) => setForm({ ...form, background: e?.target?.value ?? '' })}
                   />
                 </div>
               </div>
@@ -192,9 +194,9 @@ const UpdateBackgrounds = (props) => {
             </tr>
           </thead>
           <tbody ref={parent}>
-            {backgrounds.map((background, i) => (
+            {backgrounds?.map((background, i) => (
               <tr key={i}>
-                <td>{background.background}</td>
+                <td>{background?.background ?? ''}</td>
                 <td className="">
                   <div className="" style={{ height: '1rem', width: '1rem' }}>
                     <div
@@ -202,7 +204,7 @@ const UpdateBackgrounds = (props) => {
                       style={{
                         width: '10px',
                         height: '10px',
-                        backgroundColor: background.background,
+                        backgroundColor: background?.background ?? '',
                       }}
                     ></div>
                   </div>

@@ -13,7 +13,7 @@ import { GetCurrent } from '../../../getCurrent.js'
 const EditTable = () => {
   const navigate = useNavigate()
   const params = useParams()
-  const theme = useSelector((state) => state.theme)
+  const theme = useSelector((state) => state?.theme)
   const [languages, setLanguages] = useState([])
   const [themes, setThemes] = useState([])
   const [backgrounds, setBackgrounds] = useState([])
@@ -28,7 +28,7 @@ const EditTable = () => {
       const response = await axiosClient.get('config/get/configs')
       console.log('response', response)
 
-      const { languages, themes, backgrounds, games, currencys } = response.data
+      const { languages, themes, backgrounds, games, currencys } = response?.data
       setLanguages(languages)
       setBackgrounds(backgrounds)
       setThemes(themes)
@@ -40,30 +40,30 @@ const EditTable = () => {
       let theme = ''
       let currency = ''
 
-      const { data } = await axiosClient.get(`/table/limits/get/${params.id}`)
+      const { data } = await axiosClient.get(`/table/limits/get/${params?.id}`)
       console.log('response2', data)
 
       for (let i in languages) {
-        if (languages[i].language_id == data.result.language_id) {
-          language = languages[i].language_id
+        if (languages[i]?.language_id == data?.result?.language_id) {
+          language = languages[i]?.language_id
         }
       }
 
       for (let i in backgrounds) {
-        if (backgrounds[i].background_id == data.result.background_id) {
-          background = backgrounds[i].background_id
+        if (backgrounds[i]?.background_id == data?.result?.background_id) {
+          background = backgrounds[i]?.background_id
         }
       }
 
       for (let i in themes) {
-        if (themes[i].theme_id == data.result.theme_id) {
-          theme = themes[i].theme_id
+        if (themes[i]?.theme_id == data?.result?.theme_id) {
+          theme = themes[i]?.theme_id
         }
       }
 
       for (let i in currencys) {
-        if (currencys[i].currency_id == data.result.currency_id) {
-          currency = currencys[i].currency_id
+        if (currencys[i]?.currency_id == data?.result?.currency_id) {
+          currency = currencys[i]?.currency_id
         }
       }
 
@@ -73,15 +73,15 @@ const EditTable = () => {
 
       setFormData({
         ...formData,
-        table_limit_name: data.result.table_limit_name,
-        game_name: data.result.game_name,
-        game_id: data.result.game_id,
-        min_bet: data.result.min_bet,
-        max_bet: data.result.max_bet,
-        side_bet_min: data.result.side_bet_min,
-        side_bet_max: data.result.side_bet_max,
-        s_message: data.result.s_message,
-        commission: data.result.commission,
+        table_limit_name: data?.result?.table_limit_name,
+        game_name: data?.result?.game_name,
+        game_id: data?.result?.game_id,
+        min_bet: data?.result?.min_bet,
+        max_bet: data?.result?.max_bet,
+        side_bet_min: data?.result?.side_bet_min,
+        side_bet_max: data?.result?.side_bet_max,
+        s_message: data?.result?.s_message,
+        commission: data?.result?.commission,
         theme: theme,
         background: background,
         language: language,
@@ -117,24 +117,25 @@ const EditTable = () => {
 
     /*  setFormData({
       ...formData,
-      game_name: props.table,
-      game_id: props.id,
+      game_name: props?.table,
+      game_id: props?.id,
     }) */
   }, [])
 
   useEffect(() => {
     setThemeClass(
       theme === 'dark'
-        ? `bg-dark text-light border-secondary border-opacity-25 shadow-xs ${s.placeholder_grey}`
+        ? `bg-dark text-light border-secondary border-opacity-25 shadow-xs ${s?.placeholder_grey}`
         : `text-dark  border border `,
     )
 
     setThemeBorder(
       theme === 'dark'
-        ? `bg-dark text-light border-secondary  border-opacity-50  ${s.placeholder_grey}`
+        ? `bg-dark text-light border-secondary  border-opacity-50  ${s?.placeholder_grey}`
         : `text-dark bg-light bg-gradient border `,
     )
   }, [theme])
+
   useEffect(() => {
     console.log('roulette theme', theme)
     console.log('formData', formData)
@@ -182,23 +183,23 @@ const EditTable = () => {
       showToast('Enter Side Bet Maximum', 'info')
       return
     }
-    if (!formData.currency_id) return showToast('Select Currency', 'info')
-    if (formData.min_bet > formData.max_bet)
+    if (!formData?.currency_id) return showToast('Select Currency', 'info')
+    if (formData?.min_bet > formData?.max_bet)
       return showToast('Minimum Bet should be less than Maximum Bet', 'info', 3000)
-    if (formData.side_bet_min > formData.side_bet_max)
+    if (formData?.side_bet_min > formData?.side_bet_max)
       return showToast('Side Bet Minimum should be less than Side Bet Maximum', 'info', 3000)
 
     let dataToSend = {
       ...formData,
     }
-    dataToSend.language_id = dataToSend.language
-    dataToSend.theme_id = dataToSend.theme
-    dataToSend.background_id = dataToSend.background
-    //dataToSend.currency_id = dataToSend.currency
-    console.log('Data to send:', dataToSend, ' id: ', params.id, ' game: ', params.game)
+    dataToSend.language_id = dataToSend?.language
+    dataToSend.theme_id = dataToSend?.theme
+    dataToSend.background_id = dataToSend?.background
+    //dataToSend.currency_id = dataToSend?.currency
+    console.log('Data to send:', dataToSend, ' id: ', params?.id, ' game: ', params?.game)
 
     try {
-      const response = await axiosClient.put(`table/limits/update/${params.id}`, dataToSend)
+      const response = await axiosClient.put(`table/limits/update/${params?.id}`, dataToSend)
       console.log(response)
       showToast('Table Updated', 'success')
       setTimeout(() => {
@@ -231,7 +232,7 @@ const EditTable = () => {
           ></i>
         </div>
         <div className="text-center w-100">
-          <h3 className="text-center pb-2 capitalize animate">{params.game}</h3>
+          <h3 className="text-center pb-2 capitalize animate">{params?.game}</h3>
         </div>
       </div>
       <div className={`row `}></div>
@@ -255,12 +256,12 @@ const EditTable = () => {
                   <div className="mb-3">
                     <label className="animate form-label">Table Name</label>
                     <input
-                    disabled
-                      className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder}  ${s.placeholder_grey}`}
+                      disabled
+                      className={`form-control animate ${s?.placeholder_grey} bg-${theme} ${themeBorder}  ${s?.placeholder_grey}`}
                       type="text"
                       placeholder="Enter Table Name"
                       name="table_limit_name"
-                      value={formData.table_limit_name}
+                      value={formData?.table_limit_name}
                       onChange={handleChange}
                     />
                   </div>
@@ -270,11 +271,11 @@ const EditTable = () => {
                   <div className="mb-3">
                     <label className="animate form-label">Minimum Bet</label>
                     <input
-                      className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder}  ${s.placeholder_grey}`}
+                      className={`form-control animate ${s?.placeholder_grey} bg-${theme} ${themeBorder}  ${s?.placeholder_grey}`}
                       type="number"
                       placeholder="Enter Minimum Bet"
                       name="min_bet"
-                      value={formData.min_bet}
+                      value={formData?.min_bet}
                       onChange={handleChange}
                       min="0"
                     />
@@ -285,11 +286,11 @@ const EditTable = () => {
                   <div className="mb-3">
                     <label className="animate form-label">Maximum Bet</label>
                     <input
-                      className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder}  ${s.placeholder_grey}`}
+                      className={`form-control animate ${s?.placeholder_grey} bg-${theme} ${themeBorder}  ${s?.placeholder_grey}`}
                       type="number"
                       placeholder="Enter Maximum Bet"
                       name="max_bet"
-                      value={formData.max_bet}
+                      value={formData?.max_bet}
                       onChange={handleChange}
                       min="0"
                     />
@@ -300,11 +301,11 @@ const EditTable = () => {
                   <div className="mb-3">
                     <label className="animate form-label">Side Bet Minimum</label>
                     <input
-                      className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder}  ${s.placeholder_grey}`}
+                      className={`form-control animate ${s?.placeholder_grey} bg-${theme} ${themeBorder}  ${s?.placeholder_grey}`}
                       type="number"
                       placeholder="Enter Side Bet Minimum"
                       name="side_bet_min"
-                      value={formData.side_bet_min}
+                      value={formData?.side_bet_min}
                       onChange={handleChange}
                       min="0"
                     />
@@ -315,11 +316,11 @@ const EditTable = () => {
                   <div className="mb-3">
                     <label className="animate form-label">Side Bet Maximum</label>
                     <input
-                      className={`form-control animate ${s.placeholder_grey} bg-${theme} ${themeBorder}  ${s.placeholder_grey}`}
+                      className={`form-control animate ${s?.placeholder_grey} bg-${theme} ${themeBorder}  ${s?.placeholder_grey}`}
                       type="number"
                       placeholder="Enter Side Bet Maximum"
                       name="side_bet_max"
-                      value={formData.side_bet_max}
+                      value={formData?.side_bet_max}
                       onChange={handleChange}
                       min="0"
                     />
@@ -330,15 +331,15 @@ const EditTable = () => {
                   <div className="mb-3">
                     <label className="animate form-label">Theme</label>
                     <select
-                      className={`animate form-select form-select-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}  ${s.placeholder_grey}`}
+                      className={`animate form-select form-select-sm ${s?.placeholder_grey} bg-${theme} ${themeBorder}  ${s?.placeholder_grey}`}
                       name="theme"
-                      value={formData.theme}
+                      value={formData?.theme}
                       onChange={handleChange}
                     >
                       <option value="">Select Theme</option>
-                      {themes.map((theme, i) => (
-                        <option key={i} value={theme.theme_id}>
-                          {theme.theme}
+                      {themes?.map((theme, i) => (
+                        <option key={i} value={theme?.theme_id}>
+                          {theme?.theme}
                         </option>
                       ))}
                     </select>
@@ -349,15 +350,15 @@ const EditTable = () => {
                   <div className="mb-3">
                     <label className="animate form-label">Background</label>
                     <select
-                      className={`animate form-select form-select-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}  ${s.placeholder_grey}`}
+                      className={`animate form-select form-select-sm ${s?.placeholder_grey} bg-${theme} ${themeBorder}  ${s?.placeholder_grey}`}
                       name="background"
-                      value={formData.background}
+                      value={formData?.background}
                       onChange={handleChange}
                     >
                       <option value="">Select Background</option>
-                      {backgrounds.map((bg) => (
-                        <option key={bg.background_id} value={bg.background_id}>
-                          {bg.background}
+                      {backgrounds?.map((bg) => (
+                        <option key={bg?.background_id} value={bg?.background_id}>
+                          {bg?.background}
                         </option>
                       ))}
                     </select>
@@ -368,15 +369,15 @@ const EditTable = () => {
                   <div className="mb-3">
                     <label className="animate form-label">Language</label>
                     <select
-                      className={`animate form-select form-select-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}  ${s.placeholder_grey}`}
+                      className={`animate form-select form-select-sm ${s?.placeholder_grey} bg-${theme} ${themeBorder}  ${s?.placeholder_grey}`}
                       name="language"
-                      value={formData.language}
+                      value={formData?.language}
                       onChange={handleChange}
                     >
                       <option value="">Select Language</option>
-                      {languages.map((lang) => (
-                        <option key={lang.language_id} value={lang.language_id}>
-                          {lang.language}
+                      {languages?.map((lang) => (
+                        <option key={lang?.language_id} value={lang?.language_id}>
+                          {lang?.language}
                         </option>
                       ))}
                     </select>
@@ -387,15 +388,15 @@ const EditTable = () => {
                   <div className="mb-3">
                     <label className="animate form-label">Currency</label>
                     <select
-                      className={`animate form-select form-select-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}  ${s.placeholder_grey}`}
+                      className={`animate form-select form-select-sm ${s?.placeholder_grey} bg-${theme} ${themeBorder}  ${s?.placeholder_grey}`}
                       name="currency_id"
-                      value={formData.currency_id}
+                      value={formData?.currency_id}
                       onChange={handleChange}
                     >
                       <option value="">Select currency</option>
-                      {currencys.map((curr) => (
-                        <option key={curr.currency_id} value={curr.currency_id}>
-                          {curr.currency}
+                      {currencys?.map((curr) => (
+                        <option key={curr?.currency_id} value={curr?.currency_id}>
+                          {curr?.currency}
                         </option>
                       ))}
                     </select>
@@ -405,16 +406,16 @@ const EditTable = () => {
                 <div className={`col-12 col-md-6 col-xl-4`}>
                   <div className="mb-3">
                     <div
-                      className={` mt-0 mt-md-4 mt-xl-0 ${params.game == 'baccarat' ? 'd-block' : 'd-none'}`}
+                      className={` mt-0 mt-md-4 mt-xl-0 ${params?.game == 'baccarat' ? 'd-block' : 'd-none'}`}
                     >
                       <div className="form-check ">
                         <input
                           className="form-check-input animate"
                           type="checkbox"
                           name="commission"
-                          checked={formData.commission}
+                          checked={formData?.commission}
                           onChange={() =>
-                            setFormData({ ...formData, commission: !formData.commission })
+                            setFormData({ ...formData, commission: !formData?.commission })
                           }
                         />
                         <label className="form-check-label animate">Commission</label>

@@ -146,17 +146,42 @@ const DataTableComponent2 = (props) => {
             <div className={`d-flex align-items-center mt-2`}>
               <div className="me-auto ">
                 <select
-                  className={`form-select form-select-sm ${theme == 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'} shadow-xs border-0`}
-                  aria-label="Rows per page"
+                  className={`form-select form-select-sm ${theme == 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'}  shadow-none border-0 border-secondary`}
+                  placeholder="Rows per page"
                   defaultValue={15}
                   onChange={(e) => setRowsPerPage(parseInt(e.target.value))}
                   style={{ height: '25px' }}
                 >
-                  <option value={5}>5</option>
-                  <option value={10}>10</option>
-                  <option value={15}>15</option>
-                  <option value={20}>20</option>
-                  <option value={25}>25</option>
+                  <option
+                    className={` ${theme == 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'}`}
+                    value={5}
+                  >
+                    5
+                  </option>
+                  <option
+                    className={` ${theme == 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'}`}
+                    value={10}
+                  >
+                    10
+                  </option>
+                  <option
+                    className={` ${theme == 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'}`}
+                    value={15}
+                  >
+                    15
+                  </option>
+                  <option
+                    className={` ${theme == 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'}`}
+                    value={20}
+                  >
+                    20
+                  </option>
+                  <option
+                    className={` ${theme == 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'}`}
+                    value={25}
+                  >
+                    25
+                  </option>
                 </select>
               </div>
             </div>
@@ -184,4 +209,3 @@ const DataTableComponent2 = (props) => {
 }
 
 export default DataTableComponent2
-

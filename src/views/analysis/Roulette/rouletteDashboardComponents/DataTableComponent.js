@@ -118,7 +118,7 @@ const DataTableComponent = (props) => {
             <div className={`d-flex align-items-center mt-2`}>
               <div className="me-auto">
                 <select
-                  className={`form-select form-select-sm ${theme == 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'} shadow-xs border-0`}
+                  className={`form-select form-select-sm ${theme == 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'}  border-0`}
                   aria-label="Rows per page"
                   defaultValue={7}
                   onChange={(e) => setRowsPerPage(parseInt(e.target.value))}
@@ -154,4 +154,3 @@ const DataTableComponent = (props) => {
 }
 
 export default DataTableComponent
-

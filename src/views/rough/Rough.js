@@ -40,6 +40,7 @@ import DoughNutChartComonent from './components/DoughNutChartComonent.js'
 import WheelPocketStatistics from './components/WheelPocketStatistics.js'
 import DropZoneStatistics from './components/DropZoneStatistics.js'
 import WinStatistics from './components/WinStatistics.js'
+import { Loader } from '../../components/Loader.js'
 
 const Rough = () => {
   const [data, setData] = useState([])
@@ -168,9 +169,12 @@ const Rough = () => {
   }
 
   return (
-    <div className={` ${theme === 'dark' ? 'text-light' : 'text-dark'} d-flex justify-content-center align-items-center   pb-4`} style={{ height: 'calc(100vh - 120px)' }}>
+    <div
+      className={` ${theme === 'dark' ? 'text-light' : 'text-dark'} d-flex justify-content-center align-items-center   pb-4`}
+      style={{ height: 'calc(100vh - 120px)' }}
+    >
       <div className={`fs-1 text-shadow poppins-600   `}>
-     Opp's No Data Found
+        <Loader />
       </div>
     </div>
   )

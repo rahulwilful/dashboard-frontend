@@ -102,4 +102,3 @@ const customedTooltip = ({ active, payload, label }) => {
 }
 
 export default RadarChartComponent
-

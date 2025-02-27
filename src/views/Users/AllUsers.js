@@ -59,137 +59,128 @@ createTheme('customDark', {
 })
 
 const AllUsers = () => {
-  const theme = useSelector((state) => state.theme)
+  const theme = useSelector((state) => state?.theme)
   const [users, setUsers] = useState([])
   const [renderKey, setRenderKey] = useState(0)
   const [toggleUser, setTuggleUser] = useState({})
   const navigate = useNavigate()
   const [user, setUser] = useState({})
+  const [rowsPerPage, setRowsPerPage] = useState(15)
+
   let originalUsers = []
 
   useEffect(() => {
     getCurrent()
-     
-  
   }, [])
 
   const handleUpdateUser = (id) => {
-    console.log("user: ",user)
+    console.log('user: ', user)
     console.log('users: ', users)
-    console.log('id: ',id)
-    for(let i=0;i<users.length;i++){
-      if(users[i].user_id == id){
-        
-        if(users[i].roleType == 'super_admin' && user.roleType != 'super_admin'){
-          console.log("user to update: ",users[i])
+    console.log('id: ', id)
+    for (let i = 0; i < users?.length; i++) {
+      if (users[i]?.user_id == id) {
+        if (users[i]?.roleType == 'super_admin' && user?.roleType != 'super_admin') {
+          console.log('user to update: ', users[i])
           showToast('Unauthorized', 'error')
           return
         }
       }
     }
-    
-  
+
     navigate(`/update/user/${id}`)
   }
 
   const getCurrent = async () => {
-    console.log(" called getCurrent")
+    console.log('called getCurrent')
     const res = await GetCurrent('users')
     setUser(res)
-    console.log("res: ",user)
+    console.log('res: ', user)
     getUsers()
     return
   }
 
   const getUsers = async () => {
     const res = await axiosClient.get('/user/get/users')
-    let users = res.data.users
-    users = users.filter((u) => u.user_id !== user.user_id)
+    let users = res?.data?.users
+    users = users?.filter((u) => u?.user_id !== user?.user_id)
     setUsers(users)
-
-
   }
 
-  const handleToggleUser = async(id) => {
-   console.log("id: ",id)
-   for(let i=0;i<users.length;i++){
-    if(users[i].user_id == id && users[i].roleType == 'super_admin'){
-      showToast('Unauthorized', 'error')
-      return
-    }
-   }
-
-   try {
-    const res = await axiosClient.put(`/user/toggle/active/${id}`)
-
-    console.log("res: ",res)
-    showToast('User updated successfully!', 'success')
-    let tempUsers = users
-    console.log(" tempUsers: ",tempUsers)
-    for(let i=0;i<tempUsers.length;i++){
-      if(tempUsers[i].user_id == id){
-        console.log("tempUsers: ",tempUsers[i].active)
-        tempUsers[i].active = !tempUsers[i].active
-        console.log("tempUsers: ",tempUsers[i].active)
+  const handleToggleUser = async (id) => {
+    console.log('id: ', id)
+    for (let i = 0; i < users?.length; i++) {
+      if (users[i]?.user_id == id && users[i]?.roleType == 'super_admin') {
+        showToast('Unauthorized', 'error')
+        return
       }
     }
-    setUsers(tempUsers)
-    setRenderKey(renderKey + 1)
-   
 
-   } catch (err) {
-    console.log("error: ",err)
-   }
+    try {
+      const res = await axiosClient.put(`/user/toggle/active/${id}`)
+
+      console.log('res: ', res)
+      showToast('User updated successfully!', 'success')
+      let tempUsers = [...users]
+      console.log('tempUsers: ', tempUsers)
+      for (let i = 0; i < tempUsers?.length; i++) {
+        if (tempUsers[i]?.user_id == id) {
+          console.log('tempUsers: ', tempUsers[i]?.active)
+          tempUsers[i].active = !tempUsers[i]?.active
+          console.log('tempUsers: ', tempUsers[i]?.active)
+        }
+      }
+      setUsers(tempUsers)
+      setRenderKey(renderKey + 1)
+    } catch (err) {
+      console.log('error: ', err)
+    }
   }
-
-  
-
 
   const columns = [
     {
       name: 'Name',
-      selector: (row) => row.name,
+      selector: (row) => row?.name,
       sortable: true,
       minWidth: '100px',
     },
     {
       name: 'User Name',
-      selector: (row) => row.user_name,
+      selector: (row) => row?.user_name,
       sortable: true,
     },
     {
       name: 'Role',
-      selector: (row) => row.roleType,
+      selector: (row) => row?.roleType,
       sortable: true,
     },
     {
-      name: ' Action',
+      name: 'Action',
       cell: (row) => (
         <div className={``}>
           <div className="">
             <span
               className={`rounded-1 text-light border-0  px-1  d-flex justify-content-center align-items-center gap-4 ${theme == 'dark' ? 'text-light' : 'text-dark'} `}
             >
-              <Link to={`/user/${row.user_id}`}>
+              <Link to={`/user/${row?.user_id}`}>
                 <i
                   className={`bi bi-eye-fill drop_shadow pointer icon-hover ${theme == 'dark' ? 'text-light' : 'text-dark'} `}
                 ></i>
               </Link>
-              
-                <i
+
+              <i
                 onClick={() => {
-                  handleUpdateUser(row.user_id)
+                  handleUpdateUser(row?.user_id)
                 }}
-                  className={`bi bi-pen-fill drop_shadow pointer icon-hover ${theme == 'dark' ? 'text-light' : 'text-dark'}`}
-                ></i>
-              
+                className={`bi bi-pen-fill drop_shadow pointer icon-hover ${theme == 'dark' ? 'text-light' : 'text-dark'}`}
+              ></i>
+
               <i
                 data-bs-toggle="modal"
                 data-bs-target="#toggleUserModel"
                 onClick={() => {
                   setTuggleUser(row)
                 }}
-                className={`bi bi-hand-thumbs-up-fill text-success drop_shadow pointer ${row.active == true ? '' : 'd-none'}`}
+                className={`bi bi-hand-thumbs-up-fill text-success drop_shadow pointer ${row?.active == true ? '' : 'd-none'}`}
               ></i>
               <i
                 data-bs-toggle="modal"
@@ -197,7 +188,7 @@ const AllUsers = () => {
                 onClick={() => {
                   setTuggleUser(row)
                 }}
-                className={`bi bi-hand-thumbs-down-fill text-danger drop_shadow pointer ${row.active == false ? '' : 'd-none'}`}
+                className={`bi bi-hand-thumbs-down-fill text-danger drop_shadow pointer ${row?.active == false ? '' : 'd-none'}`}
               ></i>
             </span>
           </div>
@@ -237,7 +228,9 @@ const AllUsers = () => {
             <div className={`modal-content`}>
               <div className={`modal-header`}>
                 <h1 className={`modal-title fs-5`} id="toggleUserModelLabel">
-                {toggleUser.active == true ? 'Deactivate '+toggleUser.name : 'Activate '+toggleUser.name}
+                  {toggleUser?.active == true
+                    ? 'Deactivate ' + toggleUser?.name
+                    : 'Activate ' + toggleUser?.name}
                 </h1>
                 <button
                   type="button"
@@ -246,22 +239,20 @@ const AllUsers = () => {
                   aria-label="Close"
                 ></button>
               </div>
-              {/* <div className="modal-body">
-                
-              </div> */}
               <div className={`modal-footer`}>
                 <button type="button" className={`btn btn-secondary`} data-bs-dismiss="modal">
                   Close
                 </button>
                 <button
                   type="button"
-                  className={`btn  ${toggleUser.active == true ? 'btn-danger' : 'btn-primary'} `}
+                  className={`btn  ${toggleUser?.active == true ? 'btn-danger' : 'btn-primary'} `}
                   data-bs-toggle="modal"
                   data-bs-target="#toggleUserModel"
-                  onClick={()=>{handleToggleUser(toggleUser.user_id)}}
-                  
+                  onClick={() => {
+                    handleToggleUser(toggleUser?.user_id)
+                  }}
                 >
-                  {toggleUser.active == true ? 'Deactivate' : 'Activate'}
+                  {toggleUser?.active == true ? 'Deactivate' : 'Activate'}
                 </button>
               </div>
             </div>
@@ -281,15 +272,41 @@ const AllUsers = () => {
         </div>
 
         <div className="w-100" key={renderKey}>
-          <DataTable
-            className=""
-            columns={columns}
-            data={users}
-            theme={theme === 'dark' ? 'customDark' : 'light'}
-            selectableRows
-            pagination
-            highlightOnHover
-          />
+          <div className={`d-flex align-items-center justify-content-end mt-2 px-2`}>
+            <div className="d-flex gap-2">
+              <label className="d-flex text-nowrap" htmlFor="rowsPerPage">
+                Select Rows
+              </label>
+              <select
+                className={`form-select form-select-sm ${theme == 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'} border-0 shadow-none`}
+                id="rowsPerPage"
+                aria-label="Rows per page"
+                defaultValue={15}
+                onChange={(e) => setRowsPerPage(parseInt(e.target.value))}
+                style={{ height: '25px' }}
+              >
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={15}>15</option>
+                <option value={20}>20</option>
+                <option value={25}>25</option>
+              </select>
+            </div>
+          </div>
+          <div className={``} key={rowsPerPage}>
+            <DataTable
+              className=""
+              columns={columns}
+              data={users}
+              fixedHeaderScrollHeight="300px"
+              theme={theme === 'dark' ? 'customDark' : 'light'}
+              selectableRows
+              pagination
+              highlightOnHover
+              paginationPerPage={rowsPerPage}
+              paginationRowsPerPageOptions={[rowsPerPage]}
+            />
+          </div>
         </div>
       </div>
     </>

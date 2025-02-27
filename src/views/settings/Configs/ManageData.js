@@ -12,7 +12,7 @@ import { GetCurrent } from '../../../getCurrent'
 import NoDataFull from '../../NoData/NoDataFull'
 
 const ManageData = (props) => {
-  const theme = useSelector((state) => state.theme)
+  const theme = useSelector((state) => state?.theme)
   const navigate = useNavigate()
   const [themes, setThemes] = useState([])
   const [originalThemes, setOriginalThemes] = useState([])
@@ -23,18 +23,18 @@ const ManageData = (props) => {
 
   const getDeletDays = async () => {
     const res = await axiosClient.get(`/config/get/delete/days`)
-    // console.log('res', res)
-    if (res) {
+    console.log('res', res)
+    if (res?.data?.result) {
       setDisplay('data')
     } else {
       setDisplay('nodata')
     }
-    setDeleDays(res.data.result)
-    setInputDeletDays(res.data.result)
+    setDeleDays(res?.data?.result ?? [])
+    setInputDeletDays(res?.data?.result ?? [])
   }
 
   const handleSetForm = (theme) => {
-    setForm({ theme_id: theme.theme_id, theme: theme.theme })
+    setForm({ theme_id: theme?.theme_id, theme: theme?.theme })
   }
 
   const updateDeletDays = async () => {
@@ -105,7 +105,7 @@ const ManageData = (props) => {
                   type="number"
                   className="form-control"
                   id=""
-                  value={inputDeletDays}
+                  value={inputDeletDays ?? ''}
                   onChange={(e) => setInputDeletDays(e.target.value)}
                 />
               </div>

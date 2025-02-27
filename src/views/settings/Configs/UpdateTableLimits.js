@@ -25,20 +25,20 @@ const UpdateTableLimits = (props) => {
     const { data } = await axiosClient.get(`/config/get/table/type`)
     console.log('data: ', data)
 
-    if (data) {
+    if (data?.game_types) {
       setDisplay('data')
     } else {
       setDisplay('nodata')
     }
-    setGames(data.game_types)
-    setOriginalGames(data.game_types)
+    setGames(data?.game_types ?? [])
+    setOriginalGames(data?.game_types ?? [])
   }
 
   const handleSetForm = (table) => {
     setForm({
-      game_type_id: table.game_type_id,
-      game_type_name: table.game_type_name,
-      active: table.active,
+      game_type_id: table?.game_type_id ?? '',
+      game_type_name: table?.game_type_name ?? '',
+      active: table?.active ?? true,
     })
   }
 
@@ -49,7 +49,7 @@ const UpdateTableLimits = (props) => {
       showToast('Table Type updated successfully!', 'success')
       let temp = games
       for (let i in temp) {
-        if (temp[i].game_type_id == form.game_type_id) {
+        if (temp[i]?.game_type_id == form.game_type_id) {
           temp[i].game_type_name = form.game_type_name
           temp[i].active = form.active
         }
@@ -79,7 +79,7 @@ const UpdateTableLimits = (props) => {
       setGames(originalGames)
     } else {
       const value = e.target.value.toLowerCase()
-      const filtered = games.filter((game) => game.game_type_name.toLowerCase().includes(value))
+      const filtered = games.filter((game) => game?.game_type_name?.toLowerCase().includes(value))
       setGames(filtered)
       setSearch(value)
     }
@@ -114,7 +114,7 @@ const UpdateTableLimits = (props) => {
                   type="text"
                   className="form-control "
                   id="game_type_name"
-                  value={form.game_type_name}
+                  value={form?.game_type_name ?? ''}
                   onChange={(e) => setForm({ ...form, game_type_name: e.target.value })}
                 />
               </div>
@@ -124,8 +124,8 @@ const UpdateTableLimits = (props) => {
                     className="form-check-input "
                     type="checkbox"
                     name="commission"
-                    checked={form.active}
-                    onChange={() => setForm({ ...form, active: !form.active })}
+                    checked={form?.active ?? true}
+                    onChange={() => setForm({ ...form, active: !form?.active ?? false })}
                   />
                   <label className="form-check-label ">Analysis</label>
                 </div>
@@ -175,9 +175,9 @@ const UpdateTableLimits = (props) => {
                   <div className={``}>
                     <img
                       src={
-                        table.game_type_name == 'roulette'
+                        table?.game_type_name == 'roulette'
                           ? roulleteWheel
-                          : BaccaratTables[i % 20].table
+                          : BaccaratTables[i % 20]?.table ?? ''
                       }
                       className={`object-fit-cover`}
                       style={{ width: '60px', height: '60px' }}
@@ -185,9 +185,9 @@ const UpdateTableLimits = (props) => {
                   </div>
                   <div className={`w-100`}>
                     <div className={``}>
-                      <h5 className={`card-title capitalize`}>{table.game_type_name}</h5>
+                      <h5 className={`card-title capitalize`}>{table?.game_type_name ?? ''}</h5>
                       <p
-                        className={`card-text capitalize bg-gradient shadow-xs rounded-circle ${table.active == true ? 'bg-success' : 'bg-danger'}`}
+                        className={`card-text capitalize bg-gradient shadow-xs rounded-circle ${table?.active == true ? 'bg-success' : 'bg-danger'}`}
                         style={{ width: 10, height: 10 }}
                       ></p>
                     </div>
@@ -214,3 +214,4 @@ const UpdateTableLimits = (props) => {
 }
 
 export default UpdateTableLimits
+

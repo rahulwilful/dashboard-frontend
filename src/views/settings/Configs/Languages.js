@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux'
 import NoDataFull from '../../NoData/NoDataFull'
 
 const UpdateLanguages = (props) => {
-  const theme = useSelector((state) => state.theme)
+  const theme = useSelector((state) => state?.theme)
   const navigate = useNavigate()
   const [languages, setLanguages] = useState([])
   const [originalLanguages, setOriginalLanguages] = useState([])
@@ -22,28 +22,28 @@ const UpdateLanguages = (props) => {
     const { data } = await axiosClient.get(`/config/get/language`)
     console.log(data)
 
-    if (data) {
+    if (data?.languages) {
       setDisplay('data')
     } else {
       setDisplay('nodata')
     }
-    setLanguages(data.languages)
-    setOriginalLanguages(data.languages)
+    setLanguages(data?.languages ?? [])
+    setOriginalLanguages(data?.languages ?? [])
   }
 
   const handleSetForm = (language) => {
-    setForm({ language_id: language.language_id, language: language.language })
+    setForm({ language_id: language?.language_id ?? '', language: language?.language ?? '' })
   }
 
   const updateLanguage = async () => {
     try {
-      const { data } = await axiosClient.put(`/config/update/language/${form.language_id}`, form)
+      const { data } = await axiosClient.put(`/config/update/language/${form?.language_id}`, form)
       console.log(data)
       showToast('Language updated successfully!', 'success')
       const temp = languages
       for (let i in temp) {
-        if (temp[i].language_id == form.language_id) {
-          temp[i].language = form.language
+        if (temp[i]?.language_id === form?.language_id) {
+          temp[i].language = form?.language ?? ''
         }
       }
       setLanguages(temp)
@@ -76,7 +76,7 @@ const UpdateLanguages = (props) => {
     } else {
       const value = e.target.value.toLowerCase()
       const filtered = languages.filter((language) =>
-        language.language.toLowerCase().includes(value),
+        language?.language?.toLowerCase().includes(value),
       )
       setLanguages(filtered)
       setSearch(value)
@@ -111,7 +111,7 @@ const UpdateLanguages = (props) => {
                   type="text"
                   className="form-control"
                   id="language"
-                  value={form.language}
+                  value={form?.language ?? ''}
                   onChange={(e) => setForm({ ...form, language: e.target.value })}
                 />
               </div>
@@ -155,7 +155,7 @@ const UpdateLanguages = (props) => {
                   </div>
                   <div className={`w-100`}>
                     <div className={``}>
-                      <h5 className={`card-title capitalize`}>{language.language}</h5>
+                      <h5 className={`card-title capitalize`}>{language?.language}</h5>
                       <p className={`card-text capitalize`}></p>
                     </div>
                     <div className={`d-flex justify-content-end`}>
@@ -181,3 +181,4 @@ const UpdateLanguages = (props) => {
 }
 
 export default UpdateLanguages
+

@@ -40,7 +40,7 @@ const AppHeader = () => {
     setColorMode(color)
     dispatch({ type: 'set', theme: color })
     localStorage.removeItem('coreui-free-react-admin-template-theme', color)
-   // window.location.reload()
+    // window.location.reload()
   }
 
   useEffect(() => {
@@ -103,7 +103,6 @@ const AppHeader = () => {
                 <CIcon icon={cilSun} size="lg" onClick={() => changeTheme('dark')} />
               )}
             </CDropdownToggle>
-           
           </CDropdown>
           <li className="nav-item py-1">
             <div className="vr h-100 mx-2 text-body text-opacity-75"></div>
@@ -119,5 +118,3 @@ const AppHeader = () => {
 }
 
 export default AppHeader
-
-

@@ -14,7 +14,7 @@ import { GetCurrent } from '../../getCurrent'
 import axiosClient from '../../axiosClient'
 
 const UpdateUser = () => {
-  const theme = useSelector((state) => state.theme)
+  const theme = useSelector((state) => state?.theme)
   const [renderKey, setRenderKey] = useState(0)
   const [themeClass, setThemeClass] = useState('bg-light text-dark border')
   const [themeBorder, setThemeBorder] = useState('bg-light text-dark border')
@@ -57,10 +57,10 @@ const UpdateUser = () => {
   const getUser = async () => {
     try {
       const res = await axiosClient.get(`/user/get/${id}`)
-      console.log('res: ', res.data.user)
+      console.log('res: ', res?.data?.user)
 
-      setUser(res.data.user)
-      setUserForm(res.data.user)
+      setUser(res?.data?.user)
+      setUserForm(res?.data?.user)
     } catch (err) {
       console.log('error: ', err)
     }
@@ -73,7 +73,7 @@ const UpdateUser = () => {
     try {
       const res = await axiosClient.get(`/role/get/all`)
       console.log('role: ', res)
-      setRoles(res.data.roles)
+      setRoles(res?.data?.roles)
     } catch (err) {
       console.log('error: ', err)
     }
@@ -85,14 +85,13 @@ const UpdateUser = () => {
     const user = await GetCurrent('users')
     console.log('user ', user)
   }
+
   const handleUserUpdate = async () => {
-    console.log(' called handleUserUpdate')
+    console.log('called handleUserUpdate')
     try {
       const res = await axiosClient.put(`/user/update/by/super/admin/${id}`, userForm)
-      console.log('res: ', res.data.user)
+      console.log('res: ', res?.data?.user)
 
-      //setUser(res.data.user)
-      //setUserForm(res.data.user)
       showToast('User updated successfully!', 'success')
     } catch (err) {
       console.log('error: ', err)
@@ -120,7 +119,6 @@ const UpdateUser = () => {
 
   return (
     <>
-      
       <div
         className={`${theme === 'dark' ? 'text-light' : 'text-dark'} pb-4 d-flex justify-content-center fade-in`}
       >
@@ -152,7 +150,7 @@ const UpdateUser = () => {
                             className={`form-control ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
                             id="name"
                             type="text"
-                            value={userForm.name}
+                            value={userForm?.name}
                             onChange={(e) => setUserForm({ ...userForm, name: e.target.value })}
                           />
                         </div>
@@ -160,7 +158,7 @@ const UpdateUser = () => {
                       <div className={`col-12 col-md-6 col-xl-4`}>
                         <div className={`opacity-75`}>
                           <label className={`small mb-1`} htmlFor="Role">
-                           User Name
+                            User Name
                           </label>
                           <input
                             disabled
@@ -168,7 +166,7 @@ const UpdateUser = () => {
                             id="Role"
                             type="text"
                             name=""
-                            value={userForm.user_name}
+                            value={userForm?.user_name}
                           />
                         </div>
                       </div>
@@ -181,7 +179,7 @@ const UpdateUser = () => {
                             className={`form-control ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
                             id="mobile_no"
                             type="text"
-                            value={userForm.phone_no}
+                            value={userForm?.phone_no}
                             onChange={(e) => setUserForm({ ...userForm, phone_no: e.target.value })}
                           />
                         </div>
@@ -194,12 +192,12 @@ const UpdateUser = () => {
                           <select
                             className={`form-select ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
                             id="Role"
-                            value={userForm.roleType}
+                            value={userForm?.roleType}
                             onChange={(e) => setUserForm({ ...userForm, roleType: e.target.value })}
                           >
-                            {roles.map((role, i) => (
-                              <option key={i} value={role.type}>
-                                {role.role_name}
+                            {roles?.map((role, i) => (
+                              <option key={i} value={role?.type}>
+                                {role?.role_name}
                               </option>
                             ))}
                           </select>
@@ -215,9 +213,9 @@ const UpdateUser = () => {
                                 type="checkbox"
                                 value=""
                                 onClick={() =>
-                                  setUserForm({ ...userForm, limits: !userForm.limits })
+                                  setUserForm({ ...userForm, limits: !userForm?.limits })
                                 }
-                                checked={userForm.limits ? true : false}
+                                checked={userForm?.limits ?? false}
                                 id="flexCheckDefault"
                               />
                               <label className="form-check-label" htmlFor="flexCheckDefault">
@@ -231,9 +229,9 @@ const UpdateUser = () => {
                                 className="form-check-input"
                                 type="checkbox"
                                 onClick={() =>
-                                  setUserForm({ ...userForm, analysis: !userForm.analysis })
+                                  setUserForm({ ...userForm, analysis: !userForm?.analysis })
                                 }
-                                checked={userForm.analysis ? true : false}
+                                checked={userForm?.analysis ?? false}
                                 value=""
                                 id="flexCheckDefault1"
                               />
@@ -248,9 +246,9 @@ const UpdateUser = () => {
                                 className="form-check-input"
                                 type="checkbox"
                                 onClick={() =>
-                                  setUserForm({ ...userForm, config: !userForm.config })
+                                  setUserForm({ ...userForm, config: !userForm?.config })
                                 }
-                                checked={userForm.config ? true : false}
+                                checked={userForm?.config ?? false}
                                 value=""
                                 id="flexCheckDefault2"
                               />
@@ -265,9 +263,9 @@ const UpdateUser = () => {
                                 className="form-check-input"
                                 type="checkbox"
                                 onClick={() =>
-                                  setUserForm({ ...userForm, settings: !userForm.settings })
+                                  setUserForm({ ...userForm, settings: !userForm?.settings })
                                 }
-                                checked={userForm.settings ? true : false}
+                                checked={userForm?.settings ?? false}
                                 value=""
                                 id="flexCheckDefault3"
                               />
@@ -281,8 +279,10 @@ const UpdateUser = () => {
                               <input
                                 className="form-check-input"
                                 type="checkbox"
-                                onClick={() => setUserForm({ ...userForm, users: !userForm.users })}
-                                checked={userForm.users ? true : false}
+                                onClick={() =>
+                                  setUserForm({ ...userForm, users: !userForm?.users })
+                                }
+                                checked={userForm?.users ?? false}
                                 value=""
                                 id="flexCheckDefault3"
                               />
@@ -305,14 +305,6 @@ const UpdateUser = () => {
                 >
                   Update User
                 </button>
-               {/*  <button
-                  type="button"
-                  data-bs-toggle="modal"
-                  data-bs-target="#changePasswordModal"
-                  className={`btn ${theme === 'dark' ? 'btn-primary' : 'btn-dark'} btn-sm px-3 bg-gradient capitalize`}
-                >
-                  Change Password
-                </button> */}
               </div>
             </div>
           </div>

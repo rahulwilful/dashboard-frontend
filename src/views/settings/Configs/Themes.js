@@ -12,7 +12,7 @@ import { GetCurrent } from '../../../getCurrent'
 import NoDataFull from '../../NoData/NoDataFull'
 
 const UpdateThemes = (props) => {
-  const theme = useSelector((state) => state.theme)
+  const theme = useSelector((state) => state?.theme)
   const navigate = useNavigate()
   const [themes, setThemes] = useState([])
   const [originalThemes, setOriginalThemes] = useState([])
@@ -22,28 +22,28 @@ const UpdateThemes = (props) => {
   const getThemes = async () => {
     const { data } = await axiosClient.get(`/config/get/theme`)
     console.log(data)
-    if (data) {
+    if (data?.themes) {
       setDisplay('data')
     } else {
       setDisplay('nodata')
     }
-    setThemes(data.themes)
-    setOriginalThemes(data.themes)
+    setThemes(data?.themes ?? [])
+    setOriginalThemes(data?.themes ?? [])
   }
 
   const handleSetForm = (theme) => {
-    setForm({ theme_id: theme.theme_id, theme: theme.theme })
+    setForm({ theme_id: theme?.theme_id ?? '', theme: theme?.theme ?? '' })
   }
 
   const updateTheme = async () => {
     try {
-      const { data } = await axiosClient.put(`/config/update/theme/${form.theme_id}`, form)
+      const { data } = await axiosClient.put(`/config/update/theme/${form?.theme_id}`, form)
       console.log(data)
       showToast('Theme updated successfully!', 'success')
-      const temp = themes
+      const temp = themes ?? []
       for (let i in temp) {
-        if (temp[i].theme_id == form.theme_id) {
-          temp[i].theme = form.theme
+        if (temp[i]?.theme_id == form?.theme_id) {
+          temp[i].theme = form?.theme ?? ''
         }
       }
       setThemes(temp)
@@ -72,11 +72,11 @@ const UpdateThemes = (props) => {
 
   const handleSearch = (e) => {
     console.log('handleSearch called')
-    if (e.target.value === '') {
-      setThemes(originalThemes)
+    if (e?.target?.value === '') {
+      setThemes(originalThemes ?? [])
     } else {
-      const value = e.target.value.toLowerCase()
-      const filtered = themes.filter((theme) => theme.theme.toLowerCase().includes(value))
+      const value = e?.target?.value?.toLowerCase()
+      const filtered = themes?.filter((theme) => theme?.theme?.toLowerCase()?.includes(value)) ?? []
       setThemes(filtered)
       setSearch(value)
     }
@@ -111,8 +111,8 @@ const UpdateThemes = (props) => {
                   type="text"
                   className="form-control"
                   id="theme"
-                  value={form.theme}
-                  onChange={(e) => setForm({ ...form, theme: e.target.value })}
+                  value={form?.theme ?? ''}
+                  onChange={(e) => setForm({ ...form, theme: e?.target?.value ?? '' })}
                 />
               </div>
             </div>
@@ -152,7 +152,7 @@ const UpdateThemes = (props) => {
           </div>
         </div>
         <div className={`row gap-0 w-100 px-3 ${display == 'data' ? '' : 'd-none'}`}>
-          {themes.map((theme, i) => (
+          {themes?.map((theme, i) => (
             <div key={i} className={`col-12 col-sm-3 mb-3 mb-sm-0 mt-2`}>
               <div className={`card card-hover shadow border-0 p-0`}>
                 <div className={`card-body m-0 d-flex`}>
@@ -161,7 +161,7 @@ const UpdateThemes = (props) => {
                   </div>
                   <div className={`w-100`}>
                     <div>
-                      <h5 className={`card-title capitalize`}>{theme.theme}</h5>
+                      <h5 className={`card-title capitalize`}>{theme?.theme}</h5>
                       <p className={`card-text capitalize`}></p>
                     </div>
                     <div className={`d-flex justify-content-end`}>
@@ -187,3 +187,4 @@ const UpdateThemes = (props) => {
 }
 
 export default UpdateThemes
+

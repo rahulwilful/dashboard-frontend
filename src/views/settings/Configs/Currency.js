@@ -16,7 +16,7 @@ import NoDataFull from '../../NoData/NoDataFull'
 
 const Currency = () => {
   const [parent, animateParent] = useAutoAnimate()
-  const theme = useSelector((state) => state.theme)
+  const theme = useSelector((state) => state?.theme)
 
   const navigate = useNavigate()
   const [originalBackgrounds, setOriginalBackgrounds] = useState([])
@@ -36,27 +36,27 @@ const Currency = () => {
     } else {
       setDisplay('nodata')
     }
-    setCurrencys(data.currencies)
-    setOriginalCurrencys(data.currencies)
+    setCurrencys(data?.currencies)
+    setOriginalCurrencys(data?.currencies)
   }
 
   const handleSetForm = (currency) => {
-    setForm({ currency_id: currency.currency_id, currency: currency.currency })
+    setForm({ currency_id: currency?.currency_id, currency: currency?.currency })
   }
 
   const updateCurrency = async () => {
-    let tempForm = { currency: form.currency.toUpperCase() }
+    let tempForm = { currency: form?.currency?.toUpperCase() }
 
     try {
       const { data } = await axiosClient.put(
-        `/config/update/currency/${form.currency_id}`,
+        `/config/update/currency/${form?.currency_id}`,
         tempForm,
       )
       console.log(data)
       showToast('Currency updated successfully!', 'success')
       const temp = currencys.map((currency) =>
-        currency.currency_id === form.currency_id
-          ? { ...currency, currency: tempForm.currency }
+        currency?.currency_id === form?.currency_id
+          ? { ...currency, currency: tempForm?.currency }
           : currency,
       )
       setCurrencys(temp)
@@ -92,7 +92,7 @@ const Currency = () => {
     } else {
       const value = e.target.value.toLowerCase()
       const filtered = currencys.filter((currency) =>
-        currency.currency.toLowerCase().includes(value),
+        currency?.currency?.toLowerCase().includes(value),
       )
       setCurrencys(filtered)
       setSearch(value)
@@ -153,7 +153,7 @@ const Currency = () => {
                     type="text"
                     class="form-control"
                     id="exampleInputEmail1"
-                    value={form.currency}
+                    value={form?.currency}
                     onChange={(e) => setForm({ ...form, currency: e.target.value })}
                   />
                 </div>
@@ -210,7 +210,7 @@ const Currency = () => {
             {currencys &&
               currencys.map((currency, i) => (
                 <tr key={i}>
-                  <td>{currency.currency}</td>
+                  <td>{currency?.currency}</td>
 
                   <td>
                     <i
@@ -242,3 +242,4 @@ const Currency = () => {
 }
 
 export default Currency
+

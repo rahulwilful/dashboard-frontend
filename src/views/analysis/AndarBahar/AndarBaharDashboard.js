@@ -24,6 +24,7 @@ import { CustomEase } from 'gsap/all'
 import { CardImage } from 'react-bootstrap-icons'
 
 import { GetCurrent } from '../../../getCurrent'
+import { Loader } from '../../../components/Loader'
 
 gsap.registerPlugin(CustomEase)
 
@@ -193,6 +194,7 @@ const AndarBaharDashboard = () => {
   }
 
   const getCustomeGameDataByRadio = async (limitParam) => {
+    console.log('limitParam: ', limitParam)
     setData([])
     const limitToUse = limitParam || limit
 
@@ -205,7 +207,7 @@ const AndarBaharDashboard = () => {
       setRenderKey(renderKey + 1)
       setLimit(limitParam)
       let data = res?.data?.result
-      console.log('response: ', data)
+      // console.log('response: ', data)
       if (data?.length > 0) {
         setDisplay('data')
       }
@@ -214,7 +216,7 @@ const AndarBaharDashboard = () => {
         setDisplay('nodata')
       }
     } catch (err) {
-      console.log('err: ', err)
+      //console.log('err: ', err)
       setDisplay('nodata')
     }
     localStorage.setItem('andarBaharCallOnTimeInterval', true)
@@ -277,10 +279,16 @@ const AndarBaharDashboard = () => {
     localStorage.setItem('andarBaharCallOnTimeInterval', false)
   }
 
+  /**
+   * Process the data received from the API to update the state variables.
+   * @param {Array} resData - The data received from the API.
+   */
   const processData = (resData) => {
+    console.log('processData resData: ', resData)
     let live = false
     const currentTime = new Date()
 
+    // Check if the connection is live based on the date_time of the first entry
     if (resData?.length > 0 && resData[0]?.date_time) {
       const resDataTime = new Date(resData[0]?.date_time)
       const diffInMs = currentTime - resDataTime
@@ -290,21 +298,29 @@ const AndarBaharDashboard = () => {
         live = true
       }
     }
-
+    console.log('processData1 ')
+    // If data is already loaded and the connection is not live, return early
     if (data?.length > 0 && live == false) {
       return
     }
+    console.log('processData2 ')
+
     setLive(live)
 
+    // If live, update live data
     if (live == true) {
       setLiveData(resData[0])
     }
 
+    console.log('processData3 ')
+
+    // Initialize counters
     let andarTotal = 0
     let baharTotal = 0
     let andarShot = 0
     let baharShot = 0
 
+    // Iterate through the data and update counters
     for (let i in resData) {
       const splittedAndar = resData[i]?.andar_cards?.split(',')
       const splittedBahar = resData[i]?.bahar_cards?.split(',')
@@ -317,13 +333,18 @@ const AndarBaharDashboard = () => {
       if (resData[i]?.side_win == 'A') andarShot++
       if (resData[i]?.side_win == 'B') baharShot++
     }
+    console.log('processData4 ')
 
+    // Initialize streak variables
     let streak = []
     let tempStreak = []
     let andarStreak = 0
     let baharStreak = 0
     let curWinner = resData[0]?.winner
 
+    console.log('processData5 ')
+
+    // Iterate through the data and update streak variables
     for (let i = 1; i < resData.length; i++) {
       if (curWinner == resData[i]?.winner) {
         tempStreak.push(curWinner)
@@ -335,19 +356,24 @@ const AndarBaharDashboard = () => {
         curWinner = resData[i]?.winner
       }
     }
-
+    console.log('processData6 ')
+    // If there is a remaining streak, add it to the streak array
     if (tempStreak.length > 0) streak.push(tempStreak)
 
+    // Iterate through the streak array and update the streak counters
     for (let i in streak) {
       if (streak[i][0] == 'A') andarStreak++
       else baharStreak++
     }
 
+    // Initialize the andar and bahar cards arrays
     let tempAndarCards = resData[0]?.splittedAndar
     let tempAndarCards2 = []
     let tempBaharCards = resData[0]?.splittedBahar
     let tempBaharCards2 = []
+    console.log('processData7 ')
 
+    // Iterate through the andar and bahar cards and update the arrays
     for (let i in tempAndarCards) {
       if (i == 0) {
         for (let j in CardImages) {
@@ -371,7 +397,9 @@ const AndarBaharDashboard = () => {
         }
       }
     }
+    console.log('processData8 ')
 
+    // Iterate through the bahar cards and update the array
     for (let i in tempBaharCards) {
       if (i == 0) {
         for (let j in CardImages) {
@@ -395,41 +423,71 @@ const AndarBaharDashboard = () => {
         }
       }
     }
-
+    console.log('processData9 ')
+    // If there are no shots, hide the doughnut chart
     if (andarShot == 0 && baharShot == 0) {
       setShowDoughnutChart(false)
     } else {
       setShowDoughnutChart(true)
     }
 
+    // Iterate through the CardImages array and find the joker card image
     for (let i in CardImages) {
       if (CardImages[i]?.name == resData[0]?.joker_cards) {
         setJokerCardImage(CardImages[i]?.card)
       }
     }
-
+    console.log('processData10 ')
+    // Set the initial index to 0
     setIndex(0)
+
+    // Set the initial andar and bahar cards
     setAndarCards(tempAndarCards2)
     setBaharCards(tempBaharCards2)
+
+    // Set the initial joker card
     setJokerCard(resData[0]?.joker_cards)
+
+    // Set the initial winner
     setWinner(resData[0]?.winner)
+
+    // Set the initial side win
     setSideWin(resData[0]?.side_win)
+
+    // Set the data
     setData(resData)
+    console.log('processData11 ')
+
+    // Set the data length in local storage
     localStorage.setItem('andarBaharDataLength', resData.length)
+    console.log('processData12 ')
+    // Set the andar vs bahar win data
     setAndarWinVsBaharWin([
       { name: 'Andar ', value: andarTotal },
       { name: 'Bahar ', value: baharTotal },
     ])
+    console.log('processData13 ')
+    // Set the andar shot vs bahar shot win data
     setAndarShotWinVsBaharShotWin([
       { name: 'Andar Shot', value: andarShot },
       { name: 'Bahar Shot', value: baharShot },
     ])
+    console.log('processData14 ')
+    // Set the graph data
     setGraphData([
       { name: 'Andar ', value: andarTotal, color: 'rgb(36, 141, 92)' },
       { name: 'Bahar ', value: baharTotal, color: 'rgb(255, 43, 50)' },
       { name: 'Andar Shot', value: andarShot, color: 'rgb(36, 141, 92)' },
       { name: 'Bahar Shot', value: baharShot, color: 'rgb(255, 43, 50)' },
     ])
+    console.log('processData15 ')
+
+    // Set the streak data
+    /*  setStreakData([
+      { name: 'Andar Streak', value: andarStreak },
+      { name: 'Bahar Streak', value: baharStreak },
+    ]) */
+    console.log('processData last ')
   }
 
   const handleIndexChange = (event) => {
@@ -631,143 +689,145 @@ const AndarBaharDashboard = () => {
   }
 
   return (
-    <div className={` ${theme === 'dark' ? 'text-light' : 'text-dark'} pb-4 `}>
-      <div className={``}>
+    <>
+      <div className={` ${theme === 'dark' ? 'text-light' : 'text-dark'} pb-4 `}>
         <div className={``}>
-          <h3 className="text-center text-shadow capitalize">
-            {' '}
-            {table_limit_name ? table_limit_name : 'Title'}
-          </h3>
-        </div>
+          <div className={``}>
+            <h3 className="text-center text-shadow capitalize">
+              {' '}
+              {table_limit_name ? table_limit_name : 'Title'}
+            </h3>
+          </div>
 
-        <div className={`px-2`}>
-          <div className={`row    d-flex justify-content-center`}>
-            <div
-              className={`  col-12 col-md-10 col-xxl-12 border-0 shadow-s poppins-500 box ${s.opacity} ${themeClass} bg-gradient py-2 rounded`}
-            >
-              <div className={`row gx-1 gy-2 `}>
-                <div className={`col-12 col-md-6 col-xxl-3 d-flex `}>
-                  <div
-                    className={` d-flex gap-2 w-100 justify-content-between   justify-content-sm-evenly align-items-center`}
-                  >
-                    <div className={`d-flex gap-2`}>
-                      <lable> 10</lable>
-                      <input
-                        className="pointer text-dark "
-                        type="radio"
-                        value={'10'}
-                        name="searchBy"
-                        id="searchByDate"
-                        onClick={() => getCustomeGameDataByRadio(10)}
-                      />
-                    </div>
-                    <div className={`d-flex gap-2`}>
-                      <lable> 20</lable>
-                      <input
-                        className="pointer text-dark "
-                        type="radio"
-                        value={'20'}
-                        name="searchBy"
-                        id="searchByDate"
-                        onClick={() => getCustomeGameDataByRadio(20)}
-                      />
-                    </div>
-                    <div className={`d-flex gap-2`}>
-                      <lable> 50</lable>
-                      <input
-                        className="pointer text-dark "
-                        type="radio"
-                        value={'50'}
-                        name="searchBy"
-                        id="searchByDate"
-                        onClick={() => getCustomeGameDataByRadio(50)}
-                      />
-                    </div>
+          <div className={`px-2`}>
+            <div className={`row    d-flex justify-content-center`}>
+              <div
+                className={`  col-12 col-md-10 col-xxl-12 border-0 shadow-s poppins-500 box ${s.opacity} ${themeClass} bg-gradient py-2 rounded`}
+              >
+                <div className={`row gx-1 gy-2 `}>
+                  <div className={`col-12 col-md-6 col-xxl-3 d-flex `}>
                     <div
-                      className={`border-end border-secondary h-100 border-opacity-25 d-none d-md-block`}
-                    ></div>
-                  </div>
-                </div>
-                <div className={`col-12 col-md-6 col-xxl-3 `}>
-                  <div
-                    className={` w-100  d-flex justify-content-evenly w-100 d-flex gap-1  border-end-0  border-end-xxl-1 border-secondary border-opacity-25 `}
-                  >
-                    <div className="gap-2 fontText w-100 px-0 px-xxl-3  poppins-500 d-flex justify-content-evenly gap-3 align-items-center ">
-                      <div className={`w-100  `}>
+                      className={` d-flex gap-2 w-100 justify-content-between   justify-content-sm-evenly align-items-center`}
+                    >
+                      <div className={`d-flex gap-2`}>
+                        <lable> 10</lable>
                         <input
-                          className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}  `}
-                          type="number"
-                          placeholder="NUmber Of Games"
-                          onChange={(e) => setCustomLimit(e.target.value)}
+                          className="pointer text-dark "
+                          type="radio"
+                          value={'10'}
+                          name="searchBy"
+                          id="searchByDate"
+                          onClick={() => getCustomeGameDataByRadio(10)}
                         />
                       </div>
-                      <div className={` d-flex justify-content-end `}>
-                        <button
-                          className="btn btn-primary bg-gradient btn-sm  fontText"
-                          type="button"
-                          onClick={() => getCustomeGameData()}
-                        >
-                          Search
-                        </button>
+                      <div className={`d-flex gap-2`}>
+                        <lable> 20</lable>
+                        <input
+                          className="pointer text-dark "
+                          type="radio"
+                          value={'20'}
+                          name="searchBy"
+                          id="searchByDate"
+                          onClick={() => getCustomeGameDataByRadio(20)}
+                        />
+                      </div>
+                      <div className={`d-flex gap-2`}>
+                        <lable> 50</lable>
+                        <input
+                          className="pointer text-dark "
+                          type="radio"
+                          value={'50'}
+                          name="searchBy"
+                          id="searchByDate"
+                          onClick={() => getCustomeGameDataByRadio(50)}
+                        />
                       </div>
                       <div
-                        className={`border-end border-secondary h-100 border-opacity-25 d-none d-xxl-block`}
+                        className={`border-end border-secondary h-100 border-opacity-25 d-none d-md-block`}
                       ></div>
                     </div>
                   </div>
-                </div>
-                <div className={`col-12 col-md-12 col-xl-12 col-xxl-6 px-0 px-xxl-3`}>
-                  <div className={``}>
-                    <div className={`row gx-2 gy-1 d-flex  justify-content-evenly`}>
-                      <div className={`col-6 col-sm-5 col-lg-4`}>
-                        <div className={``}>
-                          <div className={`input-group  input-group-sm`}>
-                            <span
-                              className={`input-group-text  font12 bg-${theme} ${themeBorder}`}
-                              id="inputGroup-sizing-sm"
-                            >
-                              From
-                            </span>
-                            <input
-                              type="date"
-                              className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
-                              aria-label="Sizing example input"
-                              aria-describedby="inputGroup-sizing-sm"
-                              onChange={(e) => setFromDate(e.target.value)}
-                            />
-                          </div>
+                  <div className={`col-12 col-md-6 col-xxl-3 `}>
+                    <div
+                      className={` w-100  d-flex justify-content-evenly w-100 d-flex gap-1  border-end-0  border-end-xxl-1 border-secondary border-opacity-25 `}
+                    >
+                      <div className="gap-2 fontText w-100 px-0 px-xxl-3  poppins-500 d-flex justify-content-evenly gap-3 align-items-center ">
+                        <div className={`w-100  `}>
+                          <input
+                            className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}  `}
+                            type="number"
+                            placeholder="NUmber Of Games"
+                            onChange={(e) => setCustomLimit(e.target.value)}
+                          />
                         </div>
-                      </div>
-                      <div className={`col-6 col-sm-5 col-lg-4`}>
-                        <div className="">
-                          <div className="input-group input-group-sm ">
-                            <span
-                              className={`input-group-text font12 bg-${theme} ${themeBorder}`}
-                              id="inputGroup-sizing-sm"
-                            >
-                              To
-                            </span>
-                            <input
-                              type="date"
-                              className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
-                              aria-label="Sizing example input"
-                              aria-describedby="inputGroup-sizing-sm"
-                              onChange={(e) => setToDate(e.target.value)}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        className={`col-12  col-lg-4 d-flex justify-content-lg-end justify-content-center align-items-center`}
-                      >
-                        <div className="">
+                        <div className={` d-flex justify-content-end `}>
                           <button
-                            className={`btn btn-primary bg-gradient btn-sm fontText`}
+                            className="btn btn-primary bg-gradient btn-sm  fontText"
                             type="button"
-                            onClick={() => getGameDataByDate()}
+                            onClick={() => getCustomeGameData()}
                           >
-                            Search By Date
+                            Search
                           </button>
+                        </div>
+                        <div
+                          className={`border-end border-secondary h-100 border-opacity-25 d-none d-xxl-block`}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={`col-12 col-md-12 col-xl-12 col-xxl-6 px-0 px-xxl-3`}>
+                    <div className={``}>
+                      <div className={`row gx-2 gy-1 d-flex  justify-content-evenly`}>
+                        <div className={`col-6 col-sm-5 col-lg-4`}>
+                          <div className={``}>
+                            <div className={`input-group  input-group-sm`}>
+                              <span
+                                className={`input-group-text  font12 bg-${theme} ${themeBorder}`}
+                                id="inputGroup-sizing-sm"
+                              >
+                                From
+                              </span>
+                              <input
+                                type="date"
+                                className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
+                                aria-label="Sizing example input"
+                                aria-describedby="inputGroup-sizing-sm"
+                                onChange={(e) => setFromDate(e.target.value)}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className={`col-6 col-sm-5 col-lg-4`}>
+                          <div className="">
+                            <div className="input-group input-group-sm ">
+                              <span
+                                className={`input-group-text font12 bg-${theme} ${themeBorder}`}
+                                id="inputGroup-sizing-sm"
+                              >
+                                To
+                              </span>
+                              <input
+                                type="date"
+                                className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
+                                aria-label="Sizing example input"
+                                aria-describedby="inputGroup-sizing-sm"
+                                onChange={(e) => setToDate(e.target.value)}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          className={`col-12  col-lg-4 d-flex justify-content-lg-end justify-content-center align-items-center`}
+                        >
+                          <div className="">
+                            <button
+                              className={`btn btn-primary bg-gradient btn-sm fontText`}
+                              type="button"
+                              onClick={() => getGameDataByDate()}
+                            >
+                              Search By Date
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -776,38 +836,165 @@ const AndarBaharDashboard = () => {
               </div>
             </div>
           </div>
-        </div>
 
-        <div className={`${display == 'data' ? '' : 'd-none'} `}>
-          <div className={`mt-3`}>
-            <div className={`row g-3   align-items-stretch`}>
-              <div className={`col-12 col-md-5 box ${s.opacity}`}>
-                <div
-                  className={`${andarCards?.length > 0 ? '' : 'd-none'} shadow-s px-2 pb-2 rounded  ${themeBorder} `}
-                >
+          <div className={`${display == 'data' ? '' : 'd-none'} `}>
+            <div className={`mt-3`}>
+              <div className={`row g-3   align-items-stretch`}>
+                <div className={`col-12 col-md-5 box ${s.opacity}`}>
                   <div
-                    className={`border-bottom border-secondary  border-opacity-25  py-1 px-3 fontTextHeading`}
+                    className={`${andarCards?.length > 0 ? '' : 'd-none'} shadow-s px-2 pb-2 rounded  ${themeBorder} `}
                   >
+                    <div
+                      className={`border-bottom border-secondary  border-opacity-25  py-1 px-3 fontTextHeading`}
+                    >
+                      <div className={``}>
+                        {' '}
+                        <span
+                          className={`bg-gradient bg-primary text-light border-0 bg-gradient px-2 shadow-xs poppins-500 rounded-1 `}
+                        >
+                          Andar
+                        </span>
+                      </div>
+                    </div>
                     <div className={``}>
-                      {' '}
-                      <span
-                        className={`bg-gradient bg-primary text-light border-0 bg-gradient px-2 shadow-xs poppins-500 rounded-1 `}
+                      <div
+                        className={`  d-flex position-relative justify-content-start align-items-center overflow-x-auto `}
+                        style={{ height: '240px', position: 'relative', width: '100%' }}
+                        key={index}
                       >
-                        Andar
-                      </span>
+                        {andarCards?.length > 0 && andarCards[0]?.position !== undefined ? (
+                          andarCards.map((card, i) => (
+                            <div
+                              key={i}
+                              className={`animateAndar `}
+                              style={{
+                                position: 'absolute',
+                                left: `${card?.position}rem`,
+                              }}
+                            >
+                              <div className={`px-2`}>
+                                <div className={``}>{}</div>
+                              </div>
+                              <div className={``}>
+                                <img
+                                  src={card?.image}
+                                  alt=""
+                                  className={`${theme == 'dark' ? 'card_drop_shadow_dark' : 'card_drop_shadow_light'}`}
+                                  style={{ height: '200px', transform: 'rotateY(15deg)' }}
+                                />
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <p>No cards available</p>
+                        )}
+                      </div>
                     </div>
                   </div>
-                  <div className={``}>
+                  <div
+                    className={`${andarCards?.length == 0 ? '' : 'd-none'} shadow-s px-2 pb-2 rounded  ${themeBorder} `}
+                  >
+                    <div
+                      className={`border-bottom border-secondary  border-opacity-25  py-1 px-3 fontTextHeading`}
+                    >
+                      <div className={``}>
+                        {' '}
+                        <span
+                          className={`bg-gradient bg-primary text-light border-0 bg-gradient px-2 shadow-xs poppins-500 rounded-1 `}
+                        >
+                          Andar
+                        </span>
+                      </div>
+                    </div>
+                    <div className={``}>
+                      <div
+                        className={`  d-flex position-relative justify-content-start align-items-center overflow-x-auto `}
+                        style={{ height: '240px', position: 'relative', width: '100%' }}
+                        key={index}
+                      >
+                        <div className={` h-100  w-100`}>
+                          <div
+                            className={`d-flex justify-content-center align-items-center`}
+                            style={{ height: '200px' }}
+                          >
+                            <NoData />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className={`col-12 col-md-2  align-items-stretch box ${s.opacity}`}>
+                  <div
+                    className={` shadow-s px-2 pb-2 rounded  h-100 d-flex flex-column  justify-content-center align-items-center  ${themeBorder}`}
+                  >
+                    <div className={`w-100`}>
+                      <div
+                        className={`border-bottom border-secondary  border-opacity-25  py-1 px-3 fontTextHeading`}
+                      >
+                        {' '}
+                        <span
+                          className={`bg-gradient bg-warning text-light border-0 bg-gradient px-2 shadow-xs poppins-500 rounded-1 `}
+                        >
+                          Joker
+                        </span>
+                      </div>
+                    </div>
+                    <div
+                      className={` h-100 d-flex flex-column  justify-content-center align-items-center `}
+                    >
+                      <div
+                        className={`d-flex justify-content-start justify-content-md-center align-items-center `}
+                      >
+                        <div
+                          className={`${jokerCard ? '' : 'd-none'}`}
+                          style={{ maxWidth: '130px' }}
+                        >
+                          <img
+                            src={jokerCardImage}
+                            alt=""
+                            className={`${theme == 'dark' ? 'card_drop_shadow_dark' : 'card_drop_shadow_light'}`}
+                            style={{ width: '100%', transform: 'rotateY(15deg)' }}
+                          />
+                        </div>
+                        <div
+                          className={`${!jokerCard ? '' : 'd-none'}`}
+                          style={{ maxWidth: '130px' }}
+                        >
+                          <div className={``}>
+                            <NoData />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className={`col-12 col-md-5 box ${s.opacity}`}>
+                  <div
+                    className={`${baharCards?.length > 0 ? '' : 'd-none'} shadow-s px-2 pb-2 rounded    ${themeBorder} `}
+                  >
+                    <div className={``}>
+                      <div
+                        className={`border-bottom border-secondary  border-opacity-25  py-1 px-3 fontTextHeading`}
+                      >
+                        {' '}
+                        <span
+                          className={`bg-gradient bg-danger text-light border-0 bg-gradient px-2 shadow-xs poppins-500 rounded-1 `}
+                        >
+                          Bahar
+                        </span>
+                      </div>
+                    </div>
                     <div
                       className={`  d-flex position-relative justify-content-start align-items-center overflow-x-auto `}
                       style={{ height: '240px', position: 'relative', width: '100%' }}
                       key={index}
                     >
-                      {andarCards?.length > 0 && andarCards[0]?.position !== undefined ? (
-                        andarCards.map((card, i) => (
+                      {baharCards?.length > 0 && baharCards[0]?.position !== undefined ? (
+                        baharCards.map((card, i) => (
                           <div
                             key={i}
-                            className={`animateAndar `}
+                            className={`animateBahar `}
                             style={{
                               position: 'absolute',
                               left: `${card?.position}rem`,
@@ -816,14 +1003,12 @@ const AndarBaharDashboard = () => {
                             <div className={`px-2`}>
                               <div className={``}>{}</div>
                             </div>
-                            <div className={``}>
-                              <img
-                                src={card?.image}
-                                alt=""
-                                className={`${theme == 'dark' ? 'card_drop_shadow_dark' : 'card_drop_shadow_light'}`}
-                                style={{ height: '200px', transform: 'rotateY(15deg)' }}
-                              />
-                            </div>
+                            <img
+                              src={card?.image}
+                              alt=""
+                              className={`${theme == 'dark' ? 'card_drop_shadow_dark' : 'card_drop_shadow_light'}`}
+                              style={{ height: '200px', transform: 'rotateY(15deg)' }}
+                            />
                           </div>
                         ))
                       ) : (
@@ -831,296 +1016,177 @@ const AndarBaharDashboard = () => {
                       )}
                     </div>
                   </div>
-                </div>
-                <div
-                  className={`${andarCards?.length == 0 ? '' : 'd-none'} shadow-s px-2 pb-2 rounded  ${themeBorder} `}
-                >
                   <div
-                    className={`border-bottom border-secondary  border-opacity-25  py-1 px-3 fontTextHeading`}
+                    className={`${baharCards?.length == 0 ? '' : 'd-none'} shadow-s px-2 pb-2 rounded  ${themeBorder} `}
                   >
-                    <div className={``}>
-                      {' '}
-                      <span
-                        className={`bg-gradient bg-primary text-light border-0 bg-gradient px-2 shadow-xs poppins-500 rounded-1 `}
-                      >
-                        Andar
-                      </span>
-                    </div>
-                  </div>
-                  <div className={``}>
                     <div
-                      className={`  d-flex position-relative justify-content-start align-items-center overflow-x-auto `}
-                      style={{ height: '240px', position: 'relative', width: '100%' }}
-                      key={index}
+                      className={`border-bottom border-secondary  border-opacity-25  py-1 px-3 fontTextHeading`}
                     >
-                      <div className={` h-100  w-100`}>
-                        <div
-                          className={`d-flex justify-content-center align-items-center`}
-                          style={{ height: '200px' }}
+                      <div className={``}>
+                        {' '}
+                        <span
+                          className={`bg-gradient bg-danger text-light border-0 bg-gradient px-2 shadow-xs poppins-500 rounded-1 `}
                         >
-                          <NoData />
+                          Bahar
+                        </span>
+                      </div>
+                    </div>
+                    <div className={``}>
+                      <div
+                        className={`  d-flex position-relative justify-content-start align-items-center overflow-x-auto `}
+                        style={{ height: '240px', position: 'relative', width: '100%' }}
+                        key={index}
+                      >
+                        <div className={` h-100  w-100`}>
+                          <div
+                            className={`d-flex justify-content-center align-items-center`}
+                            style={{ height: '200px' }}
+                          >
+                            <NoData />
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className={`col-12 col-md-2  align-items-stretch box ${s.opacity}`}>
-                <div
-                  className={` shadow-s px-2 pb-2 rounded  h-100 d-flex flex-column  justify-content-center align-items-center  ${themeBorder}`}
-                >
-                  <div className={`w-100`}>
-                    <div
-                      className={`border-bottom border-secondary  border-opacity-25  py-1 px-3 fontTextHeading`}
-                    >
-                      {' '}
-                      <span
-                        className={`bg-gradient bg-warning text-light border-0 bg-gradient px-2 shadow-xs poppins-500 rounded-1 `}
-                      >
-                        Joker
-                      </span>
-                    </div>
-                  </div>
-                  <div
-                    className={` h-100 d-flex flex-column  justify-content-center align-items-center `}
+            </div>
+
+            <div className={`mt-3 box  ${s.opacity}`}>
+              <div
+                className={`text-light d-flex w-100 py-1 justify-content-center gap-2 align-items-center font12 ${themeBorder} shadow-s  rounded `}
+              >
+                <div className={`fontTextHeading  poppins-500`}>
+                  winner :{' '}
+                  <span
+                    className={`bg-gradient bg-primary text-light border-0 bg-gradient px-2 shadow-xs  poppins-500 rounded-1 ${winner == 'A' ? '' : 'd-none'}`}
                   >
-                    <div
-                      className={`d-flex justify-content-start justify-content-md-center align-items-center `}
-                    >
-                      <div className={`${jokerCard ? '' : 'd-none'}`} style={{ maxWidth: '130px' }}>
-                        <img
-                          src={jokerCardImage}
-                          alt=""
-                          className={`${theme == 'dark' ? 'card_drop_shadow_dark' : 'card_drop_shadow_light'}`}
-                          style={{ width: '100%', transform: 'rotateY(15deg)' }}
-                        />
+                    Andar
+                  </span>
+                  <span
+                    className={`bg-gradient bg-danger text-light border-0 bg-gradient px-2 shadow-xs  poppins-500 rounded-1 ${winner == 'B' ? '' : 'd-none'}`}
+                  >
+                    Bahar
+                  </span>
+                </div>
+                <div className={`fontTextHeading  poppins-500`}>
+                  Side Win :{' '}
+                  <span
+                    className={`bg-gradient bg-primary text-light border-0 bg-gradient px-2 shadow-xs  poppins-500 rounded-1 ${side_win == 'A' ? '' : 'd-none'}`}
+                  >
+                    Andar
+                  </span>
+                  <span
+                    className={`bg-gradient bg-danger text-light border-0 bg-gradient px-2 shadow-xs  poppins-500 rounded-1 ${side_win == 'B' ? '' : 'd-none'}`}
+                  >
+                    Bahar
+                  </span>
+                  <span
+                    className={`bg-gradient bg-dark text-light border-0 bg-gradient px-2 shadow-xs  poppins-500 rounded-1 ${side_win == '' ? '' : 'd-none'}`}
+                  >
+                    -----
+                  </span>
+                </div>
+                <div className={``}>
+                  <button
+                    onClick={() => handleIndexChange('-')}
+                    type="button"
+                    className={`btn btn-primary btn-sm ${index == 0 ? 'd-none' : ''} `}
+                  >
+                    <i className="bi bi-chevron-left"></i>
+                  </button>
+                  <button
+                    disabled
+                    type="button"
+                    className={`btn btn-primary btn-sm ${index == 0 ? '' : 'd-none'}`}
+                  >
+                    <i className="bi bi-chevron-left"></i>
+                  </button>
+                </div>
+
+                <div className={`fs-4 ${theme === 'light' ? 'text-dark' : 'text-light'}`}>
+                  {data?.length}/{index + 1}
+                </div>
+                <div className={``}>
+                  <button
+                    onClick={() => handleIndexChange('+')}
+                    type="button"
+                    className={`btn btn-primary btn-sm ${index < data?.length - 1 ? '' : 'd-none'}`}
+                  >
+                    <i className="bi bi-chevron-right  "></i>
+                  </button>
+                  <button
+                    disabled
+                    type="button"
+                    className={`btn btn-primary btn-sm ${index >= data?.length - 1 ? '' : 'd-none'}`}
+                  >
+                    <i className="bi bi-chevron-right "></i>
+                  </button>
+                </div>
+                <div
+                  className={`fontTextHeading  poppins-500  d-flex justify-content-center align-items-center gap-2 ${live ? 'text-ligt' : 'text-danger'}`}
+                >
+                  <div className={``}>Active</div>
+                  <span
+                    className={`rounded-circle d-flex justify-content-center    ${live ? 'bg-success' : 'bg-danger disabled'} text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25 pointer`}
+                    disabled={!live}
+                    onClick={live ? updateData : null}
+                  >
+                    <i class="bi bi-arrow-clockwise"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className={``}>
+              <div className={``}>
+                <div className={`mt-2`}>
+                  <div className={`row  py-2 gx-3 `}>
+                    <div className={` col-12 col-md-4 box ${s.opacity}`}>
+                      <div className={`rounded shadow-s ${themeBorder}`}>
+                        <DoughnutChartComponent doughnutData={andarWinVsBaharWin} />
+                      </div>
+                    </div>
+                    <div className={` col-12 col-md-4  box ${s.opacity}`}>
+                      <div
+                        className={`rounded shadow-s ${themeBorder} ${showDoughnutChart ? '' : 'd-none'} `}
+                      >
+                        <DoughnutChartComponent doughnutData={andarShotWinVsBaharShotWin} />
                       </div>
                       <div
-                        className={`${!jokerCard ? '' : 'd-none'}`}
-                        style={{ maxWidth: '130px' }}
+                        className={`rounded h-100 d-flex justify-content-center align-items-center shadow-s ${themeBorder} ${showDoughnutChart ? 'd-none' : ''} `}
                       >
-                        <div className={``}>
-                          <NoData />
-                        </div>
+                        <NoData />
+                      </div>
+                    </div>
+                    <div className={` col-12 col-md-4  box ${s.opacity}`}>
+                      <div className={`rounded shadow-s ${themeBorder} `}>
+                        <DoughnutChartComponent doughnutData={graphData} />
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className={`col-12 col-md-5 box ${s.opacity}`}>
-                <div
-                  className={`${baharCards?.length > 0 ? '' : 'd-none'} shadow-s px-2 pb-2 rounded    ${themeBorder} `}
-                >
-                  <div className={``}>
-                    <div
-                      className={`border-bottom border-secondary  border-opacity-25  py-1 px-3 fontTextHeading`}
-                    >
-                      {' '}
-                      <span
-                        className={`bg-gradient bg-danger text-light border-0 bg-gradient px-2 shadow-xs poppins-500 rounded-1 `}
-                      >
-                        Bahar
-                      </span>
-                    </div>
-                  </div>
-                  <div
-                    className={`  d-flex position-relative justify-content-start align-items-center overflow-x-auto `}
-                    style={{ height: '240px', position: 'relative', width: '100%' }}
-                    key={index}
-                  >
-                    {baharCards?.length > 0 && baharCards[0]?.position !== undefined ? (
-                      baharCards.map((card, i) => (
-                        <div
-                          key={i}
-                          className={`animateBahar `}
-                          style={{
-                            position: 'absolute',
-                            left: `${card?.position}rem`,
-                          }}
-                        >
-                          <div className={`px-2`}>
-                            <div className={``}>{}</div>
-                          </div>
-                          <img
-                            src={card?.image}
-                            alt=""
-                            className={`${theme == 'dark' ? 'card_drop_shadow_dark' : 'card_drop_shadow_light'}`}
-                            style={{ height: '200px', transform: 'rotateY(15deg)' }}
-                          />
-                        </div>
-                      ))
-                    ) : (
-                      <p>No cards available</p>
-                    )}
-                  </div>
-                </div>
-                <div
-                  className={`${baharCards?.length == 0 ? '' : 'd-none'} shadow-s px-2 pb-2 rounded  ${themeBorder} `}
-                >
-                  <div
-                    className={`border-bottom border-secondary  border-opacity-25  py-1 px-3 fontTextHeading`}
-                  >
-                    <div className={``}>
-                      {' '}
-                      <span
-                        className={`bg-gradient bg-danger text-light border-0 bg-gradient px-2 shadow-xs poppins-500 rounded-1 `}
-                      >
-                        Bahar
-                      </span>
-                    </div>
-                  </div>
-                  <div className={``}>
-                    <div
-                      className={`  d-flex position-relative justify-content-start align-items-center overflow-x-auto `}
-                      style={{ height: '240px', position: 'relative', width: '100%' }}
-                      key={index}
-                    >
-                      <div className={` h-100  w-100`}>
-                        <div
-                          className={`d-flex justify-content-center align-items-center`}
-                          style={{ height: '200px' }}
-                        >
-                          <NoData />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className={`mt-3 box  ${s.opacity}`}>
-            <div
-              className={`text-light d-flex w-100 py-1 justify-content-center gap-2 align-items-center font12 ${themeBorder} shadow-s  rounded `}
-            >
-              <div className={`fontTextHeading  poppins-500`}>
-                winner :{' '}
-                <span
-                  className={`bg-gradient bg-primary text-light border-0 bg-gradient px-2 shadow-xs  poppins-500 rounded-1 ${winner == 'A' ? '' : 'd-none'}`}
-                >
-                  Andar
-                </span>
-                <span
-                  className={`bg-gradient bg-danger text-light border-0 bg-gradient px-2 shadow-xs  poppins-500 rounded-1 ${winner == 'B' ? '' : 'd-none'}`}
-                >
-                  Bahar
-                </span>
-              </div>
-              <div className={`fontTextHeading  poppins-500`}>
-                Side Win :{' '}
-                <span
-                  className={`bg-gradient bg-primary text-light border-0 bg-gradient px-2 shadow-xs  poppins-500 rounded-1 ${side_win == 'A' ? '' : 'd-none'}`}
-                >
-                  Andar
-                </span>
-                <span
-                  className={`bg-gradient bg-danger text-light border-0 bg-gradient px-2 shadow-xs  poppins-500 rounded-1 ${side_win == 'B' ? '' : 'd-none'}`}
-                >
-                  Bahar
-                </span>
-                <span
-                  className={`bg-gradient bg-dark text-light border-0 bg-gradient px-2 shadow-xs  poppins-500 rounded-1 ${side_win == '' ? '' : 'd-none'}`}
-                >
-                  -----
-                </span>
-              </div>
-              <div className={``}>
-                <button
-                  onClick={() => handleIndexChange('-')}
-                  type="button"
-                  className={`btn btn-primary btn-sm ${index == 0 ? 'd-none' : ''} `}
-                >
-                  <i className="bi bi-chevron-left"></i>
-                </button>
-                <button
-                  disabled
-                  type="button"
-                  className={`btn btn-primary btn-sm ${index == 0 ? '' : 'd-none'}`}
-                >
-                  <i className="bi bi-chevron-left"></i>
-                </button>
-              </div>
-
-              <div className={`fs-4 ${theme === 'light' ? 'text-dark' : 'text-light'}`}>
-                {data?.length}/{index + 1}
-              </div>
-              <div className={``}>
-                <button
-                  onClick={() => handleIndexChange('+')}
-                  type="button"
-                  className={`btn btn-primary btn-sm ${index < data?.length - 1 ? '' : 'd-none'}`}
-                >
-                  <i className="bi bi-chevron-right  "></i>
-                </button>
-                <button
-                  disabled
-                  type="button"
-                  className={`btn btn-primary btn-sm ${index >= data?.length - 1 ? '' : 'd-none'}`}
-                >
-                  <i className="bi bi-chevron-right "></i>
-                </button>
               </div>
               <div
-                className={`fontTextHeading  poppins-500  d-flex justify-content-center align-items-center gap-2 ${live ? 'text-ligt' : 'text-danger'}`}
+                className={`mt-2  rounded  shadow-s ${themeBorder}  bg-gradient box ${s.opacity}`}
               >
-                <div className={``}>Active</div>
-                <span
-                  className={`rounded-circle d-flex justify-content-center    ${live ? 'bg-success' : 'bg-danger disabled'} text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25 pointer`}
-                  disabled={!live}
-                  onClick={live ? updateData : null}
-                >
-                  <i class="bi bi-arrow-clockwise"></i>
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className={``}>
-            <div className={``}>
-              <div className={`mt-2`}>
-                <div className={`row  py-2 gx-3 `}>
-                  <div className={` col-12 col-md-4 box ${s.opacity}`}>
-                    <div className={`rounded shadow-s ${themeBorder}`}>
-                      <DoughnutChartComponent doughnutData={andarWinVsBaharWin} />
-                    </div>
-                  </div>
-                  <div className={` col-12 col-md-4  box ${s.opacity}`}>
-                    <div
-                      className={`rounded shadow-s ${themeBorder} ${showDoughnutChart ? '' : 'd-none'} `}
-                    >
-                      <DoughnutChartComponent doughnutData={andarShotWinVsBaharShotWin} />
-                    </div>
-                    <div
-                      className={`rounded h-100 d-flex justify-content-center align-items-center shadow-s ${themeBorder} ${showDoughnutChart ? 'd-none' : ''} `}
-                    >
-                      <NoData />
-                    </div>
-                  </div>
-                  <div className={` col-12 col-md-4  box ${s.opacity}`}>
-                    <div className={`rounded shadow-s ${themeBorder} `}>
-                      <DoughnutChartComponent doughnutData={graphData} />
+                <div className={`py-1 row    d-flex justify-content-center `}>
+                  <div className={`col-12 col-sm-10 h-100 mt-2`}>
+                    <div className={``} key={renderKey}>
+                      <BarChartComponent graphData={graphData} />
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className={`mt-2  rounded  shadow-s ${themeBorder}  bg-gradient box ${s.opacity}`}>
-              <div className={`py-1 row    d-flex justify-content-center `}>
-                <div className={`col-12 col-sm-10 h-100 mt-2`}>
-                  <div className={``} key={renderKey}>
-                    <BarChartComponent graphData={graphData} />
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
-        </div>
-        <div className={`${display == 'nodata' ? '' : 'd-none'}`}>
-          <NoDataFull />
+          <div className={`${display == 'nodata' ? '' : 'd-none'}`}>
+            <NoDataFull />
+          </div>
         </div>
       </div>
-    </div>
+      <Loader display={display} />
+    </>
   )
 }
 

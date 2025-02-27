@@ -40,7 +40,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    if (!navigator.onLine) {
+    if (!navigator?.onLine) {
       //showToast('error', 'No internet connection')
     } else {
       //showToast('success', 'Internet connection')
@@ -56,7 +56,7 @@ const Login = () => {
 
     try {
       const res = await axiosClient.get(`/user/get/current`)
-      if (res) {
+      if (res?.data) {
         // navigate('/')
       }
     } catch (err) {}
@@ -87,7 +87,7 @@ const Login = () => {
         password,
       })
       console.log('Login successful, response: ', response)
-      localStorage.setItem('token', response.data.token)
+      localStorage.setItem('token', response?.data?.token)
       console.log('Token stored in localStorage')
       showToast('Login successful', 'success')
       setTimeout(() => {
@@ -96,9 +96,9 @@ const Login = () => {
       //
     } catch (err) {
       console.error('Error during login: ', err)
-      setError(err.response.data.message)
-      if (err.response.data.message) {
-        showToast(err.response.data.message, 'error')
+      setError(err?.response?.data?.message)
+      if (err?.response?.data?.message) {
+        showToast(err?.response?.data?.message, 'error')
         console.log('Forbidden error toast shown')
       } else {
         showToast('Something went wrong', 'error')
@@ -115,7 +115,6 @@ const Login = () => {
       opacity: 0,
       y: 100,
       duration: 1,
-
       ease: 'power1.out',
     })
   }
@@ -166,8 +165,8 @@ const Login = () => {
                       <div className={`row`}>
                         <div className={`col-xs-6 d-flex justify-content-center`}>
                           {isLoading ? (
-                            <div class="spinner-border" role="status">
-                              <span class="visually-hidden">Loading...</span>
+                            <div className="spinner-border" role="status">
+                              <span className="visually-hidden">Loading...</span>
                             </div>
                           ) : (
                             <button
@@ -205,60 +204,3 @@ const Login = () => {
 }
 
 export default Login
-
-{
-  /*  <CRow className="justify-content-center">
-          <CCol md={4}>
-            <div className="  d-flex justify-content-center mb-3">
-              <div className=" bg-dark p-1 rounded">
-                <div>
-                  <CImage src={LOGO} style={{ width: '120px' }} />
-                </div>
-              </div>
-            </div>
-            <CCardGroup>
-              <CCard className="p-4">
-                <CCardBody>
-                  <CForm onSubmit={handleSubmit}>
-                    <h1>Login</h1>
-                    <p className="text-body-secondary">Sign In to your account</p>
-                    <CInputGroup className="mb-3">
-                      <CInputGroupText>
-                        <CIcon icon={cilUser} />
-                      </CInputGroupText>
-                      <CFormInput
-                        placeholder="User Name"
-                        autoComplete="user_name"
-                        value={user_name}
-                        x
-                        onChange={(e) => setUser_name(e.target.value)}
-                      />
-                    </CInputGroup>
-                    <CInputGroup className="mb-4">
-                      <CInputGroupText>
-                        <CIcon icon={cilLockLocked} />
-                      </CInputGroupText>
-                      <CFormInput
-                        type="password"
-                        placeholder="Password"
-                        autoComplete="current-password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                      />
-                    </CInputGroup>
-                    {error && <div className="text-danger">{error}</div>}
-                    <CRow>
-                      <CCol xs={6}>
-                        <CButton color="primary" className="px-4" type="submit">
-                          Login
-                        </CButton>
-                      </CCol>
-                      <CCol xs={6} className="text-right"></CCol>
-                    </CRow>
-                  </CForm>
-                </CCardBody>
-              </CCard>
-            </CCardGroup>
-          </CCol>
-        </CRow> */
-}

@@ -192,9 +192,9 @@ const PlayerBankerDashboardComponent = (props) => {
   }
 
   useEffect(() => {
-    if (!props?.shoeData || props?.shoeData?.length === 0) {
+    if (!props?.shoeData || props?.shoeData?.length <= 0) {
       // If props.shoeData is undefined or empty, don't proceed
-      console.error('shoeData is undefined or empty')
+      // console.error('shoeData is undefined or empty')
       return
     }
 
@@ -203,9 +203,11 @@ const PlayerBankerDashboardComponent = (props) => {
 
     // Fetch current shoe from localStorage if available
     const currentShoeFromStorage = localStorage.getItem('currentShoe')
+    console.log('currentShoe', currentShoeFromStorage)
 
     // Ensure props.shoes and props.shoeData are valid
     if (props?.shoeData && props?.shoeData?.length > 0) {
+      //console.log('shoeData', shoeData)
       const currentShoeExists = props?.shoes?.some((shoe) => shoe === currentShoeFromStorage)
 
       if (currentShoeFromStorage && currentShoeExists) {
@@ -231,7 +233,14 @@ const PlayerBankerDashboardComponent = (props) => {
         localStorage.getItem('currentShoe') != undefined
       ) {
         for (let i = 0; i < props?.shoeData?.length; i++) {
+          console.log(
+            'props?.shoeData[i]?.shoe: ',
+            props?.shoeData[i]?.shoe,
+            ' currentShoeFromStorage: ',
+            currentShoeFromStorage,
+          )
           if (props?.shoeData[i]?.shoe == currentShoeFromStorage) {
+            console.log('inside if block props?.shoeData[i]?.shoe: ', props?.shoeData[i]?.shoe)
             setCurrentShoeData(props?.shoeData[i]?.data)
 
             setCurrentShoe(props?.shoeData[i]?.shoe)
@@ -249,13 +258,14 @@ const PlayerBankerDashboardComponent = (props) => {
         tempData = props?.shoeData[0]?.data
         tempCurrShoe = props?.shoeData[0]?.shoe
         localStorage.setItem('currentShoe', tempCurrShoe)
+        console.log('current Shoe flag == 0: ', localStorage.getItem('currentShoe'))
         setCurrentShoe(props?.shoeData[0]?.shoe)
         setCurrentOption({ label: props?.shoeData[0]?.shoe, value: props?.shoeData[0]?.shoe })
       }
 
       processData(tempData)
 
-      console.log('tempData : ', tempData)
+      // console.log('tempData : ', tempData)
 
       // Build options list for the dropdown
       for (let i = 0; i < props?.shoes?.length; i++) {
@@ -316,7 +326,7 @@ const PlayerBankerDashboardComponent = (props) => {
   }
 
   const getDataByShoe = async (shoe) => {
-    console.log('getDataByShoe: ', shoe)
+    //console.log('getDataByShoe: ', shoe)
 
     try {
       const res = await axiosClient.get(
@@ -345,13 +355,14 @@ const PlayerBankerDashboardComponent = (props) => {
 
         let tempShoeData = shoeData
         tempShoeData.push({ shoe: shoe, data: resData })
-        console.log('tempShoeData: ', tempShoeData)
+        //console.log('tempShoeData: ', tempShoeData)
         setShoeData(tempShoeData)
 
         for (let i = 0; i < tempShoeData?.length; i++) {
           if (tempShoeData[i]?.shoe == shoe) {
             console.log("localStorage.setItem('currentShoe', shoe): ", shoe)
             localStorage.setItem('currentShoe', shoe)
+
             setCurrentShoeData(tempShoeData[i]?.data)
             processData(tempShoeData[i]?.data)
             setCurrentOption({ label: tempShoeData[i]?.shoe, value: tempShoeData[i]?.shoe })
@@ -359,7 +370,7 @@ const PlayerBankerDashboardComponent = (props) => {
           }
         }
 
-        console.log('getDataByShoe result: ', resData)
+        // console.log('getDataByShoe result: ', resData)
         props?.getDataByShoe(res?.data?.result)
       }
     } catch (error) {
@@ -368,7 +379,7 @@ const PlayerBankerDashboardComponent = (props) => {
   }
 
   useEffect(() => {
-    console.log('shoeData', shoeData)
+    // console.log('shoeData', shoeData)
     fadeInAnimation()
   }, [shoeData])
 

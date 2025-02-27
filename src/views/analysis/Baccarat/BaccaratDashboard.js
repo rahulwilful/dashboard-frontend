@@ -25,6 +25,7 @@ import { GetCurrent } from '../../../getCurrent.js'
 import NoData from '../../NoData/NoData'
 import NoDataFull from '../../NoData/NoDataFull'
 import showToast from '../../../components/Notification/ShowToast.js'
+import { Loader } from '../../../components/Loader.js'
 
 const BaccaratDashboard = () => {
   const navigate = useNavigate()
@@ -103,7 +104,7 @@ const BaccaratDashboard = () => {
   }, [])
 
   const getCurrent = async () => {
-    console.log('called getCurrent')
+    //console.log('called getCurrent')
 
     await GetCurrent('analysis')
     getGameData(10)
@@ -117,7 +118,7 @@ const BaccaratDashboard = () => {
       setShoePlayerBankerComponent(false)
       let data = res?.data?.result
       setUpdatedData(res?.data?.result)
-      console.log('response: ', data)
+      //console.log('response: ', data)
 
       let live = false
       const currentTime = new Date()
@@ -132,7 +133,7 @@ const BaccaratDashboard = () => {
         }
       }
 
-      console.log('live status: ', live)
+      //console.log('live status: ', live)
       setLive(live)
 
       if (data?.length > 0) {
@@ -144,7 +145,7 @@ const BaccaratDashboard = () => {
       }
       setRenderKey(renderKey + 1)
     } catch (err) {
-      console.log('err: ', err)
+      //console.log('err: ', err)
       setDisplay('nodata')
     }
 
@@ -157,7 +158,7 @@ const BaccaratDashboard = () => {
   }
 
   const getGameDataByDate = async () => {
-    console.log('fromDate ', fromDate, ' toDate ', toDate)
+    //console.log('fromDate ', fromDate, ' toDate ', toDate)
     try {
       const res = await axiosClient.post(`/game/get/${game}/${game_type_id}/${table_limit_id}`, {
         from_date: fromDate,
@@ -165,7 +166,7 @@ const BaccaratDashboard = () => {
       })
       processData(res?.data?.result)
       let data = res?.data?.result
-      console.log('response: ', data)
+      //console.log('response: ', data)
       if (data?.length > 0) {
         setDisplay('data')
       }
@@ -175,35 +176,10 @@ const BaccaratDashboard = () => {
       }
       setRenderKey(renderKey + 1)
     } catch (err) {
-      console.log('err: ', err)
+      //console.log('err: ', err)
       setDisplay('nodata')
     }
 
-    localStorage.setItem('baccaratCallOnTimeInterval', false)
-  }
-
-  const getGameDataByFromShoeToToShoe = async () => {
-    try {
-      const res = await axiosClient.get(
-        `/baccarat/get/from/to/${game_type_id}/${table_limit_id}/${fromShoe}/${toShoe}`,
-      )
-
-      setShoePlayerBankerComponent(false)
-      processData(res?.data?.result)
-      let data = res?.data?.result
-      console.log('response: ', data)
-      if (data?.length > 0) {
-        setDisplay('data')
-      }
-
-      if (data?.length == 0) {
-        setDisplay('nodata')
-      }
-
-      setRenderKey(renderKey + 1)
-    } catch (err) {
-      console.log(err)
-    }
     localStorage.setItem('baccaratCallOnTimeInterval', false)
   }
 
@@ -214,7 +190,7 @@ const BaccaratDashboard = () => {
       setShoePlayerBankerComponent(false)
       processData(res?.data?.result)
       let data = res?.data?.result
-      console.log('response: ', data)
+      //console.log('response: ', data)
       if (data?.length > 0) {
         setDisplay('data')
       }
@@ -224,14 +200,53 @@ const BaccaratDashboard = () => {
       }
       setRenderKey(renderKey + 1)
     } catch (err) {
-      console.log('err: ', err)
+      //console.log('err: ', err)
       setDisplay('nodata')
     }
 
     localStorage.setItem('baccaratCallOnTimeInterval', true)
   }
 
+  const getGameDataByFromShoeToToShoe = async () => {
+    if (fromShoe > toShoe) {
+      showToast('From Shoe should be less than To Shoe', 'error')
+      return
+    }
+    if (toShoe < 0) {
+      showToast(' To Shoe should be greater than 0', 'error')
+      return
+    }
+    if (!fromShoe || !toShoe) {
+      showToast('From Shoe and To Shoe should not be empty', 'error')
+      return
+    }
+    localStorage.setItem('currentShoe', toShoe)
+    setDisplay('loading')
+    try {
+      const res = await axiosClient.get(
+        `/baccarat/get/from/to/${game_type_id}/${table_limit_id}/${fromShoe}/${toShoe}`,
+      )
+
+      setShoePlayerBankerComponent(false)
+      processData(res?.data?.result)
+      let data = res?.data?.result
+      //console.log('response: ', res?.data?.result)
+      if (data?.length > 0) {
+        setDisplay('data')
+      }
+
+      if (data?.length == 0) {
+        setDisplay('nodata')
+      }
+    } catch (err) {
+      //console.log(err)
+      setDisplay('nodata')
+    }
+    localStorage.setItem('baccaratCallOnTimeInterval', false)
+  }
+
   const processData = async (resData) => {
+    // console.log('processData: ', resData)
     setRawData(resData)
 
     const resShoes = await axiosClient.get(`/baccarat/get/shoes/${game_type_id}/${table_limit_id}`)
@@ -249,7 +264,7 @@ const BaccaratDashboard = () => {
       }
     }
 
-    console.log('live status: ', live)
+    //console.log('live status: ', live)
     setLive(live)
     if (live == true) {
       setLiveData(resData[0])
@@ -378,6 +393,7 @@ const BaccaratDashboard = () => {
 
     setBankerVsPlayer(bankerVsPlayer)
     setShoes(resShoes?.data?.result)
+    //console.log('processed data', data)
     setData(data)
     setDataSize(data?.length)
     setDoughnutData(doughnutData)
@@ -409,8 +425,8 @@ const BaccaratDashboard = () => {
   }, [theme])
 
   useEffect(() => {
-    if (data) console.log('data: ', data)
-    if (rawData) console.log('rawData: ', rawData)
+    /*  if (data) console.log('data: ', data)
+    if (rawData) console.log('rawData: ', rawData) */
   }, [data])
 
   const config = { threshold: 0.1 }
@@ -451,152 +467,154 @@ const BaccaratDashboard = () => {
   ]
 
   return (
-    <div
-      className={` ${theme === 'dark' ? 'text-light' : 'text-dark'} pb-4 d-flex justify-content-center`}
-    >
-      <div className={`w-100`}>
-        <div className={`text-center text-shadow capitalize poppins-400`}>
-          <h3> {table_limit_name ? table_limit_name : 'Title'}</h3>
-        </div>
+    <>
+      <div
+        className={` ${theme === 'dark' ? 'text-light' : 'text-dark'} pb-4 d-flex justify-content-center`}
+      >
+        <div className={`w-100`}>
+          <div className={`text-center text-shadow capitalize poppins-400`}>
+            <h3> {table_limit_name ? table_limit_name : 'Title'}</h3>
+          </div>
 
-        <div className={`px-2 py-1 `}>
-          <div className={`px-1`}>
-            <div className={`row    d-flex justify-content-center`}>
-              <div
-                className={`col-12 col-md-10 col-xxl-12 border-0 shadow-s poppins-500 box ${s.opacity} ${themeClass} bg-gradient py-2 rounded`}
-              >
-                <div className={`row  gy-2`}>
-                  <div className={`col-12 col-md-6 col-xxl-3 d-flex `}>
-                    <div
-                      className={` d-flex gap-2 w-100 justify-content-between   justify-content-sm-evenly align-items-center`}
-                    >
-                      <div className={`d-flex gap-2`}>
-                        <label> 10</label>
-                        <input
-                          className="pointer text-dark "
-                          type="radio"
-                          value={'10'}
-                          name="searchBy"
-                          id="searchByDate"
-                          onChange={(e) => setLimit(e.target.value)}
-                        />
-                      </div>
-                      <div className={`d-flex gap-2`}>
-                        <label> 20</label>
-                        <input
-                          className="pointer text-dark "
-                          type="radio"
-                          value={'20'}
-                          name="searchBy"
-                          id="searchByDate"
-                          onChange={(e) => setLimit(e.target.value)}
-                        />
-                      </div>
-                      <div className={`d-flex gap-2`}>
-                        <label> 50</label>
-                        <input
-                          className="pointer text-dark "
-                          type="radio"
-                          value={'50'}
-                          name="searchBy"
-                          id="searchByDate"
-                          onChange={(e) => setLimit(e.target.value)}
-                        />
-                      </div>
+          <div className={`px-2 py-1 `}>
+            <div className={`px-1`}>
+              <div className={`row    d-flex justify-content-center`}>
+                <div
+                  className={`col-12 col-md-10 col-xxl-12 border-0 shadow-s poppins-500 box ${s.opacity} ${themeClass} bg-gradient py-2 rounded`}
+                >
+                  <div className={`row  gy-2`}>
+                    <div className={`col-12 col-md-6 col-xxl-3 d-flex `}>
                       <div
-                        className={`border-end border-secondary h-100 border-opacity-25 d-none d-md-block`}
-                      ></div>
-                    </div>
-                  </div>
-                  <div className={`col-12 col-md-6 col-xxl-3  px-1 `}>
-                    <div
-                      className={` w-100 gap-1  d-flex justify-content-evenly w-100 d-flex   border-end-0  border-end-xxl-1 border-secondary border-opacity-25 `}
-                    >
-                      <div className="gap-1 fontText w-100 px-0 px-xxl-1  poppins-500 d-flex justify-content-evenly gap-0 align-items-center ">
-                        <div className={`w-100 `}>
+                        className={` d-flex gap-2 w-100 justify-content-between   justify-content-sm-evenly align-items-center`}
+                      >
+                        <div className={`d-flex gap-2`}>
+                          <label> 10</label>
                           <input
-                            className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}  `}
-                            type="number"
-                            placeholder="From Shoe"
-                            onChange={(e) => setFromShoe(e.target.value)}
+                            className="pointer text-dark "
+                            type="radio"
+                            value={'10'}
+                            name="searchBy"
+                            id="searchByDate"
+                            onChange={(e) => setLimit(e.target.value)}
                           />
                         </div>
-                        <div className={`w-100 `}>
+                        <div className={`d-flex gap-2`}>
+                          <label> 20</label>
                           <input
-                            className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}  `}
-                            type="number"
-                            placeholder="To Shoe"
-                            onChange={(e) => setToShoe(e.target.value)}
+                            className="pointer text-dark "
+                            type="radio"
+                            value={'20'}
+                            name="searchBy"
+                            id="searchByDate"
+                            onChange={(e) => setLimit(e.target.value)}
                           />
                         </div>
-                        <div className={` d-flex justify-content-end `}>
-                          <button
-                            className="btn btn-primary bg-gradient btn-sm  fontText"
-                            type="button"
-                            onClick={() => getGameDataByFromShoeToToShoe()}
-                          >
-                            Search
-                          </button>
+                        <div className={`d-flex gap-2`}>
+                          <label> 50</label>
+                          <input
+                            className="pointer text-dark "
+                            type="radio"
+                            value={'50'}
+                            name="searchBy"
+                            id="searchByDate"
+                            onChange={(e) => setLimit(e.target.value)}
+                          />
                         </div>
                         <div
-                          className={`border-end border-secondary h-100 border-opacity-25 d-none d-xxl-block`}
+                          className={`border-end border-secondary h-100 border-opacity-25 d-none d-md-block`}
                         ></div>
                       </div>
                     </div>
-                  </div>
-                  <div className={`col-12 col-md-12 col-xl-12 col-xxl-6 px-0 px-xxl-3`}>
-                    <div className={``}>
-                      <div className={`row gx-2 gy-1 d-flex  justify-content-evenly`}>
-                        <div className={`col-6 col-sm-5 col-lg-4`}>
-                          <div className={``}>
-                            <div className={`input-group  input-group-sm`}>
-                              <span
-                                className={`input-group-text  font12 bg-${theme} ${themeBorder}`}
-                                id="inputGroup-sizing-sm"
-                              >
-                                From
-                              </span>
-                              <input
-                                type="datetime-local"
-                                className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
-                                aria-label="Sizing example input"
-                                aria-describedby="inputGroup-sizing-sm"
-                                onChange={(e) => setFromDate(e.target.value)}
-                              />
-                            </div>
+                    <div className={`col-12 col-md-6 col-xxl-3  px-1 `}>
+                      <div
+                        className={` w-100 gap-1  d-flex justify-content-evenly w-100 d-flex   border-end-0  border-end-xxl-1 border-secondary border-opacity-25 `}
+                      >
+                        <div className="gap-1 fontText w-100 px-0 px-xxl-1  poppins-500 d-flex justify-content-evenly gap-0 align-items-center ">
+                          <div className={`w-100 `}>
+                            <input
+                              className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}  `}
+                              type="number"
+                              placeholder="From Shoe"
+                              onChange={(e) => setFromShoe(e.target.value)}
+                            />
                           </div>
-                        </div>
-                        <div className={`col-6 col-sm-5 col-lg-4`}>
-                          <div className="">
-                            <div className="input-group input-group-sm ">
-                              <span
-                                className={`input-group-text font12 bg-${theme} ${themeBorder}`}
-                                id="inputGroup-sizing-sm"
-                              >
-                                To
-                              </span>
-                              <input
-                                type="datetime-local"
-                                className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
-                                aria-label="Sizing example input"
-                                aria-describedby="inputGroup-sizing-sm"
-                                onChange={(e) => setToDate(e.target.value)}
-                              />
-                            </div>
+                          <div className={`w-100 `}>
+                            <input
+                              className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}  `}
+                              type="number"
+                              placeholder="To Shoe"
+                              onChange={(e) => setToShoe(e.target.value)}
+                            />
                           </div>
-                        </div>
-                        <div
-                          className={`col-12  col-lg-4 d-flex justify-content-lg-end justify-content-center align-items-center`}
-                        >
-                          <div className="">
+                          <div className={` d-flex justify-content-end `}>
                             <button
-                              className={`btn btn-primary bg-gradient btn-sm fontText`}
+                              className="btn btn-primary bg-gradient btn-sm  fontText"
                               type="button"
-                              onClick={() => getGameDataByDate()}
+                              onClick={() => getGameDataByFromShoeToToShoe()}
                             >
-                              Search By Date
+                              Search
                             </button>
                           </div>
+                          <div
+                            className={`border-end border-secondary h-100 border-opacity-25 d-none d-xxl-block`}
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className={`col-12 col-md-12 col-xl-12 col-xxl-6 px-0 px-xxl-3`}>
+                      <div className={``}>
+                        <div className={`row gx-2 gy-1 d-flex  justify-content-evenly`}>
+                          <div className={`col-6 col-sm-5 col-lg-4`}>
+                            <div className={``}>
+                              <div className={`input-group  input-group-sm`}>
+                                <span
+                                  className={`input-group-text  font12 bg-${theme} ${themeBorder}`}
+                                  id="inputGroup-sizing-sm"
+                                >
+                                  From
+                                </span>
+                                <input
+                                  type="datetime-local"
+                                  className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
+                                  aria-label="Sizing example input"
+                                  aria-describedby="inputGroup-sizing-sm"
+                                  onChange={(e) => setFromDate(e.target.value)}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div className={`col-6 col-sm-5 col-lg-4`}>
+                            <div className="">
+                              <div className="input-group input-group-sm ">
+                                <span
+                                  className={`input-group-text font12 bg-${theme} ${themeBorder}`}
+                                  id="inputGroup-sizing-sm"
+                                >
+                                  To
+                                </span>
+                                <input
+                                  type="datetime-local"
+                                  className={`form-control font12 form-control-sm ${s.placeholder_grey} bg-${theme} ${themeBorder}`}
+                                  aria-label="Sizing example input"
+                                  aria-describedby="inputGroup-sizing-sm"
+                                  onChange={(e) => setToDate(e.target.value)}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            className={`col-12  col-lg-4 d-flex justify-content-lg-end justify-content-center align-items-center`}
+                          >
+                            <div className="">
+                              <button
+                                className={`btn btn-primary bg-gradient btn-sm fontText`}
+                                type="button"
+                                onClick={() => getGameDataByDate()}
+                              >
+                                Search By Date
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -605,70 +623,72 @@ const BaccaratDashboard = () => {
               </div>
             </div>
           </div>
-        </div>
 
-        <div className={` ${display == 'data' ? '' : 'd-none'}`} key={renderDashboardKey}>
-          <div className={`position-relative`}>
-            <div className={`w-100 mt-2  `} key={renderKey}>
-              <PlayerBankerDashboardComponent
-                shoes={shoes}
-                shoeData={data}
-                dataSize={dataSize}
-                getDataByShoe={getDataByShoe}
-                live={live}
-                updateData={updateData}
-              />
-            </div>
-            <div className={`w-100   mt-3`}>
-              <div className={`row  g-3  `}>
-                <div className={`col-12 col-md-6 box ${s.opacity} `}>
-                  <div className={` shadow-s rounded py-2 ${themeBorder} bg-gradient`}>
-                    <div className={`px-1`}>
-                      <div className={`border-bottom border-secondary border-opacity-25 px-2`}>
-                        Total Shoes {dataSize}
+          <div className={` ${display == 'data' ? '' : 'd-none'}`} key={renderDashboardKey}>
+            <div className={`position-relative`}>
+              <div className={`w-100 mt-2  `} key={renderKey}>
+                <PlayerBankerDashboardComponent
+                  shoes={shoes}
+                  shoeData={data}
+                  dataSize={dataSize}
+                  getDataByShoe={getDataByShoe}
+                  live={live}
+                  updateData={updateData}
+                />
+              </div>
+              <div className={`w-100   mt-3`}>
+                <div className={`row  g-3  `}>
+                  <div className={`col-12 col-md-6 box ${s.opacity} `}>
+                    <div className={` shadow-s rounded py-2 ${themeBorder} bg-gradient`}>
+                      <div className={`px-1`}>
+                        <div className={`border-bottom border-secondary border-opacity-25 px-2`}>
+                          Total Shoes {dataSize}
+                        </div>
                       </div>
-                    </div>
-                    <div className={``}>
-                      <PieChartComponent bankerVsPlayer={bankerVsPlayer} />
+                      <div className={``}>
+                        <PieChartComponent bankerVsPlayer={bankerVsPlayer} />
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className={`col-12 col-md-6 box ${s.opacity}`}>
-                  <div className={` shadow-s rounded py-2 ${themeBorder} bg-gradient`}>
-                    <div className={`px-1`}>
-                      <div className={`border-bottom border-secondary border-opacity-25 px-2`}>
-                        Total Shoes {dataSize}
+                  <div className={`col-12 col-md-6 box ${s.opacity}`}>
+                    <div className={` shadow-s rounded py-2 ${themeBorder} bg-gradient`}>
+                      <div className={`px-1`}>
+                        <div className={`border-bottom border-secondary border-opacity-25 px-2`}>
+                          Total Shoes {dataSize}
+                        </div>
                       </div>
-                    </div>
-                    <div className={``}>
-                      <DoughnutChartComponent doughnutData={doughnutData} />
+                      <div className={``}>
+                        <DoughnutChartComponent doughnutData={doughnutData} />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className={` box mt-3 box  ${s.opacity}`}>
-              <div
-                className={`py-3 row shadow-s rounded  d-flex justify-content-center ${themeBorder} bg-gradient`}
-              >
-                <div className={``}>
-                  <div className={`border-bottom border-secondary border-opacity-25 px-2`}>
-                    Total Shoes {dataSize}
+              <div className={` box mt-3 box  ${s.opacity}`}>
+                <div
+                  className={`py-3 row shadow-s rounded  d-flex justify-content-center ${themeBorder} bg-gradient`}
+                >
+                  <div className={``}>
+                    <div className={`border-bottom border-secondary border-opacity-25 px-2`}>
+                      Total Shoes {dataSize}
+                    </div>
                   </div>
-                </div>
-                <div className={`col-11 col-sm-10 h-100 mt-2`}>
-                  <BarChartComponent sideWin={sideWin} />
+                  <div className={`col-11 col-sm-10 h-100 mt-2`}>
+                    <BarChartComponent sideWin={sideWin} />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className={`${display == 'nodata' ? '' : 'd-none'}`}>
-          <NoDataFull />
+          <div className={`${display == 'nodata' ? '' : 'd-none'}`}>
+            <NoDataFull />
+          </div>
         </div>
       </div>
-    </div>
+
+      <Loader display={display} />
+    </>
   )
 }
 

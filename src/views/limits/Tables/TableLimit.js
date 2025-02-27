@@ -24,28 +24,27 @@ const TableLimits = () => {
   const [addNew, setAddNew] = useState(false)
   const { colorMode, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
 
-  const toggleAddNew = async(set) => {
-   await getCurrent()
+  const toggleAddNew = async (set) => {
+    await getCurrent()
     setAddNew(set)
     setCount(count + 1)
   }
 
-  const  getCurrent = async ()=>{
-    console.log("called getCurrent")
-  
+  const getCurrent = async () => {
+    console.log('called getCurrent')
+
     const user = await GetCurrent('limits')
     return
-    
   }
 
   useEffect(() => {
     //console.log('roullete', theme)
 
-   /*  getCurrent().then(() => {
+    /*  getCurrent().then(() => {
       
     }) */
     setAddNew(false)
-   
+
     console.log('game', game)
     console.log('id', id)
   }, [id])
@@ -55,7 +54,7 @@ const TableLimits = () => {
     const res = await axiosClient.get(
       `/game/get/andar_bahar/${game_type_id}/${table_limit_id}/${limit}`,
     )
-    processData(res.data.result)
+    processData(res?.data?.result)
     setRenderKey(renderKey + 1)
     localStorage.setItem('callOnTimeInterval', true)
   }

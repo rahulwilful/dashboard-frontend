@@ -154,7 +154,7 @@ const AppSidebar = () => {
       className="border-end border-secondary "
       colorScheme="dark"
       position="fixed"
-      unfoldable={unfoldable}
+      unfoldable={!unfoldable}
       visible={sidebarShow}
       onVisibleChange={(visible) => {
         dispatch({ type: 'set', sidebarShow: visible })
@@ -162,7 +162,7 @@ const AppSidebar = () => {
     >
       <CSidebarHeader className="border-bottom border-secondary">
         <CSidebarBrand to="/" className=" d-flex justify-content-center w-100 ">
-          <img src={LOGO} className="  " style={{ width: '90px' }} />
+          <img src={LOGO} className="  " style={{ width: '42%', minWidth: '40px' }} />
         </CSidebarBrand>
         <CCloseButton
           className="d-lg-none"
