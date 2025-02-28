@@ -14,6 +14,7 @@ import NoDataFull from '../../NoData/NoDataFull'
 const UpdateLanguages = (props) => {
   const theme = useSelector((state) => state?.theme)
   const navigate = useNavigate()
+  const [renderKey, setRenderKey] = useState(0)
   const [languages, setLanguages] = useState([])
   const [originalLanguages, setOriginalLanguages] = useState([])
   const [form, setForm] = useState({ language_id: '', language: '' })
@@ -47,6 +48,7 @@ const UpdateLanguages = (props) => {
         }
       }
       setLanguages(temp)
+      setRenderKey(renderKey + 1)
     } catch (error) {
       console.error(error)
       showToast('Error while updating Language', 'error')
@@ -145,7 +147,10 @@ const UpdateLanguages = (props) => {
           </label>
           <input type="text" className="form-control " id="search" onChange={handleSearch} />
         </div>
-        <div className={`row gap-0 w-100 px-3 ${display == 'data' ? '' : 'd-none'}`}>
+        <div
+          className={`row gap-0 w-100 px-3 ${display == 'data' ? '' : 'd-none'}`}
+          key={renderKey}
+        >
           {languages.map((language, i) => (
             <div key={i} className={`col-12 col-sm-3 mb-3 mb-sm-0 mt-2`}>
               <div className={`card card-hover shadow border-0 p-0`}>
@@ -181,4 +186,3 @@ const UpdateLanguages = (props) => {
 }
 
 export default UpdateLanguages
-

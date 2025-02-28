@@ -59,10 +59,10 @@ const AppHeader = () => {
         >
           <CIcon icon={cilMenu} size="lg" />
         </CHeaderToggler>
-        <CHeaderNav className="d-none d-md-flex">
+        <CHeaderNav className="d-none d-md-flex ">
           <CNavItem>
             <CNavLink to="/dashboard" as={NavLink}>
-              Dashboard
+              TECH NERD
             </CNavLink>
           </CNavItem>
           {/*  <CNavItem>
@@ -110,9 +110,9 @@ const AppHeader = () => {
           <AppHeaderDropdown />
         </CHeaderNav>
       </CContainer>
-      <div className="px-4" fluid>
+      {/*   <div className="px-4" fluid>
         <AppBreadcrumb />
-      </div>
+      </div> */}
     </CHeader>
   )
 }

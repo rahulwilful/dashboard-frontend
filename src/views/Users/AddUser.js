@@ -84,12 +84,12 @@ const AddUser = () => {
       console.log(res)
       showToast('User Added Successfully', 'success')
       setTimeout(() => {
-        //navigate("/all/users")
+        navigate('/all/users')
       }, 1500)
     } catch (err) {
       console.log('error: ', err)
-      if (err?.response?.status == 401) {
-        showToast('Email Already Exists', 'error')
+      if (err?.response?.data?.message) {
+        showToast(`${err?.response?.data?.message}`, 'error')
       } else {
         showToast('Something went wrong', 'error')
       }

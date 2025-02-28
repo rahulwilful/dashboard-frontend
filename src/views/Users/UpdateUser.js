@@ -6,7 +6,7 @@ import showToast from '../../components/Notification/ShowToast'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import s from './AllUsers.module.css'
 
@@ -14,6 +14,7 @@ import { GetCurrent } from '../../getCurrent'
 import axiosClient from '../../axiosClient'
 
 const UpdateUser = () => {
+  const navigate = useNavigate()
   const theme = useSelector((state) => state?.theme)
   const [renderKey, setRenderKey] = useState(0)
   const [themeClass, setThemeClass] = useState('bg-light text-dark border')
@@ -93,6 +94,9 @@ const UpdateUser = () => {
       console.log('res: ', res?.data?.user)
 
       showToast('User updated successfully!', 'success')
+      setTimeout(() => {
+        navigate('/all/users')
+      }, 1500)
     } catch (err) {
       console.log('error: ', err)
       showToast('Error while updating user', 'error')
