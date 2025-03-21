@@ -112,7 +112,9 @@ const WheelPocketStatistics = (props) => {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>total spin</td>
+                    <td data-toggle="tooltip" title="Add Admin">
+                      total spin
+                    </td>
                     <td className={`text-end`}>
                       <span
                         className={`rounded-1 bg-primary text-light border-0 bg-gradient px-1 shadow-xs border border-secondary border-opacity-25`}

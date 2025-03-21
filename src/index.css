@@ -15,14 +15,13 @@
 
 .text-decoration-none {
   text-decoration: none; /* To remove default link styles, if needed */
-  
 }
 
-.position_relative{
+.position_relative {
   position: relative;
 }
 
-.position_top_sticky{
+.position_top_sticky {
   position: sticky;
   top: 92px;
   z-index: 100;

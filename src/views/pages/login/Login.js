@@ -34,8 +34,8 @@ import Earth from './Earth'
 const Login = () => {
   const [showForm, setShowForm] = useState(false)
   const navigate = useNavigate()
-  const [user_name, setUser_name] = useState('superadmin')
-  const [password, setPassword] = useState('666666')
+  const [user_name, setUser_name] = useState('')
+  const [password, setPassword] = useState('')
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
 
